@@ -24,6 +24,14 @@ subprojects {
 
     apply plugin: 'java'
 
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
+        }
+    }
+
     sourceSets {
         integrationTest {
             java {
