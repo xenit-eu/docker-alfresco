@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [DOCKER-240] Use public images.
 * [DOCKER-236] Separate out share.
 * [DOCKER-242] Build in function of flavor. Registry name configurable.
+* [DOCKER-243] Travis file.
 
 ## [v0.0.11] - 2019-07-01
 ### Added
