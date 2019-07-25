@@ -1,0 +1,294 @@
+plugins {
+    id "eu.xenit.docker-alfresco" version "4.0.3" apply false
+}
+
+static def calcTags(version) {
+    def tags = [
+            "${version.major}.${version.minor}.${version.rev}".toString(),
+            "${version.major}.${version.minor}".toString()
+    ]
+
+    if (version.label) {
+        tags += "${version.major}.${version.minor}.${version.rev}.${version.label}".toString()
+    }
+    return tags
+}
+
+subprojects {
+    configurations {
+        sharedLib
+        sharedBin
+        integrationTestCompile.extendsFrom testCompile
+        integrationTestRuntime.extendsFrom testRuntime
+    }
+
+    apply plugin: 'java'
+
+    sourceSets {
+        integrationTest {
+            java {
+                compileClasspath += main.output + test.output
+                runtimeClasspath += main.output + test.output
+                srcDir file("$project.parent.projectDir/src/integrationTest/java")
+            }
+        }
+        test {
+            java {
+                compileClasspath += main.output
+                runtimeClasspath += main.output
+                srcDir file("$project.parent.projectDir/src/test/java")
+            }
+        }
+    }
+
+    dependencies {
+        testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.4.7'
+        testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.1'
+        testCompile group: 'io.rest-assured', name: 'json-path', version: '3.0.1'
+        testCompile group: 'io.rest-assured', name: 'rest-assured-common', version: '3.0.1'
+        testCompile group: 'junit', name: 'junit', version: '4.11'
+        testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+    }
+
+
+    if ("${project.projectDir}".toLowerCase().contains('skeleton')) {
+        apply plugin: 'eu.xenit.docker'
+    } else if ("${project.projectDir}".contains('enterprise') || "${project.projectDir}".contains('community')) {
+        apply plugin: 'eu.xenit.docker-alfresco'
+    }
+
+
+    if (new File("${project.projectDir}/../overload.gradle").exists())
+        apply from: "${project.projectDir}/../overload.gradle"
+    if (new File("${project.projectDir}/overload.gradle").exists())
+        apply from: "${project.projectDir}/overload.gradle"
+
+    if ("${project.alfresco.flavor}" == "skeleton") {
+        def workingDir = "$project.buildDir/dockerbuild"
+
+        task copyDockerfile(type: Copy) {
+            from("$project.parent.projectDir/src/main/resources/dockerfiles/") {
+                if(project.alfresco.version.major.toInteger() < 6) {
+                    include "Dockerfile-skeleton-pre6"
+                    rename "Dockerfile-skeleton-pre6", 'Dockerfile'
+                } else {
+                    include "Dockerfile-skeleton"
+                    rename "Dockerfile-skeleton", 'Dockerfile'
+                }
+            }
+            into workingDir
+        }
+        task copyGlobalResources(type: Copy) {
+            from "$project.parent.projectDir/src/main/resources/global"
+            into workingDir
+        }
+        task copyLocalResources(type: Copy) {
+            from "$project.projectDir/local"
+            into workingDir
+        }
+
+        buildDockerImage.dependsOn(copyDockerfile)
+        buildDockerImage.dependsOn(copyGlobalResources)
+        buildDockerImage.dependsOn(copyLocalResources)
+
+        dockerFile {
+            dockerFile = file("$workingDir/Dockerfile")
+            dockerBuild {
+                if (!(project.hasProperty("repoName"))) {
+                    ext.repoName = "hub.xenit.eu"
+                }
+                repository = "${repoName}" + "/alfresco-repository-" + "${project.alfresco.flavor}"
+                tags = calcTags(project.alfresco.version)
+                automaticTags = false
+            }
+        }
+
+        buildDockerImage {
+            buildArgs = [
+                    'ALFRESCO_VERSION_MAJOR': "${project.alfresco.version.major}",
+                    'ALFRESCO_VERSION_MINOR': "${project.alfresco.version.minor}",
+                    'ALFRESCO_VERSION_REV'  : "${project.alfresco.version.rev}",
+                    'ALFRESCO_FLAVOR'       : "${project.alfresco.flavor}",
+                    'BASE_IMAGE'            : "xeniteu/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
+            ]
+
+            if (project.hasProperty('extraBuildArgs'))
+                buildArgs << project.extraBuildArgs
+
+            doFirst {
+                println buildArgs
+            }
+        }
+
+        test.enabled = false
+
+        docker {
+            if(System.getenv("DOCKER_USER") != null) {
+                registryCredentials {
+                    username = System.getenv("DOCKER_USER")
+                    password = System.getenv("DOCKER_PASSWORD")
+                }
+            } else {
+                println "using default credentials"
+            }
+        }
+
+        composeDown.enabled = false
+    } else if ("${project.alfresco.flavor}" == "enterprise" || ("${project.alfresco.flavor}" == "community")) {
+
+        def skeleton = ":${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}" + "/skeleton"
+        def path = "${skeleton}:buildDockerImage"
+
+        dockerAlfresco {
+            baseImage = { project(skeleton).getTasks().getByName('buildDockerImage').getImageId() }
+            dockerBuild {
+                if (!(project.hasProperty("repoName"))) {
+                    ext.repoName = "hub.xenit.eu"
+                }
+                repository = "${repoName}" + "/alfresco-repository-" + "${project.alfresco.flavor}"
+                tags = calcTags(project.alfresco.version)
+                automaticTags = false
+            }
+        }
+
+        afterEvaluate {
+            createDockerFile.dependsOn(path)
+
+            if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
+                changedPortsComposeUp.dependsOn(buildDockerImage)
+            else
+                changedPortsComposeUp.enabled=false
+
+            // nested configurations do not get the DOCKER_IMAGE
+            buildDockerImage {
+                doLast {
+                    if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
+                        dockerCompose.changedPorts.environment.put 'DOCKER_IMAGE', getImageId()
+                }
+            }
+
+
+            createDockerFile {
+                inputs.files configurations.sharedLib
+                inputs.files configurations.sharedBin
+
+                environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
+                environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
+
+                doFirst {
+                    project.delete(file("${destFile.parent}/shared"))
+                    copy {
+                        from configurations.sharedLib
+                        into destFile.parent + "/shared/lib"
+                    }
+
+                    if (!configurations.sharedBin.isEmpty()) {
+                        copy {
+                            from tarTree(resources.gzip(configurations.sharedBin.singleFile))
+                            into destFile.parent + "/shared/bin"
+                        }
+                    }
+                }
+
+                if (!configurations.sharedLib.isEmpty()) {
+                    copyFile './shared/lib/*.jar', '${CATALINA_HOME}/shared/lib/'
+                }
+                if (!configurations.sharedBin.isEmpty()) {
+                    copyFile './shared/bin/*', '/opt/alfresco'
+                }
+            }
+        }
+
+        task integrationTestDefault(type: Test, group: "verification") {
+            enabled = (project.hasProperty('tests') && project.tests)
+
+            testClassesDirs = sourceSets.integrationTest.output.classesDirs
+            classpath = sourceSets.integrationTest.runtimeClasspath
+            outputs.upToDateWhen { false }
+
+            doFirst {
+                dockerCompose.exposeAsSystemProperties(integrationTestDefault)
+
+                systemProperty 'alfresco.port.internal', '8080'
+                systemProperty 'flavor', "${project.alfresco.flavor}"
+                systemProperty 'version', "${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}"
+            }
+        }
+
+        task integrationTestChangedPorts(type: Test, group: "verification") {
+            enabled = (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
+
+            testClassesDirs = sourceSets.integrationTest.output.classesDirs
+            classpath = sourceSets.integrationTest.runtimeClasspath
+            outputs.upToDateWhen { false }
+
+            doFirst {
+                dockerCompose.changedPorts.exposeAsSystemProperties(integrationTestChangedPorts)
+
+                systemProperty 'alfresco.port.internal', '5656'
+                systemProperty 'flavor', "${project.alfresco.flavor}"
+                systemProperty 'version', "${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}"
+            }
+        }
+
+        test {
+            workingDir = project.parent.projectDir
+        }
+
+        task integrationTests(type: Test, group: "verification") {
+            workingDir = project.parent.projectDir
+            dependsOn integrationTestDefault
+            dependsOn integrationTestChangedPorts
+        }
+
+        dockerCompose.dependsOn(buildDockerImage)
+
+        docker {
+            if(System.getenv("DOCKER_USER") != null) {
+                registryCredentials {
+                    username = System.getenv("DOCKER_USER")
+                    password = System.getenv("DOCKER_PASSWORD")
+                }
+            } else {
+                println "using default credentials"
+            }
+        }
+
+        dockerCompose {
+
+            if (project.hasProperty('tests') && project.tests) {
+                isRequiredBy(project.tasks.integrationTestDefault)
+
+                environment.put 'SHARE_IMAGE', project.shareimage
+                environment.put 'SOLR_IMAGE', project.solrimage
+                environment.put 'SOLR_PORT_SSL', '8443'
+
+                def composeDir = "${project.parent.projectDir}/src/integrationTest/resources";
+
+                if(project.alfresco.version.major.toInteger() < 6) {
+                    useComposeFiles = ["$composeDir/docker-compose-alfresco.yml", "$composeDir/docker-compose-share.yml",
+                                       "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml"];
+
+                } else {
+                    useComposeFiles = ["$composeDir/docker-compose-alfresco.yml", "$composeDir/docker-compose-share.yml",
+                                       "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml", "$composeDir/docker-compose-transformers.yml"];
+                }
+
+                finalizedBy(composeDown)
+
+                changedPorts {
+                    isRequiredBy(project.tasks.integrationTestChangedPorts)
+
+                    environment.put 'ALFRESCO_PORT', '5656'
+                    environment.put 'ALFRESCO_PORT_SSL', '5657'
+                    environment.put 'SOLR_PORT', '2323'
+                    environment.put 'SOLR_PORT_SSL', '2324'
+
+                    useComposeFiles = ["$composeDir/docker-compose-alfresco-changed-ports.yml", "$composeDir/docker-compose-solr-changed-ports.yml",
+                                       "$composeDir/docker-compose-db.yml", "$composeDir/docker-compose-transformers.yml"];
+                }
+            }
+        }
+    }
+}
+

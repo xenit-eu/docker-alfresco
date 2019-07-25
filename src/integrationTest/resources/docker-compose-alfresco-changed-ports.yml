@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  alfresco:
+    image: ${DOCKER_IMAGE}
+    ports:
+      - ${ALFRESCO_PORT}
+    environment:
+      - SOLR_HOST=solr
+      - SOLR_PORT=${SOLR_PORT}
+      - SOLR_PORT_SSL=${SOLR_PORT_SSL}
+      - TOMCAT_PORT=${ALFRESCO_PORT}
+      - TOMCAT_PORT_SSL=${ALFRESCO_PORT_SSL}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${ALFRESCO_PORT}/alfresco/s/api/server"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+

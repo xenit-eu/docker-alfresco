@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [DOCKER-240] Use public images.
 * [DOCKER-236] Separate out share.
 * [DOCKER-242] Build in function of flavor. Registry name configurable.
+
 ## [v0.0.11] - 2019-07-01
 ### Added
 * [DOCKER-225] Make sure there is one community build for each major-minor version
@@ -125,3 +126,4 @@ Correct way to change those - via TOMCAT_PORT and TOMCAT_PORT_SSL.
 * [DOCKER-37] Removed bundled images for versions >=5.0
 * [DOCKER-26] Removed the PROXY_<variable> parameters from the init
 	
+

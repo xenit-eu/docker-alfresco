@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+ alfresco-pdf-renderer:
+   image: alfresco/alfresco-pdf-renderer:0.9
+   environment:
+     JAVA_OPTS: " -Xms256m -Xmx512m"
+
+ libreoffice:
+   image: alfresco/alfresco-libreoffice:0.9
+   environment:
+     JAVA_OPTS: " -Xms256m -Xmx512m"
+
+ imagemagick:
+   image: alfresco/alfresco-imagemagick:0.9
+   environment:
+     JAVA_OPTS: " -Xms256m -Xmx512m"
+
+ # only works from Alfresco 6.1 on
+ tika:
+   image: alfresco/alfresco-tika:1.2
+   environment:
+     JAVA_OPTS: " -Xms256m -Xmx512m"
+
+

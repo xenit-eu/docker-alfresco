@@ -1,0 +1,19 @@
+ext {
+    alfresco = [
+            version: [
+                    major: 5,
+                    minor: 0,
+                    rev: 4,
+            ],
+            flavor: 'enterprise'
+    ]
+    solrimage = 'xeniteu/alfresco-solr4:5.1'
+    shareimage = 'hub.xenit.eu/alfresco-share-enterprise:5.0.4'
+    tests = true
+}
+
+dependencies {
+    baseAlfrescoWar 'org.alfresco:alfresco-enterprise:5.0.4@war'
+
+    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
+}

@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+ alfresco:
+   image: ${DOCKER_IMAGE}
+   ports:
+     - 8080
+   depends_on:
+     - postgresql
+   environment:
+   - SOLR_HOST=solr
+   - GLOBAL_alfresco-pdf-renderer.url=http://alfresco-pdf-renderer:8090/ # from Alfresco 6.0 on
+   - GLOBAL_jodconverter.url=http://libreoffice:8090/ # from Alfresco 6.0 on
+   - GLOBAL_img.url=http://imagemagick:8090/ # from Alfresco 6.0 on
+   - GLOBAL_tika.url=http://tika:8090/  # from Alfresco 6.1 on

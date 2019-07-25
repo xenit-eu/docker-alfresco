@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+ postgresql:
+   image: xeniteu/postgres
+   environment:
+   - POSTGRES_USER=alfresco
+   - POSTGRES_PASSWORD=admin
+   - POSTGRES_DB=alfresco
+
+

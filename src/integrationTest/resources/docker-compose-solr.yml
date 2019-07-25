@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+
+ solr:
+   image: ${SOLR_IMAGE}
+   environment:
+   - ALFRESCO_HOST=alfresco

@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+ share:
+   image: ${SHARE_IMAGE}
+   ports:
+     - 8080
