@@ -2,21 +2,48 @@ language: java
 sudo: required
 dist: trusty
 services:
-- docker
+  - docker
 cache:
   directories:
-  - "$HOME/.gradle"
+    - "$HOME/.gradle"
 matrix:
   include:
-  - os: linux
-    jdk: oraclejdk8
-    env:
-    - DOCKER_USER=xenitpublisher
-    - secure: "VDXirYb1TQxtLdVaCyJoNDghqMLWPd5WdGfm1ZpjSwAKWCosPNoD86BIDI+PCYDxffNFDH6ooKhKIVubSHcE/ur2vdLSnRLzqi2KkSSZQULjjMcwpmHq+PDnf8LarRuW/byCB5PwrvcSkJiabq/CsOISs0t9XLCluVx21yDYiaIeQoPkG83+uhn9Rj6jeijOIZhYEYZg/lJEmkQ/ddX5ex6LcpKuZ+Jf2SRNSNO7UJ6f8zg7eDD4TmF9riYWlEOSkrxKeac1gu99iRS7CZn85Zs7729208xoM+zyl/n/YK3KwELlbKBLsOkIpdGrN8KWd7XVY9Zqb9W32gtub9HBh7dVmNikJ1TIQiLFbyTkQP+y9nIpprI+8MozMveZQIjEMK6NSSxtcgpcgM5hck8bXhpmMEzlE7XWe+Ttoq2e499aIYO9J6uRd86mc4c+AZVcjkvtQXVA08sVurm/X/cFE+Lp+mgsqio212QETlc3pxz5656HT8O0XuBbnSe45wnF00PP9fHSeajwKQ1z2sOGLIEo5mkE/FALSchP0RTIP+rSMsOJ+aXqJwtDU44IZ5ROcqJsixkNYq44zznDBQKHRphZLa2LofyQHmb2eeGRNqgeIGpynJySp5NVqayThaaVuYjl+SPw6kjcSXAuF1mWCtDf1Ye4KzNE0Z+Uoy/QoD8="
-    before_install:
-    - chmod +x ./gradlew
-    # https://github.com/travis-ci/travis-ci/issues/8667
-    install:
-      - true
-    script:
-    - if [[ $TRAVIS_BRANCH = "master" ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
+    - os: linux
+      jdk: oraclejdk8
+      env:
+        - DOCKER_USER=xenitpublisher
+        - secure: "VDXirYb1TQxtLdVaCyJoNDghqMLWPd5WdGfm1ZpjSwAKWCosPNoD86BIDI+PCYDxffNFDH6ooKhKIVubSHcE/ur2vdLSnRLzqi2KkSSZQULjjMcwpmHq+PDnf8LarRuW/byCB5PwrvcSkJiabq/CsOISs0t9XLCluVx21yDYiaIeQoPkG83+uhn9Rj6jeijOIZhYEYZg/lJEmkQ/ddX5ex6LcpKuZ+Jf2SRNSNO7UJ6f8zg7eDD4TmF9riYWlEOSkrxKeac1gu99iRS7CZn85Zs7729208xoM+zyl/n/YK3KwELlbKBLsOkIpdGrN8KWd7XVY9Zqb9W32gtub9HBh7dVmNikJ1TIQiLFbyTkQP+y9nIpprI+8MozMveZQIjEMK6NSSxtcgpcgM5hck8bXhpmMEzlE7XWe+Ttoq2e499aIYO9J6uRd86mc4c+AZVcjkvtQXVA08sVurm/X/cFE+Lp+mgsqio212QETlc3pxz5656HT8O0XuBbnSe45wnF00PP9fHSeajwKQ1z2sOGLIEo5mkE/FALSchP0RTIP+rSMsOJ+aXqJwtDU44IZ5ROcqJsixkNYq44zznDBQKHRphZLa2LofyQHmb2eeGRNqgeIGpynJySp5NVqayThaaVuYjl+SPw6kjcSXAuF1mWCtDf1Ye4KzNE0Z+Uoy/QoD8="
+        - VERSIONS_TO_BUILD: 4
+      before_install:
+        - chmod +x ./gradlew
+      # https://github.com/travis-ci/travis-ci/issues/8667
+      install:
+        - true
+      script:
+        - if [[ $TRAVIS_BRANCH = "master" ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
+    - os: linux
+      jdk: oraclejdk8
+      env:
+        - DOCKER_USER=xenitpublisher
+        - secure: "VDXirYb1TQxtLdVaCyJoNDghqMLWPd5WdGfm1ZpjSwAKWCosPNoD86BIDI+PCYDxffNFDH6ooKhKIVubSHcE/ur2vdLSnRLzqi2KkSSZQULjjMcwpmHq+PDnf8LarRuW/byCB5PwrvcSkJiabq/CsOISs0t9XLCluVx21yDYiaIeQoPkG83+uhn9Rj6jeijOIZhYEYZg/lJEmkQ/ddX5ex6LcpKuZ+Jf2SRNSNO7UJ6f8zg7eDD4TmF9riYWlEOSkrxKeac1gu99iRS7CZn85Zs7729208xoM+zyl/n/YK3KwELlbKBLsOkIpdGrN8KWd7XVY9Zqb9W32gtub9HBh7dVmNikJ1TIQiLFbyTkQP+y9nIpprI+8MozMveZQIjEMK6NSSxtcgpcgM5hck8bXhpmMEzlE7XWe+Ttoq2e499aIYO9J6uRd86mc4c+AZVcjkvtQXVA08sVurm/X/cFE+Lp+mgsqio212QETlc3pxz5656HT8O0XuBbnSe45wnF00PP9fHSeajwKQ1z2sOGLIEo5mkE/FALSchP0RTIP+rSMsOJ+aXqJwtDU44IZ5ROcqJsixkNYq44zznDBQKHRphZLa2LofyQHmb2eeGRNqgeIGpynJySp5NVqayThaaVuYjl+SPw6kjcSXAuF1mWCtDf1Ye4KzNE0Z+Uoy/QoD8="
+        - VERSIONS_TO_BUILD: 5
+      before_install:
+        - chmod +x ./gradlew
+      # https://github.com/travis-ci/travis-ci/issues/8667
+      install:
+        - true
+      script:
+        - if [[ $TRAVIS_BRANCH = "master" ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
+    - os: linux
+      jdk: oraclejdk8
+      env:
+        - DOCKER_USER=xenitpublisher
+        - secure: "VDXirYb1TQxtLdVaCyJoNDghqMLWPd5WdGfm1ZpjSwAKWCosPNoD86BIDI+PCYDxffNFDH6ooKhKIVubSHcE/ur2vdLSnRLzqi2KkSSZQULjjMcwpmHq+PDnf8LarRuW/byCB5PwrvcSkJiabq/CsOISs0t9XLCluVx21yDYiaIeQoPkG83+uhn9Rj6jeijOIZhYEYZg/lJEmkQ/ddX5ex6LcpKuZ+Jf2SRNSNO7UJ6f8zg7eDD4TmF9riYWlEOSkrxKeac1gu99iRS7CZn85Zs7729208xoM+zyl/n/YK3KwELlbKBLsOkIpdGrN8KWd7XVY9Zqb9W32gtub9HBh7dVmNikJ1TIQiLFbyTkQP+y9nIpprI+8MozMveZQIjEMK6NSSxtcgpcgM5hck8bXhpmMEzlE7XWe+Ttoq2e499aIYO9J6uRd86mc4c+AZVcjkvtQXVA08sVurm/X/cFE+Lp+mgsqio212QETlc3pxz5656HT8O0XuBbnSe45wnF00PP9fHSeajwKQ1z2sOGLIEo5mkE/FALSchP0RTIP+rSMsOJ+aXqJwtDU44IZ5ROcqJsixkNYq44zznDBQKHRphZLa2LofyQHmb2eeGRNqgeIGpynJySp5NVqayThaaVuYjl+SPw6kjcSXAuF1mWCtDf1Ye4KzNE0Z+Uoy/QoD8="
+        - VERSIONS_TO_BUILD: 6
+      before_install:
+        - chmod +x ./gradlew
+      # https://github.com/travis-ci/travis-ci/issues/8667
+      install:
+        - true
+      script:
+        - if [[ $TRAVIS_BRANCH = "master" ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
