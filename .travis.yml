@@ -20,7 +20,7 @@ matrix:
       install:
         - true
       script:
-        - if [[ $TRAVIS_BRANCH = "master" ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
+        - if [[ $TRAVIS_BRANCH = "master" && $TRAVIS_PULL_REQUEST = false ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
     - os: linux
       jdk: oraclejdk8
       env:
@@ -33,7 +33,7 @@ matrix:
       install:
         - true
       script:
-        - if [[ $TRAVIS_BRANCH = "master" ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
+        - if [[ $TRAVIS_BRANCH = "master" && $TRAVIS_PULL_REQUEST = false ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
     - os: linux
       jdk: oraclejdk8
       env:
@@ -46,4 +46,4 @@ matrix:
       install:
         - true
       script:
-        - if [[ $TRAVIS_BRANCH = "master" ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
+        - if [[ $TRAVIS_BRANCH = "master" && $TRAVIS_PULL_REQUEST = false ]] ; then travis_wait 60 ./gradlew -PrepoName=xeniteu test integrationTests pushDockerImage ; else ./gradlew -PrepoName=xeniteu test integrationTests --info ; fi
