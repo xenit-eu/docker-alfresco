@@ -168,7 +168,7 @@ fi
 
 if [ $DEBUG = true ]
 then
-    JAVA_OPTS="$JAVA_OPTS -Xdebug -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n"
+    JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8000,server=y,suspend=n"
 fi
 
 setGlobalOptions
