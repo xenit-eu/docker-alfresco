@@ -58,19 +58,6 @@ function setGlobalOptions {
     done
 }
 
-function setJavaOptions {
-    IFS=$'\n'
-    for i in `env`
-    do
-	if [[ $i == JAVA_OPTS_* ]]
-	    then
-	    key=`echo $i | cut -d '=' -f 1 | cut -d '_' -f 3-`
-	    value=`echo $i | cut -d '=' -f 2-`
-	    setJavaOption $key $value
-	fi
-    done
-}
-
 setGlobalOption 'dir.root' "${DIR_ROOT:-/opt/alfresco/alf_data}"
 setGlobalOption 'dir.keystore' "${DIR_KEYSTORE:-/opt/alfresco/keystore}"
 
@@ -157,27 +144,26 @@ setGlobalOption 'swf.exe' '/usr/bin/pdf2swf'
 setGlobalOption 'alfresco-pdf-renderer.root' "/opt/alfresco"
 setGlobalOption 'alfresco-pdf-renderer.exe' '${alfresco-pdf-renderer.root}/alfresco-pdf-renderer'
 
+setJavaOption "memory" "-Xms$JAVA_XMS -Xmx$JAVA_XMX"
+setJavaOption "encoding" "-Dfile.encoding=UTF-8"
 
 if [ $JMX_ENABLED = true ]
 then
-    JAVA_OPTS="$JAVA_OPTS -Xms$JAVA_XMS -Xmx$JAVA_XMX -Dfile.encoding=UTF-8 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.rmi.port=5000 -Dcom.sun.management.jmxremote.port=5000 -Djava.rmi.server.hostname=$JMX_RMI_HOST"
+    setJavaOption "jmx" "-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.rmi.port=5000 -Dcom.sun.management.jmxremote.port=5000 -Djava.rmi.server.hostname=${JMX_RMI_HOST}"
     setGlobalOption 'alfresco.jmx.connector.enabled' 'true'
-else
-    JAVA_OPTS="$JAVA_OPTS -Xms$JAVA_XMS -Xmx$JAVA_XMX -Dfile.encoding=UTF-8"
 fi
 
 if [ $DEBUG = true ]
 then
-    JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8000,server=y,suspend=n"
+    setJavaOption "debug" "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000"
 fi
 
 setGlobalOptions
-setJavaOptions
 
 # special handling for Alfresco 4.2 - set MaxPermSize
 if [[ $ALFRESCO_VERSION = "4"* ]]
 then   
-    setJavaOption MaxPerm -XX:MaxPermSize=256m
+    setJavaOption "MaxPerm" "-XX:MaxPermSize=256m"
 fi
 
 # special handling for Alfresco 6.1 - set messaging.subsystem.autoStart=false
