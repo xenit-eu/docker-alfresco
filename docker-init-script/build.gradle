@@ -1,0 +1,9 @@
+plugins {
+    id "application"
+}
+
+jar {
+    manifest {
+        attributes(['Main-Class': "eu.xenit.docker.alfresco.InitScriptMain"])
+    }
+}

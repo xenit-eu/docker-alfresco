@@ -15,6 +15,9 @@ static def calcTags(version) {
 }
 
 subprojects {
+    if (project.name == "docker-init-script") {
+        return
+    }
     configurations {
         sharedLib
         sharedBin
@@ -35,22 +38,20 @@ subprojects {
     sourceSets {
         integrationTest {
             java {
-                compileClasspath += main.output + test.output
-                runtimeClasspath += main.output + test.output
+                compileClasspath += test.output
+                runtimeClasspath += test.output
                 srcDir file("$project.parent.projectDir/src/integrationTest/java")
             }
         }
         test {
             java {
-                compileClasspath += main.output
-                runtimeClasspath += main.output
                 srcDir file("$project.parent.projectDir/src/test/java")
             }
         }
     }
 
     dependencies {
-        testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.4.7'
+        testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.7'
         testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.1'
         testCompile group: 'io.rest-assured', name: 'json-path', version: '3.0.1'
         testCompile group: 'io.rest-assured', name: 'rest-assured-common', version: '3.0.1'
@@ -76,7 +77,7 @@ subprojects {
 
         task copyDockerfile(type: Copy) {
             from("$project.parent.projectDir/src/main/resources/dockerfiles/") {
-                if(project.alfresco.version.major.toInteger() < 6) {
+                if (project.alfresco.version.major.toInteger() < 6) {
                     include "Dockerfile-skeleton-pre6"
                     rename "Dockerfile-skeleton-pre6", 'Dockerfile'
                 } else {
@@ -86,9 +87,18 @@ subprojects {
             }
             into workingDir
         }
+        task configureCopyGlobalResources {
+            doFirst {
+                copyGlobalResources.from(project(':docker-init-script').tasks.jar.outputs.files.singleFile) {
+                    rename { "90-init-alfresco.jar" }
+                }
+            }
+            dependsOn(":docker-init-script:jar")
+        }
         task copyGlobalResources(type: Copy) {
             from "$project.parent.projectDir/src/main/resources/global"
             into workingDir
+            dependsOn(configureCopyGlobalResources)
         }
         task copyLocalResources(type: Copy) {
             from "$project.projectDir/local"
@@ -131,7 +141,7 @@ subprojects {
         test.enabled = false
 
         docker {
-            if(System.getenv("DOCKER_USER") != null) {
+            if (System.getenv("DOCKER_USER") != null) {
                 registryCredentials {
                     username = System.getenv("DOCKER_USER")
                     password = System.getenv("DOCKER_PASSWORD")
@@ -165,7 +175,7 @@ subprojects {
             if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
                 changedPortsComposeUp.dependsOn(buildDockerImage)
             else
-                changedPortsComposeUp.enabled=false
+                changedPortsComposeUp.enabled = false
 
             // nested configurations do not get the DOCKER_IMAGE
             buildDockerImage {
@@ -252,7 +262,7 @@ subprojects {
         dockerCompose.dependsOn(buildDockerImage)
 
         docker {
-            if(System.getenv("DOCKER_USER") != null) {
+            if (System.getenv("DOCKER_USER") != null) {
                 registryCredentials {
                     username = System.getenv("DOCKER_USER")
                     password = System.getenv("DOCKER_PASSWORD")
@@ -273,7 +283,7 @@ subprojects {
 
                 def composeDir = "${project.parent.projectDir}/src/integrationTest/resources";
 
-                if(project.alfresco.version.major.toInteger() < 6) {
+                if (project.alfresco.version.major.toInteger() < 6) {
                     useComposeFiles = ["$composeDir/docker-compose-alfresco.yml", "$composeDir/docker-compose-share.yml",
                                        "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml"];
 
