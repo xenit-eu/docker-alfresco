@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 public class InitScriptMain {
 
@@ -22,14 +21,18 @@ public class InitScriptMain {
         try (InputStream globalPropertiesInputStream = new FileInputStream(globalPropertiesFile)) {
             globalProperties.load(globalPropertiesInputStream);
         }
-        InitScriptMain main = new InitScriptMain(System.getenv(), (Map) globalProperties);
+        InitScriptMain main = new InitScriptMain(new ThrowingMap<String, String>(System.getenv(), "ENV"),
+                new ThrowingMap<String, String>((Map) globalProperties, "global-properties"));
         main.process();
         try (OutputStream globalPropertiesOutputStream = new FileOutputStream(globalPropertiesFile)) {
             globalProperties.store(globalPropertiesOutputStream, null);
         }
         try (PrintStream tomcatConfigOutputStream = new PrintStream(new FileOutputStream(tomcatConfigFile))) {
-            String javaOpts = main.getJavaOptions().stream().collect(Collectors.joining(" "));
-            tomcatConfigOutputStream.println("JAVA_OPTS=\"" + javaOpts + "\"");
+            StringBuilder javaOpts = new StringBuilder();
+            for (String javaOption : main.getJavaOptions()) {
+                javaOpts.append(javaOption).append(" ");
+            }
+            tomcatConfigOutputStream.println("JAVA_OPTS=\"" + javaOpts.toString() + "\"");
             tomcatConfigOutputStream.println("export JAVA_OPTS");
         }
     }
@@ -49,15 +52,23 @@ public class InitScriptMain {
         this.environment = environment;
         this.globalProperties = globalProperties;
         alfrescoVersion = AlfrescoVersion.parse(environment.get("ALFRESCO_VERSION"));
-        javaOptions.add(environment.getOrDefault("JAVA_OPTS", ""));
+        if (environment.containsKey("JAVA_OPTS")) {
+            javaOptions.add(environment.get("JAVA_OPTS"));
+        }
     }
 
     private void setGlobalOptionFromEnvironment(String option, String environmentVariable, String defaultValue) {
-        globalProperties.put(option, environment.getOrDefault(environmentVariable, defaultValue));
+        String value = defaultValue;
+        if (environment.containsKey(environmentVariable)) {
+            value = environment.get(environmentVariable);
+        }
+        globalProperties.put(option, value);
     }
 
     private void setGlobalOptionFromEnvironment(String option, String environmentVariable) {
-        globalProperties.put(option, environment.get(environmentVariable));
+        if (environment.containsKey(environmentVariable)) {
+            globalProperties.put(option, environment.get(environmentVariable));
+        }
     }
 
     public void process() {
@@ -82,11 +93,15 @@ public class InitScriptMain {
         setGlobalOptionFromEnvironment("db.username", "DB_USERNAME", "alfresco");
         setGlobalOptionFromEnvironment("db.password", "DB_PASSWORD", "admin");
         setGlobalOptionFromEnvironment("db.url", "DB_URL",
-                "jdbc:postgresql://" + environment.get("DB_HOST") + ":" + environment.get("DB_PORT") + "/" + "DB_NAME");
+                "jdbc:postgresql://" + environment.get("DB_HOST") + ":" + environment.get("DB_PORT") + "/" + environment.get("DB_NAME"));
         setGlobalOptionFromEnvironment("db.pool.validate.query", "DB_QUERY", "select 1");
 
         // Solr configuration
-        String solrVersion = environment.computeIfAbsent("INDEX", k -> getDefaultSolrVersion());
+
+        String solrVersion = getDefaultSolrVersion();
+        if (environment.containsKey("INDEX")) {
+            solrVersion = environment.get("INDEX");
+        }
         globalProperties.put("index.subsystem.name", solrVersion);
         if ("solr6".equals(solrVersion)) {
             globalProperties.put("solr.backup.alfresco.remoteBackupLocation", "/opt/alfresco-search-services");
@@ -98,7 +113,7 @@ public class InitScriptMain {
         setGlobalOptionFromEnvironment("solr.useDynamicShardRegistration", "DYNAMIC_SHARD_REGISTRATION", "false");
         setGlobalOptionFromEnvironment("solr.secureComms", "SOLR_SSL", "https");
 
-        if (environment.getOrDefault("SOLR_SSL", "").equalsIgnoreCase("none") && alfrescoVersion.isGreaterThan("5.0")) {
+        if ("none".equalsIgnoreCase(environment.get("SOLR_SSL")) && alfrescoVersion.isGreaterThan("5.0")) {
             // TODO: remove SSL connector from tomcat server.xml
         }
 
@@ -111,7 +126,7 @@ public class InitScriptMain {
 
         // community versions works with ooo and Alfresco recommends to have only one system enabled at a time
         // https://docs.alfresco.com/4.2/concepts/OOo-subsystems-intro.html
-        if (alfrescoVersion.isLessThan("6.0") && environment.getOrDefault("ALFRESCO_FLAVOR", "").equals("community")) {
+        if (alfrescoVersion.isLessThan("6.0") && "community".equals(environment.get("ALFRESCO_FLAVOR"))) {
             globalProperties.put("ooo.enabled", "true");
             globalProperties.put("jodconverter.enabled", "false");
         } else {
@@ -119,7 +134,7 @@ public class InitScriptMain {
             globalProperties.put("jodconverter.enabled", "true");
         }
 
-        if(alfrescoVersion.isLessThan("6.0")) {
+        if (alfrescoVersion.isLessThan("6.0")) {
             globalProperties.put("ooo.exe", "/usr/lib/libreoffice/program/soffice");
             globalProperties.put("jodconverter.officeHome", "/usr/lib/libreoffice/");
             globalProperties.put("img.exe", "/usr/bin/convert");
@@ -130,22 +145,22 @@ public class InitScriptMain {
             globalProperties.put("alfresco-pdf-renderer.exe", "${alfresco-pdf-renderer.root}/alfresco-pdf-renderer");
         }
 
-        javaOptions.add("-Xms" + environment.getOrDefault("JAVA_XMS", "2048M"));
-        javaOptions.add("-Xmx" + environment.getOrDefault("JAVA_XMX", "2048M"));
+        javaOptions.add("-Xms" + environment.get("JAVA_XMS"));
+        javaOptions.add("-Xmx" + environment.get("JAVA_XMX"));
         javaOptions.add("-Dfile.encoding=UTF-8");
 
-        if (environment.getOrDefault("JMX_ENABLED", "false").equalsIgnoreCase("true")) {
+        if ("true".equalsIgnoreCase(environment.get("JMX_ENABLED"))) {
             javaOptions.add("-Dcom.sun.management.jmxremote.authenticate=false");
             javaOptions.add("-Dcom.sun.management.jmxremote.local.only=false");
             javaOptions.add("-Dcom.sun.management.jmxremote.ssl=false");
             javaOptions.add("-Dcom.sun.management.jmxremote");
             javaOptions.add("-Dcom.sun.management.jmxremote.rmi.port=5000");
             javaOptions.add("-Dcom.sun.management.jmxremote.port=5000");
-            javaOptions.add("-Djava.rmi.server.hostname=" + environment.getOrDefault("JMX_RMI_HOST", "0.0.0.0"));
+            javaOptions.add("-Djava.rmi.server.hostname=" + environment.get("JMX_RMI_HOST"));
             globalProperties.put("alfresco.jmx.connector.enabled", "true");
         }
 
-        if (environment.getOrDefault("DEBUG", "false").equalsIgnoreCase("true")) {
+        if ("true".equalsIgnoreCase(environment.get("DEBUG"))) {
             javaOptions.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000");
         }
 
@@ -158,13 +173,13 @@ public class InitScriptMain {
             globalProperties.put("messaging.subsystem.autoStart", "false");
         }
 
-        environment.forEach((key, value) -> {
-            if (key.startsWith("GLOBAL_")) {
-                String globalProperty = key.substring("GLOBAL_".length());
-                globalProperties.put(globalProperty, value);
+        for (Map.Entry<String, String> entry : environment.entrySet()) {
+            if (entry.getKey().startsWith("GLOBAL_")) {
+                String globalProperty = entry.getKey().substring("GLOBAL_".length());
+                globalProperties.put(globalProperty, entry.getValue());
             }
-        });
 
+        }
     }
 
     /**

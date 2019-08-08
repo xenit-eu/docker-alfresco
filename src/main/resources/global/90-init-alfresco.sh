@@ -5,20 +5,20 @@ set -e
 
 echo "Alfresco init start"
 
-JAVA_XMS=${JAVA_XMS:-'2048M'}
-JAVA_XMX=${JAVA_XMX:-'2048M'}
-DEBUG=${DEBUG:-'false'}
-JMX_ENABLED=${JMX_ENABLED:-'false'}
-JMX_RMI_HOST=${JMX_RMI_HOST:-'0.0.0.0'}
-DB_HOST=${DB_HOST:-'postgresql'}
-DB_PORT=${DB_PORT:-'5432'}
-DB_NAME=${DB_NAME:-'alfresco'}
+export JAVA_XMS=${JAVA_XMS:-'2048M'}
+export JAVA_XMX=${JAVA_XMX:-'2048M'}
+export DEBUG=${DEBUG:-'false'}
+export JMX_ENABLED=${JMX_ENABLED:-'false'}
+export JMX_RMI_HOST=${JMX_RMI_HOST:-'0.0.0.0'}
+export DB_HOST=${DB_HOST:-'postgresql'}
+export DB_PORT=${DB_PORT:-'5432'}
+export DB_NAME=${DB_NAME:-'alfresco'}
+export SOLR_SSL=${SOLR_SSL:-'https'}
+export JAVA_OPTS
 
 CONFIG_FILE=${CONFIG_FILE:-${CATALINA_HOME}'/shared/classes/alfresco-global.properties'}
 TOMCAT_CONFIG_FILE=${CATALINA_HOME}'/bin/setenv.sh'
 TOMCAT_SERVER_FILE=${CATALINA_HOME}'/conf/server.xml'
-
-SOLR_SSL=${SOLR_SSL:-'https'}
 
 java -jar /90-init-alfresco.jar "$CONFIG_FILE" "$TOMCAT_CONFIG_FILE"
 
@@ -31,9 +31,6 @@ fi
 
 if [ -n "$CATALINA_HOME" ]
 then
-
-echo "JAVA_OPTS=\"$JAVA_OPTS\"" >$TOMCAT_CONFIG_FILE
-echo "export JAVA_OPTS" >> $TOMCAT_CONFIG_FILE
 
 user="tomcat"
 if [[ $(stat -c %U /opt/alfresco/alf_data) != "$user" ]]

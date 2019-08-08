@@ -7,8 +7,8 @@ public class AlfrescoVersion implements Comparable<AlfrescoVersion> {
     private final String revision;
 
     public static AlfrescoVersion parse(String version) {
-        String[] components = version.split(".", 3);
-        return new AlfrescoVersion(components[0], components[1], components[2]);
+        String[] components = version.split("\\.", 3);
+        return new AlfrescoVersion(components[0], components[1], components.length == 3?components[2]:null);
     }
 
     public AlfrescoVersion(String major, String minor, String revision) {
