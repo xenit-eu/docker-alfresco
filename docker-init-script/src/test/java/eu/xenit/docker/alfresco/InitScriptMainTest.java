@@ -1,7 +1,9 @@
 package eu.xenit.docker.alfresco;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import com.sun.org.apache.bcel.internal.generic.ATHROW;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import org.junit.Test;
@@ -94,15 +97,28 @@ public class InitScriptMainTest {
                 allProperties.putAll((Map) properties);
             }
         }
+
+        Set<String> propertiesToDelete = new HashSet<>();
+        for (Entry<String, String> entry : allProperties.entrySet()) {
+            if (entry.getValue().equals("**delete**")) {
+                propertiesToDelete.add(entry.getKey());
+            }
+        }
+
+        for (String property : propertiesToDelete) {
+            allProperties.remove(property);
+        }
+
         return allProperties;
     }
 
-    private void checkProperties(String testName, Map<String, String> environment) throws IOException {
+    private InitScriptMain checkProperties(String testName, Map<String, String> environment) throws IOException {
         Map<String, String> globalProperties = new HashMap<>();
         InitScriptMain main = new InitScriptMain(environment, globalProperties);
         main.process();
         Map<String, String> expectedProperties = loadProperties(testName);
         mapDifference(expectedProperties, globalProperties);
+        return main;
     }
 
     private void mapDifference(Map<String, String> expected, Map<String, String> actual) {
@@ -124,14 +140,13 @@ public class InitScriptMainTest {
             intersectionKeys.retainAll(expectedKeys);
 
             for (String intersectionKey : intersectionKeys) {
-                if(actual.get(intersectionKey).equals(expected.get(intersectionKey))) {
+                if (actual.get(intersectionKey).equals(expected.get(intersectionKey))) {
                     actual.remove(intersectionKey);
                     expected.remove(intersectionKey);
                 }
             }
 
-            message+="\nBad values: Expected: <"+expected+">, but was: <"+actual+">";
-
+            message += "\nBad values: Expected: <" + expected + ">, but was: <" + actual + ">";
 
             throw new AssertionError(message, e);
         }
@@ -140,7 +155,73 @@ public class InitScriptMainTest {
     @Test
     public void testDefaultSettings() throws IOException {
         Map<String, String> env = getDefaultEnvironment();
-        checkProperties("testDefaultSettings", env);
+        InitScriptMain main = checkProperties("testDefaultSettings", env);
+
+        assertTrue("JAVA_OPTS contains -Xmx", main.getJavaOptions().contains("-Xmx2048M"));
+        assertTrue("JAVA_OPTS contains -Xms", main.getJavaOptions().contains("-Xms2048M"));
+    }
+
+    @Test
+    public void testSetSolr4Explicitly() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        env.put("INDEX", "solr4");
+        checkProperties("testSetSolr4Explicitly", env);
+    }
+
+    @Test
+    public void testSetSolr6Explicitly() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        env.put("INDEX", "solr6");
+        checkProperties("testSetSolr6Explicitly", env);
+    }
+
+    @Test
+    public void testJmxEnabled() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        env.put("JMX_ENABLED", "true");
+        InitScriptMain main = checkProperties("testJmxEnabled", env);
+
+        assertTrue("JAVA_OPTS contains jmxremote settings",
+                main.getJavaOptions().contains("-Dcom.sun.management.jmxremote"));
+    }
+
+    @Test
+    public void testDebugEnabled() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        env.put("DEBUG", "true");
+        InitScriptMain main = checkProperties("testDebugEnabled", env);
+
+        assertTrue("JAVA_OPTS contains debug configuration", main.getJavaOptions()
+                .contains("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000"));
+    }
+
+    @Test
+    public void testInheritsJavaOpts() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        env.put("JAVA_OPTS", "-Djava.opts.test=true");
+        InitScriptMain main = checkProperties("testInheritsJavaOpts", env);
+
+        assertTrue("JAVA_OPTS contains previously set property",
+                main.getJavaOptions().contains("-Djava.opts.test=true"));
+    }
+
+    @Test
+    public void testSetJavaMemory() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        env.put("JAVA_XMS", "1M");
+        env.put("JAVA_XMX", "2M");
+        InitScriptMain main = checkProperties("testSetJavaMemory", env);
+
+        assertTrue("JAVA_OPTS contains custom -Xms value", main.getJavaOptions().contains("-Xms1M"));
+        assertTrue("JAVA_OPTS contains custom -Xmx value", main.getJavaOptions().contains("-Xmx2M"));
+    }
+
+    @Test
+    public void testSetCustomGlobalProperties() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        env.put("GLOBAL_test.global.property", "value");
+        env.put("GLOBAL_test.*.property", "value2");
+        checkProperties("testSetCustomGlobalProperties", env);
     }
 
 }
