@@ -20,27 +20,22 @@ CONFIG_FILE=${CONFIG_FILE:-${CATALINA_HOME}'/shared/classes/alfresco-global.prop
 TOMCAT_CONFIG_FILE=${CATALINA_HOME}'/bin/setenv.sh'
 TOMCAT_SERVER_FILE=${CATALINA_HOME}'/conf/server.xml'
 
-java -jar /90-init-alfresco.jar "$CONFIG_FILE" "$TOMCAT_CONFIG_FILE"
+/opt/java/openjdk/bin/java -jar /90-init-alfresco.jar "$CONFIG_FILE" "$TOMCAT_CONFIG_FILE"
 
-if [[ $SOLR_SSL = none ]] && [[ $ALFRESCO_VERSION != "5.0"* ]] && [[ $ALFRESCO_VERSION != "3"* ]] && [[ $ALFRESCO_VERSION != "4"* ]]
-then
-#remove the SSL connector
-sed -i '/<Connector port="\${TOMCAT_PORT_SSL}" URIEncoding="UTF-8" protocol="org.apache.coyote.http11.Http11Protocol" SSLEnabled="true"/,+5d' $TOMCAT_SERVER_FILE
+if [[ $SOLR_SSL == none ]] && [[ $ALFRESCO_VERSION != "5.0"* ]] && [[ $ALFRESCO_VERSION != "3"* ]] && [[ $ALFRESCO_VERSION != "4"* ]]; then
+  #remove the SSL connector
+  sed -i '/<Connector port="\${TOMCAT_PORT_SSL}" URIEncoding="UTF-8" protocol="org.apache.coyote.http11.Http11Protocol" SSLEnabled="true"/,+5d' $TOMCAT_SERVER_FILE
 fi
 
+if [ -n "$CATALINA_HOME" ]; then
 
-if [ -n "$CATALINA_HOME" ]
-then
-
-user="tomcat"
-if [[ $(stat -c %U /opt/alfresco/alf_data) != "$user" ]]
-  then
-      chown -R $user:$user /opt/alfresco/alf_data
-fi
-if [[ $(stat -c %U "$CATALINA_HOME/temp") != "$user" ]]
-  then
-      chown -R $user:$user "$CATALINA_HOME"/temp
-fi
+  user="tomcat"
+  if [[ $(stat -c %U /opt/alfresco/alf_data) != "$user" ]]; then
+    chown -R $user:$user /opt/alfresco/alf_data
+  fi
+  if [[ $(stat -c %U "$CATALINA_HOME/temp") != "$user" ]]; then
+    chown -R $user:$user "$CATALINA_HOME"/temp
+  fi
 
 fi
 
