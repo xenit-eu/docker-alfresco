@@ -4,6 +4,10 @@ plugins {
 
 sourceCompatibility = 1.7
 
+dependencies {
+    testImplementation 'junit:junit:4.12'
+}
+
 jar {
     manifest {
         attributes(['Main-Class': "eu.xenit.docker.alfresco.InitScriptMain"])

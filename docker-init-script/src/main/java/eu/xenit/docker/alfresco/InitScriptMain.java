@@ -21,8 +21,7 @@ public class InitScriptMain {
         try (InputStream globalPropertiesInputStream = new FileInputStream(globalPropertiesFile)) {
             globalProperties.load(globalPropertiesInputStream);
         }
-        InitScriptMain main = new InitScriptMain(new ThrowingMap<String, String>(System.getenv(), "ENV"),
-                new ThrowingMap<String, String>((Map) globalProperties, "global-properties"));
+        InitScriptMain main = new InitScriptMain(System.getenv(), (Map) globalProperties);
         main.process();
         try (OutputStream globalPropertiesOutputStream = new FileOutputStream(globalPropertiesFile)) {
             globalProperties.store(globalPropertiesOutputStream, null);
@@ -49,11 +48,11 @@ public class InitScriptMain {
     private final List<String> javaOptions = new ArrayList<>();
 
     public InitScriptMain(Map<String, String> environment, Map<String, String> globalProperties) {
-        this.environment = environment;
-        this.globalProperties = globalProperties;
-        alfrescoVersion = AlfrescoVersion.parse(environment.get("ALFRESCO_VERSION"));
-        if (environment.containsKey("JAVA_OPTS")) {
-            javaOptions.add(environment.get("JAVA_OPTS"));
+        this.environment = new ThrowingMap<>(environment, "ENV");
+        this.globalProperties = new ThrowingMap<>(globalProperties, "global-properties");
+        alfrescoVersion = AlfrescoVersion.parse(this.environment.get("ALFRESCO_VERSION"));
+        if (this.environment.containsKey("JAVA_OPTS")) {
+            javaOptions.add(this.environment.get("JAVA_OPTS"));
         }
     }
 
