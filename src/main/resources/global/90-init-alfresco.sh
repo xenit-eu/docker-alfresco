@@ -20,7 +20,7 @@ CONFIG_FILE=${CONFIG_FILE:-${CATALINA_HOME}'/shared/classes/alfresco-global.prop
 TOMCAT_CONFIG_FILE=${CATALINA_HOME}'/bin/setenv.sh'
 TOMCAT_SERVER_FILE=${CATALINA_HOME}'/conf/server.xml'
 
-/opt/java/openjdk/bin/java -jar /90-init-alfresco.jar "$CONFIG_FILE" "$TOMCAT_CONFIG_FILE"
+java -jar /90-init-alfresco.jar "$CONFIG_FILE" "$TOMCAT_CONFIG_FILE"
 
 if [[ $SOLR_SSL == none ]] && [[ $ALFRESCO_VERSION != "5.0"* ]] && [[ $ALFRESCO_VERSION != "3"* ]] && [[ $ALFRESCO_VERSION != "4"* ]]; then
   #remove the SSL connector
