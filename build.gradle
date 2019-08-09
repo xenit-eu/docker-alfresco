@@ -15,6 +15,19 @@ static def calcTags(version) {
 }
 
 subprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
+        }
+    }
+}
+
+subprojects {
+    if (project.name == "docker-init-script") {
+        return
+    }
     configurations {
         sharedLib
         sharedBin
@@ -24,38 +37,22 @@ subprojects {
 
     apply plugin: 'java'
 
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven {
-            url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
-        }
-    }
 
     sourceSets {
         integrationTest {
             java {
-                compileClasspath += main.output + test.output
-                runtimeClasspath += main.output + test.output
                 srcDir file("$project.parent.projectDir/src/integrationTest/java")
-            }
-        }
-        test {
-            java {
-                compileClasspath += main.output
-                runtimeClasspath += main.output
-                srcDir file("$project.parent.projectDir/src/test/java")
             }
         }
     }
 
     dependencies {
-        testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.4.7'
-        testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.1'
-        testCompile group: 'io.rest-assured', name: 'json-path', version: '3.0.1'
-        testCompile group: 'io.rest-assured', name: 'rest-assured-common', version: '3.0.1'
-        testCompile group: 'junit', name: 'junit', version: '4.11'
-        testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+        integrationTestImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.7'
+        integrationTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.0.1'
+        integrationTestImplementation group: 'io.rest-assured', name: 'json-path', version: '3.0.1'
+        integrationTestImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: '3.0.1'
+        integrationTestImplementation group: 'junit', name: 'junit', version: '4.11'
+        integrationTestImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
     }
 
 
@@ -76,7 +73,7 @@ subprojects {
 
         task copyDockerfile(type: Copy) {
             from("$project.parent.projectDir/src/main/resources/dockerfiles/") {
-                if(project.alfresco.version.major.toInteger() < 6) {
+                if (project.alfresco.version.major.toInteger() < 6) {
                     include "Dockerfile-skeleton-pre6"
                     rename "Dockerfile-skeleton-pre6", 'Dockerfile'
                 } else {
@@ -86,9 +83,18 @@ subprojects {
             }
             into workingDir
         }
+        task configureCopyGlobalResources {
+            doFirst {
+                copyGlobalResources.from(project(':docker-init-script').tasks.jar.outputs.files.singleFile) {
+                    rename { "90-init-alfresco.jar" }
+                }
+            }
+            dependsOn(":docker-init-script:jar")
+        }
         task copyGlobalResources(type: Copy) {
             from "$project.parent.projectDir/src/main/resources/global"
             into workingDir
+            dependsOn(configureCopyGlobalResources)
         }
         task copyLocalResources(type: Copy) {
             from "$project.projectDir/local"
@@ -128,16 +134,14 @@ subprojects {
             }
         }
 
-        test.enabled = false
-
         docker {
-            if(System.getenv("DOCKER_USER") != null) {
+            if (System.getenv("DOCKER_USER") != null) {
                 registryCredentials {
                     username = System.getenv("DOCKER_USER")
                     password = System.getenv("DOCKER_PASSWORD")
                 }
             } else {
-                println "using default credentials"
+                logger.info "using default credentials"
             }
         }
 
@@ -165,7 +169,7 @@ subprojects {
             if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
                 changedPortsComposeUp.dependsOn(buildDockerImage)
             else
-                changedPortsComposeUp.enabled=false
+                changedPortsComposeUp.enabled = false
 
             // nested configurations do not get the DOCKER_IMAGE
             buildDockerImage {
@@ -239,20 +243,18 @@ subprojects {
             }
         }
 
-        test {
-            workingDir = project.parent.projectDir
-        }
-
         task integrationTests(type: Test, group: "verification") {
             workingDir = project.parent.projectDir
             dependsOn integrationTestDefault
             dependsOn integrationTestChangedPorts
         }
 
+        check.dependsOn(integrationTests)
+
         dockerCompose.dependsOn(buildDockerImage)
 
         docker {
-            if(System.getenv("DOCKER_USER") != null) {
+            if (System.getenv("DOCKER_USER") != null) {
                 registryCredentials {
                     username = System.getenv("DOCKER_USER")
                     password = System.getenv("DOCKER_PASSWORD")
@@ -273,7 +275,7 @@ subprojects {
 
                 def composeDir = "${project.parent.projectDir}/src/integrationTest/resources";
 
-                if(project.alfresco.version.major.toInteger() < 6) {
+                if (project.alfresco.version.major.toInteger() < 6) {
                     useComposeFiles = ["$composeDir/docker-compose-alfresco.yml", "$composeDir/docker-compose-share.yml",
                                        "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml"];
 

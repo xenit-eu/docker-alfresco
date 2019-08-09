@@ -17,6 +17,8 @@ include 'services:webservice'
 
 rootProject.name = 'docker-alfresco'
 
+include 'docker-init-script'
+
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("4")) {
     include '4.2/skeleton'
     include '4.2/community-4.2.f'
