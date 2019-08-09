@@ -57,17 +57,7 @@ public class InitScriptMain {
     }
 
     private void setGlobalOptionFromEnvironment(String option, String environmentVariable, String defaultValue) {
-        String value = defaultValue;
-        if (environment.containsKey(environmentVariable)) {
-            value = environment.get(environmentVariable);
-        }
-        globalProperties.put(option, value);
-    }
-
-    private void setGlobalOptionFromEnvironment(String option, String environmentVariable) {
-        if (environment.containsKey(environmentVariable)) {
-            globalProperties.put(option, environment.get(environmentVariable));
-        }
+        globalProperties.put(option, environment.containsKey(environmentVariable)?environment.get(environmentVariable):defaultValue);
     }
 
     public void process() {
@@ -86,9 +76,9 @@ public class InitScriptMain {
 
         // Database configuration
         setGlobalOptionFromEnvironment("db.driver", "DB_DRIVER", "org.postgresql.Driver");
-        setGlobalOptionFromEnvironment("db.host", "DB_HOST");
-        setGlobalOptionFromEnvironment("db.port", "DB_PORT");
-        setGlobalOptionFromEnvironment("db.name", "DB_NAME");
+        setGlobalOptionFromEnvironment("db.host", "DB_HOST", "postgresql");
+        setGlobalOptionFromEnvironment("db.port", "DB_PORT", "5432");
+        setGlobalOptionFromEnvironment("db.name", "DB_NAME", "alfresco");
         setGlobalOptionFromEnvironment("db.username", "DB_USERNAME", "alfresco");
         setGlobalOptionFromEnvironment("db.password", "DB_PASSWORD", "admin");
         setGlobalOptionFromEnvironment("db.url", "DB_URL",
