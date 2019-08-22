@@ -104,6 +104,14 @@ RUN	chmod u+x /docker-entrypoint.d/90-init-alfresco.sh && \
  	chown -hR tomcat /opt/alfresco && \
 	chown -hR tomcat ${CATALINA_HOME} 
 
+
+# TO BE DEPRECATED: add share resources, to easily allow addition of a share war in derived images
+COPY	share-config-custom.xml /docker-config/
+COPY    91-init-share-customized.sh /docker-entrypoint.d/
+RUN	chmod u+x /docker-entrypoint.d/91-init-share-customized.sh && \
+    mkdir -p "${CATALINA_HOME}/shared/classes/alfresco/web-extension/" && \
+    chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
+
 # named volumes
 VOLUME 	/opt/alfresco/alf_data ${CATALINA_HOME}/temp ${CATALINA_HOME}/logs
 
