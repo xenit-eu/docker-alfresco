@@ -60,3 +60,8 @@ if(hasProperty("enterprise")) {
     includeSubprojectPerVersion("5.","enterprise")
     includeSubprojectPerVersion("6.","enterprise")
 }
+
+if (hasProperty("legacy")) {
+//    include 'legacy'
+    include 'legacy:5.2:enterprise-5.2.5'
+}

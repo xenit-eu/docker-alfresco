@@ -28,6 +28,14 @@ subprojects {
     if (project.name == "docker-init-script") {
         return
     }
+
+
+    if (project.path.startsWith(':legacy')) {
+        return
+    }
+
+    println "root build.gradle: configuring ${project.name}"
+
     configurations {
         sharedLib
         sharedBin
