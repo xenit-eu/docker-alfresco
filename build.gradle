@@ -70,7 +70,7 @@ subprojects {
 
     if ("${project.alfresco.flavor}" == "skeleton") {
         def workingDir = "$project.buildDir/dockerbuild"
-
+        
         task copyDockerfile(type: Copy) {
             from("$project.parent.projectDir/src/main/resources/dockerfiles/") {
                 if (project.alfresco.version.major.toInteger() < 6) {
@@ -141,14 +141,14 @@ subprojects {
                     password = System.getenv("DOCKER_PASSWORD")
                 }
             } else {
-                logger.info "using default credentials"
+                logger.debug "using default credentials"
             }
         }
 
         composeDown.enabled = false
     } else if ("${project.alfresco.flavor}" == "enterprise" || ("${project.alfresco.flavor}" == "community")) {
 
-        def skeleton = ":${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}" + "/skeleton"
+        def skeleton = ":${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}" + "-skeleton"
         def path = "${skeleton}:buildDockerImage"
 
         dockerAlfresco {
@@ -260,7 +260,7 @@ subprojects {
                     password = System.getenv("DOCKER_PASSWORD")
                 }
             } else {
-                println "using default credentials"
+                logger.debug "using default credentials"
             }
         }
 
