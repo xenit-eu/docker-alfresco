@@ -21,7 +21,7 @@ ADD swftools_0.9.0-0ubuntu2_amd64.deb /tmp
 RUN	mkdir -p /opt/alfresco && \
     cd /opt/alfresco && \
 	apt-get update && \
-	apt-get install -y curl unzip vim locate xmlstarlet jq && \
+	apt-get install -y curl unzip vim locate xmlstarlet jq gettext-base && \
 
 	apt-get install -y ghostscript imagemagick && \
 	apt-get install -y libice6 libsm6 libxt6 libxrender1 libxinerama1 libfontconfig1 libcups2 libdbus-glib-1-2 libglu1 libreoffice && \
