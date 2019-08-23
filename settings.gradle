@@ -15,41 +15,48 @@ include 'api'
 include 'services:webservice'
 */
 
+def includeSubprojectPerVersion(major,flavor) {
+    rootProject.projectDir
+            .listFiles({ File version -> version.name.startsWith(major)
+            } as FileFilter)
+
+            .collectMany ({ File community ->
+                community.listFiles({ File file -> file.name.contains(flavor)
+                } as FileFilter).toList()
+            })
+
+            .each { File projectFile ->
+                def version = projectFile.parentFile.name
+                def revision = projectFile.name
+                def projectName = "${version}-${revision}"
+                def skeleton = "${version}-skeleton"
+
+                include skeleton
+                project(":${skeleton}").projectDir = file("${version}/skeleton")
+                include projectName
+                project(":${projectName}").projectDir = file("${version}/${revision}")
+            }
+}
+
 rootProject.name = 'docker-alfresco'
 
 include 'docker-init-script'
 
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("4")) {
-    include '4.2/skeleton'
-    include '4.2/community-4.2.f'
+    includeSubprojectPerVersion("4.","community")
 }
 
+
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("5")) {
-    include '5.0/skeleton'
-    include '5.0/community-5.0.d'
-
-    include '5.1/skeleton'
-    include '5.1/community-5.1.e'
-
-    include '5.2/skeleton'
-    include '5.2/community-5.2.g'
+    includeSubprojectPerVersion("5.","community")
 }
 
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("6")) {
-    include '6.0/skeleton'
-    include '6.0/community-6.0.7-ga'
-
-    include '6.1/skeleton'
-    include '6.1/community-6.1.2-ga'
+    includeSubprojectPerVersion("6.","community")
 }
 
 if(hasProperty("enterprise")) {
-    include '4.2/enterprise-4.2.8'
-    include '5.0/enterprise-5.0.4'
-    include '5.1/enterprise-5.1.4'
-    include '5.1/enterprise-5.1.5'
-    include '5.2/enterprise-5.2.4'
-    include '5.2/enterprise-5.2.5'
-    include '6.0/enterprise-6.0.1'
-    include '6.1/enterprise-6.1.0'
+    includeSubprojectPerVersion("4.","enterprise")
+    includeSubprojectPerVersion("5.","enterprise")
+    includeSubprojectPerVersion("6.","enterprise")
 }
