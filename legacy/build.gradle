@@ -1,7 +1,5 @@
 
 subprojects {
-    println "subprojects -- configuring ${project.path} dir ${project.projectDir}"
-
     configurations {
         sharedLib
         sharedBin

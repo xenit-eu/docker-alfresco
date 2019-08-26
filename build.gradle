@@ -25,16 +25,9 @@ subprojects {
 }
 
 subprojects {
-    if (project.name == "docker-init-script") {
+    if (project.name == "docker-init-script" || project.path.startsWith(':legacy')) {
         return
     }
-
-
-    if (project.path.startsWith(':legacy')) {
-        return
-    }
-
-    println "root build.gradle: configuring ${project.name}"
 
     configurations {
         sharedLib
@@ -138,7 +131,7 @@ subprojects {
                 buildArgs << project.extraBuildArgs
 
             doFirst {
-                println buildArgs
+                logger.info buildArgs
             }
         }
 
