@@ -2,6 +2,11 @@
 subprojects {
     println "subprojects -- configuring ${project.path} dir ${project.projectDir}"
 
+    configurations {
+        sharedLib
+        sharedBin
+    }
+
     apply plugin: 'eu.xenit.docker-alfresco'
 
     if (new File("${project.projectDir}/../overload.gradle").exists())
@@ -9,10 +14,10 @@ subprojects {
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
-     task copyLocalResources(type: Copy) {
-         from "$project.projectDir/../local"
-         into "${project.buildDir}/docker"
-     }
+    task copyLocalResources(type: Copy) {
+        from "$project.projectDir/../local"
+        into "${project.buildDir}/docker"
+    }
 
     task processDockerResources(type: Copy) {
         from "${project.parent.projectDir}/src/main/resources/"
@@ -24,6 +29,35 @@ subprojects {
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
     buildDockerImage.dependsOn(parentImage, processDockerResources)
+
+    afterEvaluate {
+        createDockerFile {
+            inputs.files configurations.sharedLib
+            inputs.files configurations.sharedBin
+
+            doFirst {
+                project.delete(file("${destFile.parent}/shared"))
+                copy {
+                    from configurations.sharedLib
+                    into destFile.parent + "/shared/lib"
+                }
+
+                if (!configurations.sharedBin.isEmpty()) {
+                    copy {
+                        from tarTree(resources.gzip(configurations.sharedBin.singleFile))
+                        into destFile.parent + "/shared/bin"
+                    }
+                }
+            }
+
+            if (!configurations.sharedLib.isEmpty()) {
+                copyFile './shared/lib/*.jar', '${CATALINA_HOME}/shared/lib/'
+            }
+            if (!configurations.sharedBin.isEmpty()) {
+                copyFile './shared/bin/*', '/opt/alfresco'
+            }
+        }
+    }
 
     dockerAlfresco {
         baseImage = { parentImage.getImageId() }
