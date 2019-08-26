@@ -129,10 +129,6 @@ subprojects {
 
             if (project.hasProperty('extraBuildArgs'))
                 buildArgs << project.extraBuildArgs
-
-            doFirst {
-                logger.info buildArgs
-            }
         }
 
         docker {
