@@ -1,5 +1,5 @@
 ext {
-    share = [
+    alfresco = [
             version: [
                     major: 5,
                     minor: 1,

@@ -35,6 +35,10 @@ subprojects {
             inputs.files configurations.sharedLib
             inputs.files configurations.sharedBin
 
+            environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
+            environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
+
+
             doFirst {
                 project.delete(file("${destFile.parent}/shared"))
                 copy {
