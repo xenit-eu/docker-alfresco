@@ -9,10 +9,15 @@ subprojects {
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
+     task copyLocalResources(type: Copy) {
+         from "$project.projectDir/../local"
+         into "${project.buildDir}/docker"
+     }
+
     task processDockerResources(type: Copy) {
         from "${project.parent.projectDir}/src/main/resources/"
         into "${project.buildDir}/docker"
-        //dependsOn(configureCopyGlobalResources)
+        dependsOn(copyLocalResources)
     }
 
     def parentProject = project(":${project.projectDir.parentFile.name}-${project.projectDir.name}")
