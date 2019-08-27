@@ -60,3 +60,12 @@ if(hasProperty("enterprise")) {
     includeSubprojectPerVersion("5.","enterprise")
     includeSubprojectPerVersion("6.","enterprise")
 }
+
+if (hasProperty("legacy") && hasProperty("enterprise")) {
+    include 'legacy:5.2-enterprise-5.2.5'
+    project(":legacy:5.2-enterprise-5.2.5").projectDir = file("legacy/5.2/enterprise-5.2.5")
+    include 'legacy:5.1-enterprise-5.1.5'
+    project(":legacy:5.1-enterprise-5.1.5").projectDir = file("legacy/5.1/enterprise-5.1.5")
+    include 'legacy:6.1-enterprise-6.1.0'
+    project(":legacy:6.1-enterprise-6.1.0").projectDir = file("legacy/6.1/enterprise-6.1.0")
+}

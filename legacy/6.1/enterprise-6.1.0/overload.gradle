@@ -1,0 +1,15 @@
+ext {
+    alfresco = [
+            version: [
+                    major: 6,
+                    minor: 1,
+                    rev: 0
+            ],
+            flavor: 'enterprise'
+    ]
+}
+
+dependencies {
+    baseShareWar 'org.alfresco:share:6.1.0@war'
+    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
+}

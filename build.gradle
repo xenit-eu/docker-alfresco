@@ -25,9 +25,10 @@ subprojects {
 }
 
 subprojects {
-    if (project.name == "docker-init-script") {
+    if (project.name == "docker-init-script" || project.path.startsWith(':legacy')) {
         return
     }
+
     configurations {
         sharedLib
         sharedBin
@@ -128,10 +129,6 @@ subprojects {
 
             if (project.hasProperty('extraBuildArgs'))
                 buildArgs << project.extraBuildArgs
-
-            doFirst {
-                println buildArgs
-            }
         }
 
         docker {
