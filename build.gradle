@@ -113,7 +113,9 @@ subprojects {
                     ext.repoName = "hub.xenit.eu"
                 }
 		def namespace = (project.alfresco.flavor == "enterprise" ? "alfresco-enterprise" : "public");
-                repository = "${repoName}" + "/" + namespace + "/" + "alfresco-repository-${project.alfresco.flavor}"
+		repository = ((repoName == "hub.xenit.eu") ?
+			      "${repoName}" + "/" + namespace + "/" + "alfresco-repository-${project.alfresco.flavor}" :
+			      "${repoName}" + "/" + "alfresco-repository-${project.alfresco.flavor}")
                 tags = calcTags(project.alfresco.version)
                 automaticTags = false
             }
@@ -156,7 +158,9 @@ subprojects {
                     ext.repoName = "hub.xenit.eu"
                 }
 		def namespace = (project.alfresco.flavor == "enterprise" ? "alfresco-enterprise" : "public");
-                repository = "${repoName}" + "/" + namespace + "/" + "alfresco-repository-${project.alfresco.flavor}"		
+		repository = ((repoName == "hub.xenit.eu") ?
+			      "${repoName}" + "/" + namespace + "/" + "alfresco-repository-${project.alfresco.flavor}" :
+			      "${repoName}" + "/" + "alfresco-repository-${project.alfresco.flavor}")
                 tags = calcTags(project.alfresco.version)
                 automaticTags = false
             }
