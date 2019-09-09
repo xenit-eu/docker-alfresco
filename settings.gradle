@@ -20,8 +20,8 @@ def includeSubprojectPerVersion(major,flavor) {
             .listFiles({ File version -> version.name.startsWith(major)
             } as FileFilter)
 
-            .collectMany ({ File community ->
-                community.listFiles({ File file -> file.name.contains(flavor)
+            .collectMany ({ File versionflavor ->
+                versionflavor.listFiles({ File file -> file.name.contains(flavor)
                 } as FileFilter).toList()
             })
 
