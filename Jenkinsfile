@@ -81,18 +81,18 @@ pipeline {
 		    }
 		}
 	    }
-		
-	    stage("Publish Docker Image") {
-		when {
-		    anyOf {
-			branch 'master'
-			branch 'release*'
-		    }
+	}
+	
+	stage("Publish Docker Image") {
+	    when {
+		anyOf {
+		    branch 'master'
+		    branch 'release*'
 		}
-		steps {
-		    sh "./gradlew -Penterprise -Plegacy pushDockerImage"
-		}
-            }
+	    }
+	    steps {
+		sh "./gradlew -Penterprise -Plegacy pushDockerImage"
+	    }
 	}
     }
 }
