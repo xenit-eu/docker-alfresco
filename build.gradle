@@ -2,6 +2,8 @@ plugins {
     id "eu.xenit.docker-alfresco" version "4.0.3" apply false
 }
 
+import com.avast.gradle.dockercompose.tasks.ComposeDown
+
 static def calcTags(version) {
     def tags = [
             "${version.major}.${version.minor}.${version.rev}".toString(),
@@ -302,6 +304,9 @@ subprojects {
                 }
             }
         }
+	task composeDownAll {
+            dependsOn project.tasks.withType(ComposeDown)
+	}
     }
 }
 

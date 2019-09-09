@@ -19,7 +19,7 @@ pipeline {
             }
             post {
                 always {
-                    sh "./gradlew -Penterprise composeDown"
+                    sh "./gradlew -Penterprise composeDownAll"
                 }
             }
         }
