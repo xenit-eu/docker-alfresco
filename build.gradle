@@ -256,8 +256,6 @@ subprojects {
 
         check.dependsOn(integrationTests)
 
-        dockerCompose.dependsOn(buildDockerImage)
-
         docker {
             if (System.getenv("DOCKER_USER") != null) {
                 registryCredentials {
@@ -289,8 +287,6 @@ subprojects {
                                        "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml", "$composeDir/docker-compose-transformers.yml"];
                 }
 
-                finalizedBy(composeDown)
-
                 changedPorts {
                     isRequiredBy(project.tasks.integrationTestChangedPorts)
 
@@ -304,6 +300,7 @@ subprojects {
                 }
             }
         }
+
 	task composeDownAll {
             dependsOn project.tasks.withType(ComposeDown)
 	}
