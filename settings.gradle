@@ -9,53 +9,38 @@
  */
 
 def includeSubprojectPerVersion(major,flavor,includeLegacy) {
-    new File("$rootProject.projectDir/skeleton")
-        .listFiles({ File version -> version.name.startsWith(major)
-    } as FileFilter)
-        .each { File skeletonFile ->
-        def version = skeletonFile.name
-        def projectName = "skeleton:${version}"
 
-	println "Including $projectName"
-        include projectName
-        project(":${projectName}").projectDir = file("skeleton/${version}")
-    }
-    
-    new File("$rootProject.projectDir/repository")
-        .listFiles({ File version -> version.name.startsWith(major)
-    } as FileFilter)
-	.collectMany ({ File versionFlavor ->
-        versionFlavor.listFiles({ File file -> file.name.contains(flavor)
-        } as FileFilter).toList()
-    })
-        .each { File repositoryFile ->
-        def version = repositoryFile.parentFile.name
-	def revision = repositoryFile.name
-        def projectName = "repository:${revision}"
+    new File("$rootProject.projectDir/2repository")
 
-	println "Including $projectName"
-        include projectName
-        project(":${projectName}").projectDir = file("repository/${version}/${revision}")
-    }
-
-    if(includeLegacy) {
-	new File("$rootProject.projectDir/xlegacy")
             .listFiles({ File version -> version.name.startsWith(major)
-	} as FileFilter)
-	    .collectMany ({ File versionFlavor ->
-            versionFlavor.listFiles({ File file -> file.name.contains(flavor)
-            } as FileFilter).toList()
-	})
-            .each { File legacyFile ->
-            def version = legacyFile.parentFile.name
-	    def revision = legacyFile.name
-            def projectName = "xlegacy:${revision}"
-	    
-	    println "Including $projectName"
-            include projectName
-            project(":${projectName}").projectDir = file("xlegacy/${version}/${revision}")
-	}	
-    }
+            } as FileFilter)
+
+            .collectMany({ File versionFlavor ->
+                versionFlavor.listFiles({ File file -> file.name.contains(flavor)
+                } as FileFilter).toList()
+            })
+
+            .each { File repositoryFile ->
+                def version = repositoryFile.parentFile.name
+                def revision = repositoryFile.name
+                def projectSkeleton = "1skeleton:${version}"
+                def projectRepository = "2repository:${revision}"
+                def projectLegacy = "3legacy:${revision}"
+
+//                println "Including $projectSkeleton"
+                include projectSkeleton
+                project(":${projectSkeleton}").projectDir = file("1skeleton/${version}")
+
+//                println "Including $projectRepository"
+                include projectRepository
+                project(":${projectRepository}").projectDir = file("2repository/${version}/${revision}")
+
+                if (includeLegacy && new File("3legacy/${version}/${revision}").exists()) {
+//                    println "Including $projectLegacy"
+                    include projectLegacy
+                    project(":${projectLegacy}").projectDir = file("3legacy/${version}/${revision}")
+                }
+            }
 }
 
 rootProject.name = 'docker-alfresco'
