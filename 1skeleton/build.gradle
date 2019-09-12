@@ -2,85 +2,85 @@ subprojects {
     apply plugin: 'eu.xenit.docker'
 
     if (new File("${project.projectDir}/overload.gradle").exists())
-	apply from: "${project.projectDir}/overload.gradle"
-    
+        apply from: "${project.projectDir}/overload.gradle"
+
     def workingDir = "$project.buildDir/dockerbuild"
-    
+
     task copyDockerfile(type: Copy) {
-	from("$rootProject.projectDir/src/main/resources/dockerfiles/") {
+        from("$rootProject.projectDir/src/main/resources/dockerfiles/") {
             if (project.alfresco.version.major.toInteger() < 6) {
-		include "Dockerfile-skeleton-pre6"
-		rename "Dockerfile-skeleton-pre6", 'Dockerfile'
+                include "Dockerfile-skeleton-pre6"
+                rename "Dockerfile-skeleton-pre6", 'Dockerfile'
             } else {
-		include "Dockerfile-skeleton"
-		rename "Dockerfile-skeleton", 'Dockerfile'
+                include "Dockerfile-skeleton"
+                rename "Dockerfile-skeleton", 'Dockerfile'
             }
-	}
-	into workingDir
+        }
+        into workingDir
     }
 
     task configureCopyGlobalResources {
-	doFirst {
+        doFirst {
             copyGlobalResources.from(project(':docker-init-script').tasks.jar.outputs.files.singleFile) {
-		rename { "90-init-alfresco.jar" }
+                rename { "90-init-alfresco.jar" }
             }
-	}
-	dependsOn(":docker-init-script:jar")
+        }
+        dependsOn(":docker-init-script:jar")
     }
 
     task copyGlobalResources(type: Copy) {
-	from "$rootProject.projectDir/src/main/resources/global"
-	into workingDir
-	dependsOn(configureCopyGlobalResources)
+        from "$rootProject.projectDir/src/main/resources/global"
+        into workingDir
+        dependsOn(configureCopyGlobalResources)
     }
 
     task copyLocalResources(type: Copy) {
-	from "$project.projectDir/local"
-	into workingDir
+        from "$project.projectDir/local"
+        into workingDir
     }
-    
+
     buildDockerImage.dependsOn(copyDockerfile)
     buildDockerImage.dependsOn(copyGlobalResources)
     buildDockerImage.dependsOn(copyLocalResources)
-    
+
     dockerFile {
-	dockerFile = file("$workingDir/Dockerfile")
-	dockerBuild {
+        dockerFile = file("$workingDir/Dockerfile")
+        dockerBuild {
             if (!(project.hasProperty("repoName"))) {
-		ext.repoName = "hub.xenit.eu"
+                ext.repoName = "hub.xenit.eu"
             }
-	    def namespace = (project.alfresco.flavor == "enterprise" ? "alfresco-enterprise" : "public");
-	    repository = ((repoName == "hub.xenit.eu") ?
-			  "${repoName}" + "/" + namespace + "/" + "alfresco-repository-${project.alfresco.flavor}" :
-			  "${repoName}" + "/" + "alfresco-repository-${project.alfresco.flavor}")
+            def namespace = (project.alfresco.flavor == "enterprise" ? "alfresco-enterprise" : "public");
+            repository = ((repoName == "hub.xenit.eu") ?
+                    "${repoName}" + "/" + namespace + "/" + "alfresco-repository-${project.alfresco.flavor}" :
+                    "${repoName}" + "/" + "alfresco-repository-${project.alfresco.flavor}")
             tags = calcTags(project.alfresco.version)
             automaticTags = false
-	}
+        }
     }
-    
+
     buildDockerImage {
-	buildArgs = [
-            'ALFRESCO_VERSION_MAJOR': "${project.alfresco.version.major}",
-            'ALFRESCO_VERSION_MINOR': "${project.alfresco.version.minor}",
-            'ALFRESCO_VERSION_REV'  : "${project.alfresco.version.rev}",
-            'ALFRESCO_FLAVOR'       : "${project.alfresco.flavor}",
-            'BASE_IMAGE'            : "xeniteu/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
-	]
-	
-	if (project.hasProperty('extraBuildArgs'))
+        buildArgs = [
+                'ALFRESCO_VERSION_MAJOR': "${project.alfresco.version.major}",
+                'ALFRESCO_VERSION_MINOR': "${project.alfresco.version.minor}",
+                'ALFRESCO_VERSION_REV'  : "${project.alfresco.version.rev}",
+                'ALFRESCO_FLAVOR'       : "${project.alfresco.flavor}",
+                'BASE_IMAGE'            : "xeniteu/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
+        ]
+
+        if (project.hasProperty('extraBuildArgs'))
             buildArgs << project.extraBuildArgs
     }
-    
+
     docker {
-	if (System.getenv("DOCKER_USER") != null) {
+        if (System.getenv("DOCKER_USER") != null) {
             registryCredentials {
-		username = System.getenv("DOCKER_USER")
-		password = System.getenv("DOCKER_PASSWORD")
+                username = System.getenv("DOCKER_USER")
+                password = System.getenv("DOCKER_PASSWORD")
             }
-	} else {
+        } else {
             logger.debug "using default credentials"
-	}
+        }
     }
-    
+
     composeDown.enabled = false
 }
