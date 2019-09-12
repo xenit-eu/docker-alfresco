@@ -31,14 +31,12 @@ subprojects {
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
-    def skeleton = ":skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}"
-    def path = "${skeleton}:buildDockerImage"
-/*    def parentProject = project(":skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}")
-    def parentImage = parentProject.getTasks().getByName('buildDockerImage')*/
+    def parentProject = project(":1skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}")
+    def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
 
     dockerAlfresco {
-        baseImage = { project(skeleton).getTasks().getByName('buildDockerImage').getImageId() }
+        baseImage = { parentImage.getImageId() }
         dockerBuild {
             if (!(project.hasProperty("repoName"))) {
                 ext.repoName = "hub.xenit.eu"
@@ -53,8 +51,7 @@ subprojects {
     }
 
     afterEvaluate {
-        //createDockerFile.dependsOn(parentImage)
-        createDockerFile.dependsOn(path)
+        createDockerFile.dependsOn(parentImage)
 
         if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
             changedPortsComposeUp.dependsOn(buildDockerImage)
