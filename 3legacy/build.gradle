@@ -22,7 +22,7 @@ subprojects {
         dependsOn(copyLocalResources)
     }
 
-    def parentProject = project(":repository:${project.projectDir.name}")
+    def parentProject = project(":1repository:${project.projectDir.name}")
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
     buildDockerImage.dependsOn(parentImage, processDockerResources)
