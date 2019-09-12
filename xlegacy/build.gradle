@@ -1,4 +1,3 @@
-
 subprojects {
     configurations {
         sharedLib
@@ -23,7 +22,7 @@ subprojects {
         dependsOn(copyLocalResources)
     }
 
-    def parentProject = project(":${project.projectDir.parentFile.name}-${project.projectDir.name}")
+    def parentProject = project(":repository:${project.projectDir.name}")
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
     buildDockerImage.dependsOn(parentImage, processDockerResources)

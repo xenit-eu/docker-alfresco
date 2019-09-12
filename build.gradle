@@ -2,8 +2,6 @@ plugins {
     id "eu.xenit.docker-alfresco" version "4.0.3" apply false
 }
 
-import com.avast.gradle.dockercompose.tasks.ComposeDown
-
 static def calcTags(version) {
     def tags = [
             "${version.major}.${version.minor}.${version.rev}".toString(),
@@ -26,42 +24,4 @@ subprojects {
             url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
         }
     }
-
-    configurations {
-        sharedLib
-        sharedBin
-        integrationTestCompile.extendsFrom testCompile
-        integrationTestRuntime.extendsFrom testRuntime
-    }
-
-    sourceSets {
-        integrationTest {
-            java {
-                srcDir file("$project.parent.projectDir/src/integrationTest/java")
-            }
-        }
-    }
-
-    dependencies {
-        integrationTestImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.7'
-        integrationTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.0.1'
-        integrationTestImplementation group: 'io.rest-assured', name: 'json-path', version: '3.0.1'
-        integrationTestImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: '3.0.1'
-        integrationTestImplementation group: 'junit', name: 'junit', version: '4.11'
-        integrationTestImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
-    }
-
-    task composeDownAll {
-	dependsOn project.tasks.withType(ComposeDown)
-    }
-
-    if (project.name == "docker-init-script" || project.path.startsWith(':legacy')) {
-        return
-    }
-    if ("${project.projectDir}".contains('skeleton')) {
-        apply from: "${rootProject.projectDir}/build-skeleton.gradle"
-    } else if ("${project.projectDir}".contains('enterprise') || "${project.projectDir}".contains('community')) {
-        apply from: "${rootProject.projectDir}/build-alfresco.gradle"      
-    }
 }
-

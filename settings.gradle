@@ -8,34 +8,54 @@
  * in the user guide at https://docs.gradle.org/4.0/userguide/multi_project_builds.html
  */
 
-/*
-// To declare projects as part of a multi-project build use the 'include' method
-include 'shared'
-include 'api'
-include 'services:webservice'
-*/
+def includeSubprojectPerVersion(major,flavor,includeLegacy) {
+    new File("$rootProject.projectDir/skeleton")
+        .listFiles({ File version -> version.name.startsWith(major)
+    } as FileFilter)
+        .each { File skeletonFile ->
+        def version = skeletonFile.name
+        def projectName = "skeleton:${version}"
 
-def includeSubprojectPerVersion(major,flavor) {
-    rootProject.projectDir
+	println "Including $projectName"
+        include projectName
+        project(":${projectName}").projectDir = file("skeleton/${version}")
+    }
+    
+    new File("$rootProject.projectDir/repository")
+        .listFiles({ File version -> version.name.startsWith(major)
+    } as FileFilter)
+	.collectMany ({ File versionFlavor ->
+        versionFlavor.listFiles({ File file -> file.name.contains(flavor)
+        } as FileFilter).toList()
+    })
+        .each { File repositoryFile ->
+        def version = repositoryFile.parentFile.name
+	def revision = repositoryFile.name
+        def projectName = "repository:${revision}"
+
+	println "Including $projectName"
+        include projectName
+        project(":${projectName}").projectDir = file("repository/${version}/${revision}")
+    }
+
+    if(includeLegacy) {
+	new File("$rootProject.projectDir/xlegacy")
             .listFiles({ File version -> version.name.startsWith(major)
-            } as FileFilter)
-
-            .collectMany ({ File community ->
-                community.listFiles({ File file -> file.name.contains(flavor)
-                } as FileFilter).toList()
-            })
-
-            .each { File projectFile ->
-                def version = projectFile.parentFile.name
-                def revision = projectFile.name
-                def projectName = "${version}-${revision}"
-                def skeleton = "${version}-skeleton"
-
-                include skeleton
-                project(":${skeleton}").projectDir = file("${version}/skeleton")
-                include projectName
-                project(":${projectName}").projectDir = file("${version}/${revision}")
-            }
+	} as FileFilter)
+	    .collectMany ({ File versionFlavor ->
+            versionFlavor.listFiles({ File file -> file.name.contains(flavor)
+            } as FileFilter).toList()
+	})
+            .each { File legacyFile ->
+            def version = legacyFile.parentFile.name
+	    def revision = legacyFile.name
+            def projectName = "xlegacy:${revision}"
+	    
+	    println "Including $projectName"
+            include projectName
+            project(":${projectName}").projectDir = file("xlegacy/${version}/${revision}")
+	}	
+    }
 }
 
 rootProject.name = 'docker-alfresco'
@@ -43,29 +63,20 @@ rootProject.name = 'docker-alfresco'
 include 'docker-init-script'
 
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("4")) {
-    includeSubprojectPerVersion("4.","community")
+    includeSubprojectPerVersion("4.","community",hasProperty("legacy"))
 }
 
 
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("5")) {
-    includeSubprojectPerVersion("5.","community")
+    includeSubprojectPerVersion("5.","community",hasProperty("legacy"))
 }
 
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("6")) {
-    includeSubprojectPerVersion("6.","community")
+    includeSubprojectPerVersion("6.","community",hasProperty("legacy"))
 }
 
 if(hasProperty("enterprise")) {
-    includeSubprojectPerVersion("4.","enterprise")
-    includeSubprojectPerVersion("5.","enterprise")
-    includeSubprojectPerVersion("6.","enterprise")
-}
-
-if (hasProperty("legacy") && hasProperty("enterprise")) {
-    include 'legacy:5.2-enterprise-5.2.5'
-    project(":legacy:5.2-enterprise-5.2.5").projectDir = file("legacy/5.2/enterprise-5.2.5")
-    include 'legacy:5.1-enterprise-5.1.5'
-    project(":legacy:5.1-enterprise-5.1.5").projectDir = file("legacy/5.1/enterprise-5.1.5")
-    include 'legacy:6.1-enterprise-6.1.0'
-    project(":legacy:6.1-enterprise-6.1.0").projectDir = file("legacy/6.1/enterprise-6.1.0")
+    includeSubprojectPerVersion("4.","enterprise",hasProperty("legacy"))
+    includeSubprojectPerVersion("5.","enterprise",hasProperty("legacy"))
+    includeSubprojectPerVersion("6.","enterprise",hasProperty("legacy"))
 }
