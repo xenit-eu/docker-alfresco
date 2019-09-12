@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Changed
+* [DOCKER-236] Separate out share: see https://github.com/xenit-eu/docker-share
+* [DOCKER-255] Continue to build some legacy images, with both Alfresco and Share inside
+* [DOCKER-253] Move handling of properties to Java code instead of shell in the init
+* [DOCKER-263], [DOCKER-259], [DOCKER-258], [DOCKER-257], [DOCKER-256] Refactorings, better handling of failures, notifications
+
+### Fixed
+* [DOCKER-251] Init script was duplicating JAVA_OPTS_<var> variables
+
 ## [v1.0.0] Make it public
 ### Changed
 * [DOCKER-234] Remove dependency on remote jod converter. Separate Dockerfile, init script and docker-compose files for Alfresco < 6 (with transformation tools included) and Alfresco >= 6 (using external transformations). 
