@@ -8,15 +8,10 @@
  * in the user guide at https://docs.gradle.org/4.0/userguide/multi_project_builds.html
  */
 
-/*
-// To declare projects as part of a multi-project build use the 'include' method
-include 'shared'
-include 'api'
-include 'services:webservice'
-*/
+def includeSubprojectPerVersion(major,flavor,includeLegacy) {
 
-def includeSubprojectPerVersion(major,flavor) {
-    rootProject.projectDir
+    new File("$rootProject.projectDir/2repository")
+
             .listFiles({ File version -> version.name.startsWith(major)
             } as FileFilter)
 
@@ -25,16 +20,28 @@ def includeSubprojectPerVersion(major,flavor) {
                 } as FileFilter).toList()
             })
 
-            .each { File projectFile ->
-                def version = projectFile.parentFile.name
-                def revision = projectFile.name
-                def projectName = "${version}-${revision}"
-                def skeleton = "${version}-skeleton"
+            .each { File repositoryFile ->
+                def version = repositoryFile.parentFile.name
+                def revision = repositoryFile.name
+                def projectSkeleton = "1skeleton:${version}"
+                def projectRepository = "2repository:${revision}"
+                def projectLegacy = "3legacy:${revision}"
 
-                include skeleton
-                project(":${skeleton}").projectDir = file("${version}/skeleton")
-                include projectName
-                project(":${projectName}").projectDir = file("${version}/${revision}")
+                if(flavor.equals("community")) {
+                    println "Including $projectSkeleton"
+                    include projectSkeleton
+                    project(":${projectSkeleton}").projectDir = file("1skeleton/${version}")
+                }
+                
+                println "Including $projectRepository"
+                include projectRepository
+                project(":${projectRepository}").projectDir = file("2repository/${version}/${revision}")
+
+                if (includeLegacy && new File("3legacy/${version}/${revision}").exists()) {
+                    println "Including $projectLegacy"
+                    include projectLegacy
+                    project(":${projectLegacy}").projectDir = file("3legacy/${version}/${revision}")
+                }
             }
 }
 
@@ -43,33 +50,23 @@ rootProject.name = 'docker-alfresco'
 include 'docker-init-script'
 
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("4")) {
-    includeSubprojectPerVersion("4.","community")
+    includeSubprojectPerVersion("4.","community",hasProperty("legacy"))
     if(hasProperty("enterprise")) {
-	includeSubprojectPerVersion("4.","enterprise")
+        includeSubprojectPerVersion("4.","enterprise",hasProperty("legacy"))
     }
 }
 
 
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("5")) {
-    includeSubprojectPerVersion("5.","community")
-    if(hasProperty("enterprise")) {    
-	includeSubprojectPerVersion("5.","enterprise")
-	if (hasProperty("legacy")) {
-	    include 'legacy:5.2-enterprise-5.2.5'
-	    project(":legacy:5.2-enterprise-5.2.5").projectDir = file("legacy/5.2/enterprise-5.2.5")
-	    include 'legacy:5.1-enterprise-5.1.5'
-	    project(":legacy:5.1-enterprise-5.1.5").projectDir = file("legacy/5.1/enterprise-5.1.5")
-	}
+    includeSubprojectPerVersion("5.","community",hasProperty("legacy"))
+    if(hasProperty("enterprise")) {
+        includeSubprojectPerVersion("5.","enterprise",hasProperty("legacy"))
     }
 }
 
 if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("6")) {
-    includeSubprojectPerVersion("6.","community")
-    if(hasProperty("enterprise")) {    
-	includeSubprojectPerVersion("6.","enterprise")
-	if (hasProperty("legacy")) {
-	    include 'legacy:6.1-enterprise-6.1.0'
-	    project(":legacy:6.1-enterprise-6.1.0").projectDir = file("legacy/6.1/enterprise-6.1.0")
-	}
+    includeSubprojectPerVersion("6.","community",hasProperty("legacy"))
+    if(hasProperty("enterprise")) {
+        includeSubprojectPerVersion("6.","enterprise",hasProperty("legacy"))
     }
 }
