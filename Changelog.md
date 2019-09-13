@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+* [DOCKER-266] Added enterprise 5.2.6
+
 ### Changed
 * [DOCKER-236] Separate out share: see https://github.com/xenit-eu/docker-share
 * [DOCKER-255] Continue to build some legacy images, with both Alfresco and Share inside
