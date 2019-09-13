@@ -15,8 +15,8 @@ def includeSubprojectPerVersion(major,flavor,includeLegacy) {
             .listFiles({ File version -> version.name.startsWith(major)
             } as FileFilter)
 
-            .collectMany({ File versionFlavor ->
-                versionFlavor.listFiles({ File file -> file.name.contains(flavor)
+            .collectMany ({ File versionflavor ->
+                versionflavor.listFiles({ File file -> file.name.contains(flavor)
                 } as FileFilter).toList()
             })
 
