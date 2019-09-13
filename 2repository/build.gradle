@@ -34,7 +34,11 @@ subprojects {
     def parentProject = project(":1skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}")
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
-
+    task copyGlobalResources(type: Copy) {
+        from "$rootProject.projectDir/src/main/resources/global"
+        into "$project.buildDir/docker"
+    }
+    
     dockerAlfresco {
         baseImage = { parentImage.getImageId() }
         dockerBuild {
@@ -51,7 +55,7 @@ subprojects {
     }
 
     afterEvaluate {
-        createDockerFile.dependsOn(parentImage)
+        createDockerFile.dependsOn(parentImage,copyGlobalResources)
 
         if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
             changedPortsComposeUp.dependsOn(buildDockerImage)
@@ -73,10 +77,15 @@ subprojects {
 
             environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
             environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
-
+	    def date = new Date().getTime().toString()
+            environmentVariable('BUILD_DATE', date.substring(0,date.length()-3))  // do not consider milliseconds
+	    
             doFirst {
+		copyFile '89-check-validity.sh','/docker-entrypoint.d/'
+
                 project.delete(file("${destFile.parent}/shared"))
-                copy {
+
+		copy {
                     from configurations.sharedLib
                     into destFile.parent + "/shared/lib"
                 }
