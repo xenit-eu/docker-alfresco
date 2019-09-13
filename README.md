@@ -132,7 +132,7 @@ To build a local version of the _alfresco_ images:
 or for a specific image:
 
 ```
-./gradlew 6.1/enterprise-6.1.0:buildDockerImage
+./gradlew 2repository:enterprise-6.1.0:buildDockerImage
 ```
 
 To run the integration tests:
