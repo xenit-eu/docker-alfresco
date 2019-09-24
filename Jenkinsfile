@@ -39,7 +39,7 @@ pipeline {
 	    }
 	}
 	
-/*	stage("Integration Tests") {
+	stage("Integration Tests") {
 	    parallel {
 		stage('Version 4') {
 		    environment {
@@ -81,7 +81,7 @@ pipeline {
 		    }
 		}
 	    }
-	}*/
+	}
 	
 	stage("Publish Docker Image") {
 	    when {
