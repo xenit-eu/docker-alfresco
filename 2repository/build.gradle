@@ -34,7 +34,6 @@ subprojects {
     def parentProject = project(":1skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}")
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
-
     dockerAlfresco {
         baseImage = { parentImage.getImageId() }
         dockerBuild {
@@ -73,10 +72,13 @@ subprojects {
 
             environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
             environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
-
+	    def date = new Date().getTime().toString()
+            environmentVariable('BUILD_DATE', date.substring(0,date.length()-3))  // do not consider milliseconds
+	    
             doFirst {
                 project.delete(file("${destFile.parent}/shared"))
-                copy {
+
+		copy {
                     from configurations.sharedLib
                     into destFile.parent + "/shared/lib"
                 }
