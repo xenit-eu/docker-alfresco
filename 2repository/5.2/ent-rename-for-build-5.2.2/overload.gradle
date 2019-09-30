@@ -7,7 +7,7 @@ ext {
             ],
             flavor: 'enterprise'
     ]
-    solrimage = 'xeniteu/alfresco-solr6:1.3.0.1'
+    solrimage = 'xenit/alfresco-solr6:1.3.0.1'
     shareimage = 'hub.xenit.eu/alfresco-enterprise/alfresco-share-enterprise:5.2.2'
     tests = true
 }
