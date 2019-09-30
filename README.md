@@ -77,7 +77,7 @@ Environment variables:
 | Variable                    | alfresco-global.property variable | java variable                                                | Default                                                      | Comments |
 | --------------------------- | --------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------- |
 | SOLR_SSL                    | solr.secureComms                  |                                                              | https                                                        | disabling only works for Alfresco>=5.1 |
-| ALFRESCO_HOST               | alfresco.host                     |                                                              | localhost                                                    |  |
+| ALFRESCO_HOST               | alfresco.host                     |                                                              | alfresco                                                    |  |
 | ALFRESCO_PORT               | alfresco.port                     |                                                              | 8080                                                         |  |
 | ALFRESCO_PROTOCOL           | alfresco.protocol                 |                                                              | http                                                         |  |
 | SHARE_HOST                  | share.host                        |                                                              | localhost                                                    |  |

@@ -6,7 +6,6 @@ services:
     image: ${SOLR_IMAGE}
     # tomcat properties used for solr1 + solr4, jetty for solr6
     environment:
-    - ALFRESCO_HOST=alfresco
     - ALFRESCO_PORT=${ALFRESCO_PORT}
     - ALFRESCO_PORT_SSL=${ALFRESCO_PORT_SSL}
     - TOMCAT_PORT=${SOLR_PORT}
