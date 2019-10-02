@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=xenit/tomcat:alfresco-4.2-ubuntu
+ARG BASE_IMAGE=docker.io/xenit/tomcat:alfresco-4.2-ubuntu
 FROM $BASE_IMAGE
 
 ARG ALFRESCO_VERSION_MAJOR

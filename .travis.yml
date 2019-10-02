@@ -24,10 +24,10 @@ env:
 # https://github.com/travis-ci/travis-ci/issues/8667
 install: true
 
-script: travis_wait 60 ./gradlew -PrepoName=xenit check --info
+script: travis_wait 60 ./gradlew -PrepoName=docker.io/xenit check --info
 
 deploy:
   provider: script
-  script: ./gradlew -PrepoName=xenit pushDockerImage
+  script: ./gradlew -PrepoName=docker.io/xenit pushDockerImage
   on:
     branch: master

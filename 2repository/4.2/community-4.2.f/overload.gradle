@@ -7,8 +7,8 @@ ext {
             ],
             flavor: 'community'
     ]
-    solrimage = 'xenit/alfresco-solr1:4.2'
-    shareimage = 'xenit/alfresco-share-community:4.2.f'
+    solrimage = 'docker.io/xenit/alfresco-solr1:4.2'
+    shareimage = 'docker.io/xenit/alfresco-share-community:4.2.f'
     tests = true
 }
 
