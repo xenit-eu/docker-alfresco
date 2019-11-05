@@ -5,8 +5,6 @@ set -e
 
 echo "Alfresco init start"
 
-export JAVA_XMS=${JAVA_XMS:-'2048M'}
-export JAVA_XMX=${JAVA_XMX:-'2048M'}
 export DB_HOST=${DB_HOST:-'postgresql'}
 export DB_PORT=${DB_PORT:-'5432'}
 export DB_NAME=${DB_NAME:-'alfresco'}
