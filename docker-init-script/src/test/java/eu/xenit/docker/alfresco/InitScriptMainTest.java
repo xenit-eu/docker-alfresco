@@ -49,11 +49,6 @@ public class InitScriptMainTest {
 
         env.put("ALFRESCO_VERSION", alfrescoVersion);
         env.put("ALFRESCO_FLAVOR", alfrescoFlavor);
-        env.put("JAVA_XMS", "2048M");
-        env.put("JAVA_XMX", "2048M");
-        env.put("DEBUG", "false");
-        env.put("JMX_ENABLED", "false");
-        env.put("JMX_RMI_HOST", "0.0.0.0");
         env.put("DB_HOST", "postgresql");
         env.put("DB_PORT", "5432");
         env.put("DB_NAME", "alfresco");
@@ -156,9 +151,6 @@ public class InitScriptMainTest {
     public void testDefaultSettings() throws IOException {
         Map<String, String> env = getDefaultEnvironment();
         InitScriptMain main = checkProperties("testDefaultSettings", env);
-
-        assertTrue("JAVA_OPTS contains -Xmx", main.getJavaOptions().contains("-Xmx2048M"));
-        assertTrue("JAVA_OPTS contains -Xms", main.getJavaOptions().contains("-Xms2048M"));
     }
 
     @Test
@@ -176,26 +168,6 @@ public class InitScriptMainTest {
     }
 
     @Test
-    public void testJmxEnabled() throws IOException {
-        Map<String, String> env = getDefaultEnvironment();
-        env.put("JMX_ENABLED", "true");
-        InitScriptMain main = checkProperties("testJmxEnabled", env);
-
-        assertTrue("JAVA_OPTS contains jmxremote settings",
-                main.getJavaOptions().contains("-Dcom.sun.management.jmxremote"));
-    }
-
-    @Test
-    public void testDebugEnabled() throws IOException {
-        Map<String, String> env = getDefaultEnvironment();
-        env.put("DEBUG", "true");
-        InitScriptMain main = checkProperties("testDebugEnabled", env);
-
-        assertTrue("JAVA_OPTS contains debug configuration", main.getJavaOptions()
-                .contains("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000"));
-    }
-
-    @Test
     public void testInheritsJavaOpts() throws IOException {
         Map<String, String> env = getDefaultEnvironment();
         env.put("JAVA_OPTS", "-Djava.opts.test=true");
@@ -205,16 +177,6 @@ public class InitScriptMainTest {
                 main.getJavaOptions().contains("-Djava.opts.test=true"));
     }
 
-    @Test
-    public void testSetJavaMemory() throws IOException {
-        Map<String, String> env = getDefaultEnvironment();
-        env.put("JAVA_XMS", "1M");
-        env.put("JAVA_XMX", "2M");
-        InitScriptMain main = checkProperties("testSetJavaMemory", env);
-
-        assertTrue("JAVA_OPTS contains custom -Xms value", main.getJavaOptions().contains("-Xms1M"));
-        assertTrue("JAVA_OPTS contains custom -Xmx value", main.getJavaOptions().contains("-Xmx2M"));
-    }
 
     @Test
     public void testSetCustomGlobalProperties() throws IOException {
