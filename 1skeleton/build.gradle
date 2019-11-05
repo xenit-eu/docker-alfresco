@@ -54,6 +54,7 @@ subprojects {
                     "${repoName}" + "/" + namespace + "/" + "alfresco-repository-${project.alfresco.flavor}" :
                     "${repoName}" + "/" + "alfresco-repository-${project.alfresco.flavor}")
             tags = calcTags(project.alfresco.version)
+	    pull = true
             automaticTags = false
         }
     }
@@ -69,6 +70,8 @@ subprojects {
 
         if (project.hasProperty('extraBuildArgs'))
             buildArgs << project.extraBuildArgs
+
+	println buildArgs
     }
 
     docker {

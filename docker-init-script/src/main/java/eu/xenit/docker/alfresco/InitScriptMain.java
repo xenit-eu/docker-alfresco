@@ -134,24 +134,8 @@ public class InitScriptMain {
             globalProperties.put("alfresco-pdf-renderer.exe", "${alfresco-pdf-renderer.root}/alfresco-pdf-renderer");
         }
 
-        javaOptions.add("-Xms" + environment.get("JAVA_XMS"));
-        javaOptions.add("-Xmx" + environment.get("JAVA_XMX"));
         javaOptions.add("-Dfile.encoding=UTF-8");
 
-        if ("true".equalsIgnoreCase(environment.get("JMX_ENABLED"))) {
-            javaOptions.add("-Dcom.sun.management.jmxremote.authenticate=false");
-            javaOptions.add("-Dcom.sun.management.jmxremote.local.only=false");
-            javaOptions.add("-Dcom.sun.management.jmxremote.ssl=false");
-            javaOptions.add("-Dcom.sun.management.jmxremote");
-            javaOptions.add("-Dcom.sun.management.jmxremote.rmi.port=5000");
-            javaOptions.add("-Dcom.sun.management.jmxremote.port=5000");
-            javaOptions.add("-Djava.rmi.server.hostname=" + environment.get("JMX_RMI_HOST"));
-            globalProperties.put("alfresco.jmx.connector.enabled", "true");
-        }
-
-        if ("true".equalsIgnoreCase(environment.get("DEBUG"))) {
-            javaOptions.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000");
-        }
 
         // Special handling for alfresco 4 - set MaxPermSize
         if (alfrescoVersion.major == 4) {
