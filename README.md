@@ -68,7 +68,6 @@ The variables are read by an init script which further replaces them in the rele
 * alfresco-global.properties
 
 The alfresco-global.properties can be set via a generic mechanism by setting environment variables of the form GLOBAL_<parameter>, e.g. GLOBAL_alfresco.host. 
-They can also be set via environment variables of the form JAVA_OPTS_<ignored_key> where the value should be "-Dkey=value".
 
 A subset of the alfresco-global.properties have also dedicated environment variables e.g. SOLR_SSL. Generic variables take precedence.
 
