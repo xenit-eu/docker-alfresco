@@ -75,9 +75,10 @@ ADD 	alfresco-global.properties ${CATALINA_HOME}/shared/classes/
 
 # copy init file
 RUN	mkdir -p /docker-entrypoint.d
-COPY 	90-init-alfresco.sh /docker-entrypoint.d/
+COPY 	90-init-alfresco.sh 89-init-alfresco-json-logging.sh /docker-entrypoint.d/
 COPY    90-init-alfresco.jar /
-RUN	chmod u+x /docker-entrypoint.d/90-init-alfresco.sh && \
+COPY    dependencies /docker-config/dependencies/
+RUN	chmod u+x /docker-entrypoint.d/* && \
 
 # permissions
  	chown -hR tomcat /opt/alfresco && \

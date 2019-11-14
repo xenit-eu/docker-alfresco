@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [DOCKER-266] Added enterprise 5.2.6
 
 ### Changed
+* [DOCKER-283] Transform alfred-json-logging into an entry script controlled by an environment variable
 * [DOCKER-278] Move java specific variables (jmx, debug, memory settings) to java layer
 * [DOCKER-236] Separate out share: see https://github.com/xenit-eu/docker-share
 * [DOCKER-255] Continue to build some legacy images, with both Alfresco and Share inside

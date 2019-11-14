@@ -1,6 +1,15 @@
 subprojects {
     apply plugin: 'eu.xenit.docker'
 
+    configurations {
+	runtime
+    }
+    
+    dependencies {
+	runtime group: 'net.logstash.log4j', name: 'jsonevent-layout', version: '1.7'
+	runtime group: 'eu.xenit.alfred', name: 'alfred-json-logging', version: '0.0.1'
+    }
+    
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
@@ -28,10 +37,16 @@ subprojects {
         dependsOn(":docker-init-script:jar")
     }
 
+    task pullRuntimeDependencies(type: Copy) {
+        from configurations.runtime
+        into "${workingDir}/dependencies"
+    }
+
     task copyGlobalResources(type: Copy) {
         from "$rootProject.projectDir/src/main/resources/global"
         into workingDir
         dependsOn(configureCopyGlobalResources)
+        dependsOn(pullRuntimeDependencies)		
     }
 
     task copyLocalResources(type: Copy) {
