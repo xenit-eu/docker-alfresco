@@ -66,12 +66,10 @@ subprojects {
                 'ALFRESCO_VERSION_REV'  : "${project.alfresco.version.rev}",
                 'ALFRESCO_FLAVOR'       : "${project.alfresco.flavor}",
                 'BASE_IMAGE'            : "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
-        ]
+        ] << (project.hasProperty('extraBuildArgs')?project.extraBuildArgs:[:])
 
-        if (project.hasProperty('extraBuildArgs'))
-            buildArgs << project.extraBuildArgs
 
-	println buildArgs
+        println buildArgs
     }
 
     docker {
