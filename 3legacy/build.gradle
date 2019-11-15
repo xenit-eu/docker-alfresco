@@ -59,7 +59,7 @@ subprojects {
     }
 
     dockerAlfresco {
-        baseImage = { parentImage.getImageId() }
+        baseImage = { parentImage.getImageId().get() }
         dockerBuild {
             repository = "hub.xenit.eu/alfresco-enterprise/alfresco-enterprise"
             tags = parentProject.extensions.findByName("dockerAlfresco").dockerBuild.tags

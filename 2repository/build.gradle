@@ -35,7 +35,7 @@ subprojects {
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
     dockerAlfresco {
-        baseImage = { parentImage.getImageId() }
+        baseImage = { parentImage.getImageId().get() }
         dockerBuild {
             if (!(project.hasProperty("repoName"))) {
                 ext.repoName = "hub.xenit.eu"
@@ -61,7 +61,7 @@ subprojects {
         buildDockerImage {
             doLast {
                 if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
-                    dockerCompose.changedPorts.environment.put 'DOCKER_IMAGE', getImageId()
+                    dockerCompose.changedPorts.environment.put 'DOCKER_IMAGE', getImageId().get()
             }
         }
 
