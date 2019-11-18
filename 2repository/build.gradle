@@ -45,6 +45,7 @@ subprojects {
                     "${repoName}" + "/" + namespace + "/" + "alfresco-repository-${project.alfresco.flavor}" :
                     "${repoName}" + "/" + "alfresco-repository-${project.alfresco.flavor}")
             tags = calcTags(project.alfresco.version)
+            pull = false
             automaticTags = false
         }
     }

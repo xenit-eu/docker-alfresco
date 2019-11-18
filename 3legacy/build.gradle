@@ -44,6 +44,7 @@ subprojects {
         dockerBuild {
             repository = "hub.xenit.eu/alfresco-enterprise/alfresco-enterprise"
             tags = parentProject.extensions.findByName("dockerAlfresco").dockerBuild.tags
+            pull = false
             automaticTags = false
         }
     }
