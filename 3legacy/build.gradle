@@ -27,33 +27,14 @@ subprojects {
 
     afterEvaluate {
         createDockerFile {
-            inputs.files configurations.sharedLib
-            inputs.files configurations.sharedBin
-
             environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
             environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
 
-
-            doFirst {
-                project.delete(file("${destFile.parent}/shared"))
-                copy {
-                    from configurations.sharedLib
-                    into destFile.parent + "/shared/lib"
-                }
-
-                if (!configurations.sharedBin.isEmpty()) {
-                    copy {
-                        from tarTree(resources.gzip(configurations.sharedBin.singleFile))
-                        into destFile.parent + "/shared/bin"
-                    }
-                }
+            if(!configurations.sharedLib.isEmpty()) {
+                smartCopy(configurations.sharedLib, '${CATALINA_HOME}/shared/lib/')
             }
-
-            if (!configurations.sharedLib.isEmpty()) {
-                copyFile './shared/lib/*.jar', '${CATALINA_HOME}/shared/lib/'
-            }
-            if (!configurations.sharedBin.isEmpty()) {
-                copyFile './shared/bin/*', '/opt/alfresco'
+            if(!configurations.sharedBin.isEmpty()) {
+                smartCopy(tarTree(resources.gzip(configurations.sharedBin.singleFile)), '/opt/alfresco')
             }
         }
     }
