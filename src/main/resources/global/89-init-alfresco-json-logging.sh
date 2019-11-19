@@ -29,7 +29,7 @@ module.installDate="`date +"%FT%T.%3N%:z" |sed 's/:/\\\\:/g'` >/usr/local/tomcat
 
     mkdir -p /usr/local/tomcat/webapps/alfresco/WEB-INF/classes/alfresco/extension
     echo "# Set root logger level to error
-log4j.rootLogger=error, Console, File
+log4j.rootLogger=error, Console
 
 ###### Console appender definition #######
 
@@ -39,16 +39,7 @@ log4j.appender.Console=org.apache.log4j.ConsoleAppender
 log4j.appender.Console.layout=net.logstash.log4j.JSONEventLayoutV1
 
 # use log4j NDC to replace %x with tenant domain / username
-log4j.appender.Console.layout.ConversionPattern=%d{ISO8601} %x %-5p [%c{3}] [%t] %m%n
-#log4j.appender.Console.layout.ConversionPattern=%d{ABSOLUTE} %-5p [%c] %m%n
-
-###### File appender definition #######
-log4j.appender.File=org.apache.log4j.DailyRollingFileAppender
-log4j.appender.File.File=alfresco.log
-log4j.appender.File.Append=true
-log4j.appender.File.DatePattern='.'yyyy-MM-dd
-log4j.appender.File.layout=org.apache.log4j.PatternLayout
-log4j.appender.File.layout.ConversionPattern=%d{yyyy-MM-dd} %d{ABSOLUTE} %-5p [%c] [%t] %m%n" >/usr/local/tomcat/webapps/alfresco/WEB-INF/classes/alfresco/extension/alfred-json-logging-log4j.properties
+log4j.appender.Console.layout.ConversionPattern=%d{ISO8601} %x %-5p [%c{3}] [%t] %m%n" >/usr/local/tomcat/webapps/alfresco/WEB-INF/classes/alfresco/extension/alfred-json-logging-log4j.properties
 fi
 
 echo "Alfresco json logging init done"
