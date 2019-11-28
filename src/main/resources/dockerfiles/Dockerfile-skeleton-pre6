@@ -38,6 +38,10 @@ RUN	mkdir -p /opt/alfresco && \
       echo "Package libgif4 is not available. Will not install swftools" ; \
     fi && \
 
+    # make sure the Java executable used is the Adopt Openjdk
+    if test -f /opt/java/openjdk/bin/java ; then rm -f /usr/bin/java ; ln -s /opt/java/openjdk/bin/java /usr/bin/java ; fi && \
+
+
     rm /tmp/swftools_0.9.0-0ubuntu2_amd64.deb && \
 	rm -rf ${CATALINA_HOME}/webapps/* && \
 	mkdir -p ${CATALINA_HOME}/bin && \
