@@ -9,7 +9,18 @@ services:
      - postgresql
    environment:
    - SOLR_HOST=solr
+   # this is not actually needed unless custom transformers have been deployed
+   - GLOBAL_legacy.transform.service.enabled=true
    - GLOBAL_alfresco-pdf-renderer.url=http://alfresco-pdf-renderer:8090/ # from Alfresco 6.0 on
    - GLOBAL_jodconverter.url=http://libreoffice:8090/ # from Alfresco 6.0 on
    - GLOBAL_img.url=http://imagemagick:8090/ # from Alfresco 6.0 on
    - GLOBAL_tika.url=http://tika:8090/  # from Alfresco 6.1 on
+   - GLOBAL_transform.misc.url=http://transform-misc:8090/  # from Alfresco 6.1 on
+   # works on both community and enterprise
+   - GLOBAL_local.transform.service.enabled=true
+   - GLOBAL_localTransform.pdfrenderer.url=http://alfresco-pdf-renderer:8090/
+   - GLOBAL_localTransform.imagemagick.url=http://imagemagick:8090/
+   - GLOBAL_localTransform.libreoffice.url=http://libreoffice:8090/
+   - GLOBAL_localTransform.tika.url=http://tika:8090/
+   - GLOBAL_localTransform.misc.url=http://transform-misc:8090/
+

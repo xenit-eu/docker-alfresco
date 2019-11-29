@@ -149,6 +149,11 @@ subprojects {
             } else {
                 useComposeFiles = ["$composeDir/docker-compose-alfresco.yml", "$composeDir/docker-compose-share.yml",
                                    "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml", "$composeDir/docker-compose-transformers.yml"];
+		if (project.alfresco.flavor == "enterprise") {
+                    useComposeFiles = ["$composeDir/docker-compose-alfresco.yml", "$composeDir/docker-compose-share.yml",
+                                       "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml", "$composeDir/docker-compose-transformers.yml", "$composeDir/docker-compose-enterprise-only.yml"];		    
+		}
+		
             }
 
             changedPorts {
