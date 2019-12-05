@@ -17,7 +17,7 @@ USER	root
 # downloading ALF & components
 RUN	mkdir -p /opt/alfresco && \
 	apt-get update && \
-	apt-get install -y curl unzip vim locate xmlstarlet jq gettext-base && \
+	apt-get install -y curl unzip vim locate xmlstarlet jq gettext-base fontconfig && \
 	rm -rf ${CATALINA_HOME}/webapps/* && \
 	mkdir -p ${CATALINA_HOME}/bin && \
 	touch ${CATALINA_HOME}/bin/setenv.sh && \
