@@ -113,6 +113,6 @@ VOLUME 	/opt/alfresco/alf_data ${CATALINA_HOME}/temp ${CATALINA_HOME}/logs
 
 WORKDIR /opt/alfresco
 
-HEALTHCHECK --interval=10s --timeout=3s --retries=3 --start-period=20s CMD curl -f http://localhost:${TOMCAT_PORT}/alfresco/s/api/server || exit 1
+HEALTHCHECK --interval=10s --timeout=3s --retries=30 --start-period=20s CMD curl -f http://localhost:${TOMCAT_PORT}/alfresco/s/api/server || exit 1
 
 # start ALF will be done by java image's entrypoint + tomcat image's CMD
