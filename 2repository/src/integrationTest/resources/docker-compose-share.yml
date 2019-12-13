@@ -1,7 +1,9 @@
-version: '3'
+version: '3.2'
 
 services:
  share:
    image: ${SHARE_IMAGE}
    ports:
-     - 8080
+     - target: 8080
+       mode: host
+   env_file: .env_file_share
