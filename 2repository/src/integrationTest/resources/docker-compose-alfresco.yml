@@ -6,8 +6,8 @@ services:
    ports:
      - target: 8080
        mode: host
-   depends_on:
-     - postgresql
+       #depends_on:
+       #- postgresql
    env_file: .env_file_alfresco
 
 
