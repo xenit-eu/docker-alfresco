@@ -4,7 +4,10 @@ services:
 
  postgresql:
    image: docker.io/xenit/postgres
-   env_file: .env_file_db
+   environment:
+   - POSTGRES_USER=alfresco
+   - POSTGRES_PASSWORD=admin
+   - POSTGRES_DB=alfresco
 
 
 
