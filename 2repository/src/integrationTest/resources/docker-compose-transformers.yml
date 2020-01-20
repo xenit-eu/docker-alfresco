@@ -5,27 +5,42 @@ services:
    image: alfresco/alfresco-pdf-renderer:2.1.0
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
+   ports:
+     - target: 8090
+       mode: host
 
  libreoffice:
    image: alfresco/alfresco-libreoffice:0.9
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
-
+   ports:
+     - target: 8090
+       mode: host
+       
  imagemagick:
    image: alfresco/alfresco-imagemagick:2.1.0
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
+   ports:
+     - target: 8090
+       mode: host
+
 
  # only works from Alfresco 6.1 on
  tika:
    image: alfresco/alfresco-tika:2.1.0
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
+   ports:
+     - target: 8090
+       mode: host
 
  # only works from Alfresco 6.1 on
  tika:
    image: alfresco/alfresco-transform-misc:2.1.0
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
-
+   ports:
+     - target: 8090
+       mode: host
 
