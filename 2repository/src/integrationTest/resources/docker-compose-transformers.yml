@@ -36,7 +36,7 @@ services:
        mode: host
 
  # only works from Alfresco 6.1 on
- tika:
+ transform-misc:
    image: alfresco/alfresco-transform-misc:2.1.0
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
