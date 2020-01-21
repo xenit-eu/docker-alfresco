@@ -1,0 +1,10 @@
+version: '3.2'
+
+services:
+ alfresco-pdf-renderer:
+   image: alfresco/alfresco-pdf-renderer:2.1.0
+   environment:
+     JAVA_OPTS: " -Xms256m -Xmx512m"
+   ports:
+     - target: 8090
+       mode: host
