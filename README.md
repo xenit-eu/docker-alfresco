@@ -1,5 +1,6 @@
 # Alfresco in Docker
-Xenit specific Alfresco images.
+
+Alfresco Repository images built and maintained by Xenit.
 
 ## Images created 
 
