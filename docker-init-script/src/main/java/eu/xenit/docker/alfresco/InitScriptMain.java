@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,14 +19,26 @@ public class InitScriptMain {
     public static void main(String[] argv) throws IOException {
         String globalPropertiesFile = argv[0];
         String tomcatConfigFile = argv[1];
+        String log4jConfigFile = argv[2];
         Properties globalProperties = new Properties();
+        Properties log4jConfig = new Properties();
         try (InputStream globalPropertiesInputStream = new FileInputStream(globalPropertiesFile)) {
             globalProperties.load(globalPropertiesInputStream);
         }
-        InitScriptMain main = new InitScriptMain(System.getenv(), (Map) globalProperties);
+        if (Files.exists(Paths.get(log4jConfigFile))) {
+            try (InputStream log4jConfigInputStream = new FileInputStream(log4jConfigFile)) {
+                log4jConfig.load(log4jConfigInputStream);
+            }
+        } else {
+             Files.createDirectories(Paths.get(log4jConfigFile).getParent());
+        }
+        InitScriptMain main = new InitScriptMain(System.getenv(), (Map) globalProperties, (Map) log4jConfig);
         main.process();
         try (OutputStream globalPropertiesOutputStream = new FileOutputStream(globalPropertiesFile)) {
             globalProperties.store(globalPropertiesOutputStream, null);
+        }
+        try (OutputStream log4jConfigOutputStream = new FileOutputStream(log4jConfigFile)) {
+            log4jConfig.store(log4jConfigOutputStream, null);
         }
         try (PrintStream tomcatConfigOutputStream = new PrintStream(new FileOutputStream(tomcatConfigFile))) {
             StringBuilder javaOpts = new StringBuilder();
@@ -39,6 +53,7 @@ public class InitScriptMain {
 
     private final Map<String, String> environment;
     private final Map<String, String> globalProperties;
+    private final Map<String, String> log4jProperties;
     private final AlfrescoVersion alfrescoVersion;
 
     public List<String> getJavaOptions() {
@@ -47,9 +62,11 @@ public class InitScriptMain {
 
     private final List<String> javaOptions = new ArrayList<>();
 
-    public InitScriptMain(Map<String, String> environment, Map<String, String> globalProperties) {
+    public InitScriptMain(Map<String, String> environment, Map<String, String> globalProperties,
+            Map<String, String> log4jProperties) {
         this.environment = new ThrowingMap<>(environment, "ENV");
         this.globalProperties = new ThrowingMap<>(globalProperties, "global-properties");
+        this.log4jProperties = new ThrowingMap<>(log4jProperties, "log4j-properties");
         alfrescoVersion = AlfrescoVersion.parse(this.environment.get("ALFRESCO_VERSION"));
         if (this.environment.containsKey("JAVA_OPTS")) {
             javaOptions.add(this.environment.get("JAVA_OPTS"));
@@ -150,8 +167,11 @@ public class InitScriptMain {
             if (entry.getKey().startsWith("GLOBAL_")) {
                 String globalProperty = entry.getKey().substring("GLOBAL_".length());
                 globalProperties.put(globalProperty, entry.getValue());
+            } else if (entry.getKey().startsWith("LOG4J_")) {
+                String log4jProperty = entry.getKey().substring("LOG4J_".length());
+                log4jProperties.put("log4j." + log4jProperty, entry.getValue());
             }
-
+            // If you're about to add a third branch to this if-structure, consider abstracting it into a function?
         }
     }
 

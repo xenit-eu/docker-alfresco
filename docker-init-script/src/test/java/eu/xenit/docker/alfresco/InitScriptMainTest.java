@@ -109,10 +109,29 @@ public class InitScriptMainTest {
 
     private InitScriptMain checkProperties(String testName, Map<String, String> environment) throws IOException {
         Map<String, String> globalProperties = new HashMap<>();
-        InitScriptMain main = new InitScriptMain(environment, globalProperties);
+        InitScriptMain main = new InitScriptMain(environment, globalProperties, new HashMap<String, String>());
         main.process();
         Map<String, String> expectedProperties = loadProperties(testName);
         mapDifference(expectedProperties, globalProperties);
+        return main;
+    }
+
+    private InitScriptMain checkLoggers(String testName, Map<String, String> environment) throws IOException {
+        Map<String, String> log4jProperties = new HashMap<>();
+        InitScriptMain main = new InitScriptMain(environment, new HashMap<String, String>(), log4jProperties);
+        main.process();
+        // load properties
+        Map<String, String> expectedProperties = new HashMap<>();
+        String filename = "testSetCustomLoggerLevels/default.properties";
+        try (InputStream propertiesInputStream = getClass().getResourceAsStream(filename)) {
+            Properties props = new Properties();
+            if (propertiesInputStream != null) {
+                props.load(propertiesInputStream);
+            }
+            expectedProperties = (Map) props;
+        }
+        // comparison
+        mapDifference(expectedProperties, log4jProperties);
         return main;
     }
 
@@ -184,6 +203,13 @@ public class InitScriptMainTest {
         env.put("GLOBAL_test.global.property", "value");
         env.put("GLOBAL_test.*.property", "value2");
         checkProperties("testSetCustomGlobalProperties", env);
+    }
+
+    @Test
+    public void testSetCustomLoggerLevels() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        env.put("LOG4J_logger.eu.xenit.test", "DEBUG");
+        checkLoggers("testSetCustomLoggerLevels", env);
     }
 
 }

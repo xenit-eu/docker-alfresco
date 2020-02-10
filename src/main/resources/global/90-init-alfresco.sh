@@ -12,10 +12,11 @@ export SOLR_SSL=${SOLR_SSL:-'https'}
 export JAVA_OPTS
 
 CONFIG_FILE=${CONFIG_FILE:-${CATALINA_HOME}'/shared/classes/alfresco-global.properties'}
+LOG4J_CONFIG_FILE=${LOG4J_CONFIG_FILE:-${CATALINA_HOME}'/webapps/alfresco/WEB-INF/classes/alfresco/extension/dev-log4j.properties'}
 TOMCAT_CONFIG_FILE=${CATALINA_HOME}'/bin/setenv.sh'
 TOMCAT_SERVER_FILE=${CATALINA_HOME}'/conf/server.xml'
 
-${JAVA_HOME}/bin/java -jar /90-init-alfresco.jar "$CONFIG_FILE" "$TOMCAT_CONFIG_FILE"
+${JAVA_HOME}/bin/java -jar /90-init-alfresco.jar "$CONFIG_FILE" "$TOMCAT_CONFIG_FILE" "$LOG4J_CONFIG_FILE"
 
 if [[ $SOLR_SSL == none ]] && [[ $ALFRESCO_VERSION != "5.0"* ]] && [[ $ALFRESCO_VERSION != "3"* ]] && [[ $ALFRESCO_VERSION != "4"* ]]; then
   #remove the SSL connector
