@@ -17,7 +17,7 @@ jar {
 
 jacocoTestReport {
     reports {
-        html.destination("${buildDir}/reports/jacocoHtml")
+        html.destination(file("${buildDir}/reports/jacocoHtml"))
     }
     mustRunAfter(test)
 }
