@@ -121,8 +121,8 @@ public class InitScriptMainTest {
         InitScriptMain main = new InitScriptMain(environment, new HashMap<String, String>(), log4jProperties);
         main.process();
         // load properties
-        Map<String, String> expectedProperties = new HashMap<>();
-        String filename = "testSetCustomLoggerLevels/default.properties";
+        Map<String, String> expectedProperties;
+        String filename = testName + "/default.properties";
         try (InputStream propertiesInputStream = getClass().getResourceAsStream(filename)) {
             Properties props = new Properties();
             if (propertiesInputStream != null) {
