@@ -139,6 +139,14 @@ To see all available tasks:
 ./gradlew tasks
 ```
 
-If you have access to [Alfresco private repository](https://artifacts.alfresco.com/nexus/content/groups/private/) add the repository to build.gradle and add -Penterprise to your build commands.
+If you have access to [Alfresco private repository](https://artifacts.alfresco.com/nexus/content/groups/private/) add the repository to build.gradle and add
+```
+-Penterprise
+```
+to your build commands.
 
-To build a legacy image add -Plegacy to your build commands.
+To build a legacy image add
+```
+-Plegacy
+```
+to your build commands.
