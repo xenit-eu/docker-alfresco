@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 * [DOCKER-251] Init script was duplicating JAVA_OPTS_<var> variables
+* [DOCKER-311] alf_data owner comparison used user name rather than user id
 
 ## [v1.0.0] Make it public
 ### Changed

@@ -25,12 +25,12 @@ fi
 
 if [ -n "$CATALINA_HOME" ]; then
 
-  user="tomcat"
-  if [[ $(stat -c %U /opt/alfresco/alf_data) != "$user" ]]; then
-    chown -R $user:$user /opt/alfresco/alf_data
+  userid="$(id -u tomcat)"
+  if [[ $(stat -c %u /opt/alfresco/alf_data) != "$userid" ]]; then
+    chown -R $userid:$userid /opt/alfresco/alf_data
   fi
-  if [[ $(stat -c %U "$CATALINA_HOME/temp") != "$user" ]]; then
-    chown -R $user:$user "$CATALINA_HOME"/temp
+  if [[ $(stat -c %u "$CATALINA_HOME/temp") != "$userid" ]]; then
+    chown -R $userid:$userid "$CATALINA_HOME"/temp
   fi
 
 fi
