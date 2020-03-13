@@ -4,8 +4,8 @@ plugins {
 
 static def calcTags(version) {
     def tags = [
-            "${version.major}.${version.minor}.${version.rev}".toString(),
-            "${version.major}.${version.minor}".toString()
+        "${version.major}.${version.minor}.${version.rev}".toString(),
+        "${version.major}.${version.minor}".toString()
     ]
 
     if (version.label) {

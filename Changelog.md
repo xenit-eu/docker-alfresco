@@ -7,16 +7,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 ### Added
 * [DOCKER-266] Added enterprise 5.2.6
-
+* [DOCKER-291] Added enterprise 6.2.0 and community 6.2.0-ga
+* [DOCKER-309] Added enterprise 6.1.1
+* [DOCKER-294] Install fontconfig in the skeleton image
+* [DOCKER-284] Allow setting log levels through docker-compose
+* [DOCKER-312] Start a release procedure: add Xenit version to the images tags
+	
 ### Changed
 * [DOCKER-278] Move java specific variables (jmx, debug, memory settings) to java layer
 * [DOCKER-236] Separate out share: see https://github.com/xenit-eu/docker-share
 * [DOCKER-255] Continue to build some legacy images, with both Alfresco and Share inside
 * [DOCKER-253] Move handling of properties to Java code instead of shell in the init
 * [DOCKER-263], [DOCKER-259], [DOCKER-258], [DOCKER-257], [DOCKER-256] Refactorings, better handling of failures, notifications
+* [DOCKER-292] Bump versions transformers. Use transform router + queue based transformations.	
+* Increase number of tries in healthcheck
+* Upgrade gradle and docker-alfresco plugin
+* Use smartCopy functionality
+* Disable pulling image when using an image id
 
 ### Fixed
 * [DOCKER-251] Init script was duplicating JAVA_OPTS_<var> variables
+* [DOCKER-288] Make sure java executable points to the Adopt openjdk
 
 ## [v1.0.0] Make it public
 ### Changed
@@ -141,4 +152,3 @@ Correct way to change those - via TOMCAT_PORT and TOMCAT_PORT_SSL.
 * [DOCKER-37] Removed bundled images for versions >=5.0
 * [DOCKER-26] Removed the PROXY_<variable> parameters from the init
 	
-

@@ -5,6 +5,7 @@ ARG ALFRESCO_VERSION_MAJOR
 ARG ALFRESCO_VERSION_MINOR
 ARG ALFRESCO_VERSION_REV
 ARG ALFRESCO_FLAVOR
+ARG XENIT_VERSION
 
 # ${CATALINA_HOME} is set to ${CATALINA_HOME} in upstream
 
@@ -89,5 +90,7 @@ VOLUME 	/opt/alfresco/alf_data ${CATALINA_HOME}/temp ${CATALINA_HOME}/logs
 WORKDIR /opt/alfresco
 
 HEALTHCHECK --interval=10s --timeout=3s --retries=30 --start-period=20s CMD curl -f http://localhost:${TOMCAT_PORT}/alfresco/s/api/server || exit 1
+
+LABEL eu.xenit.docker.docker-alfresco.version=$XENIT_VERSION
 
 # start ALF will be done by java image's entrypoint + tomcat image's CMD
