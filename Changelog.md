@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 ### Added
 * [DOCKER-266] Added enterprise 5.2.6
+* [DOCKER-291] Added enterprise 6.2.0 and community 6.2.0-ga
+* [DOCKER-309] Added enterprise 6.1.1
+* [DOCKER-294]: install fontconfig in the skeleton image
+* [DOCKER-284]: allow setting log levels through docker-compose
 
 ### Changed
 * [DOCKER-278] Move java specific variables (jmx, debug, memory settings) to java layer
@@ -14,9 +18,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [DOCKER-255] Continue to build some legacy images, with both Alfresco and Share inside
 * [DOCKER-253] Move handling of properties to Java code instead of shell in the init
 * [DOCKER-263], [DOCKER-259], [DOCKER-258], [DOCKER-257], [DOCKER-256] Refactorings, better handling of failures, notifications
+* [DOCKER-292] Bump versions transformers. Use transform router + queue based transformations.	
+* Increase number of tries in healthcheck
+* Upgrade gradle and docker-alfresco plugin
+* Use smartCopy functionality
+* Disable pulling imag when using an image id
 
 ### Fixed
 * [DOCKER-251] Init script was duplicating JAVA_OPTS_<var> variables
+* [DOCKER-288] Make sure java executable points to the Adopt openjdk
 
 ## [v1.0.0] Make it public
 ### Changed
