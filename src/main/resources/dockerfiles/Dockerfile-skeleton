@@ -91,6 +91,6 @@ WORKDIR /opt/alfresco
 
 HEALTHCHECK --interval=10s --timeout=3s --retries=30 --start-period=20s CMD curl -f http://localhost:${TOMCAT_PORT}/alfresco/s/api/server || exit 1
 
-LABEL xenitVersion=$XENIT_VERSION
+LABEL eu.xenit.docker.docker-alfresco.version=$XENIT_VERSION
 
 # start ALF will be done by java image's entrypoint + tomcat image's CMD
