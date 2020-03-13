@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [DOCKER-266] Added enterprise 5.2.6
 * [DOCKER-291] Added enterprise 6.2.0 and community 6.2.0-ga
 * [DOCKER-309] Added enterprise 6.1.1
-* [DOCKER-294]: Install fontconfig in the skeleton image
-* [DOCKER-284]: Allow setting log levels through docker-compose
-* [DOCKER-312]: Start a release procedure: add Xenit version to the images tags
+* [DOCKER-294] Install fontconfig in the skeleton image
+* [DOCKER-284] Allow setting log levels through docker-compose
+* [DOCKER-312] Start a release procedure: add Xenit version to the images tags
 	
 ### Changed
 * [DOCKER-278] Move java specific variables (jmx, debug, memory settings) to java layer
