@@ -3,9 +3,10 @@ plugins {
 }
 
 static def calcTags(version) {
+    def xenitVersion="1.0.1-SNAPSHOT"
     def tags = [
-            "${version.major}.${version.minor}.${version.rev}".toString(),
-            "${version.major}.${version.minor}".toString()
+        "${version.major}.${version.minor}.${version.rev}x${xenitVersion}".toString(),
+        "${version.major}.${version.minor}x${xenitVersion}".toString()
     ]
 
     if (version.label) {

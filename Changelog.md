@@ -4,14 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## Unreleased v1.0.1-SNAPSHOT
 ### Added
 * [DOCKER-266] Added enterprise 5.2.6
 * [DOCKER-291] Added enterprise 6.2.0 and community 6.2.0-ga
 * [DOCKER-309] Added enterprise 6.1.1
-* [DOCKER-294]: install fontconfig in the skeleton image
-* [DOCKER-284]: allow setting log levels through docker-compose
-
+* [DOCKER-294]: Install fontconfig in the skeleton image
+* [DOCKER-284]: Allow setting log levels through docker-compose
+* [DOCKER-312]: Start a release procedure: add Xenit version to the images tags
+	
 ### Changed
 * [DOCKER-278] Move java specific variables (jmx, debug, memory settings) to java layer
 * [DOCKER-236] Separate out share: see https://github.com/xenit-eu/docker-share
