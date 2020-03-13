@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Increase number of tries in healthcheck
 * Upgrade gradle and docker-alfresco plugin
 * Use smartCopy functionality
-* Disable pulling imag when using an image id
+* Disable pulling image when using an image id
 
 ### Fixed
 * [DOCKER-251] Init script was duplicating JAVA_OPTS_<var> variables
@@ -152,4 +152,3 @@ Correct way to change those - via TOMCAT_PORT and TOMCAT_PORT_SSL.
 * [DOCKER-37] Removed bundled images for versions >=5.0
 * [DOCKER-26] Removed the PROXY_<variable> parameters from the init
 	
-
