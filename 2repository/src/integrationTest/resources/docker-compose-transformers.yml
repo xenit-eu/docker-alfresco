@@ -7,7 +7,7 @@ services:
      JAVA_OPTS: " -Xms256m -Xmx512m"
 
  libreoffice:
-   image: alfresco/alfresco-libreoffice:0.9
+   image: alfresco/alfresco-libreoffice:2.1.0
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
 
