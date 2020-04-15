@@ -110,8 +110,8 @@ public class InitScriptMain {
         }
         globalProperties.put("index.subsystem.name", solrVersion);
         if ("solr6".equals(solrVersion)) {
-            globalProperties.put("solr.backup.alfresco.remoteBackupLocation", "/opt/alfresco-search-services");
-            globalProperties.put("solr.backup.archive.remoteBackupLocation", "/opt/alfresco-search-services");
+            globalProperties.put("solr.backup.alfresco.remoteBackupLocation", "/opt/alfresco-search-services/data/solr6Backup/alfresco");
+            globalProperties.put("solr.backup.archive.remoteBackupLocation", "/opt/alfresco-search-services/data/solr6Backup/archive");
         }
         setGlobalOptionFromEnvironment("solr.host", "SOLR_HOST", "solr");
         setGlobalOptionFromEnvironment("solr.port", "SOLR_PORT", "8080");
