@@ -114,7 +114,7 @@ These images are updated via pull requests to the [xenit-eu/docker-alfresco/](ht
 
 **Maintained by:**
 
-Roxana Angheluta <roxana.angheluta@xenit.eu>, Lars Vierbergen <lars.vierbergen@xenit.eu>
+Roxana Angheluta <roxana.angheluta@xenit.eu>
 
 ### How to build
 
