@@ -13,9 +13,6 @@ before_cache:
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 env:
-  global:
-    - DOCKER_USER=xenitpublisher
-    - secure: "bODuS/RJdxmTRCDN7UwkW5mCh+B32uuQZ3grw1bvvSR3Nk4hd1d/Xrn8OOtEfQWcnnZCQFV9LJErkCHAkFBx3b+7TLAsb99mgW1N1I/kSiMLfuyVASFJXuq+x1HXVoWlVPwkAraRLyz9Ntd5FvdXEVrKgp+qCnbXlJrWoyhsb7ALRBQFaYmK9fDXQ0PiqIFv5uiv0afGRY+AwNgvdKInSrXG7i7YwHrHqvGaI+FWVQGX7M1dtNQqMDgdLn9zji7UDf852uizkpxQhZP8rjIsRqUuGb/QERop6g7NbWICbAg2WEG+FuTgL1HovW9ix/m1kGtJYyp6OycpJZ+cfyOuylyNAdt0lJK0ffQZw40ZQUSJ7Mc2veH5KraTJau6cepR0vETA+VRZcuQlzFYxy4TIV9kJ2bowoleWJRBNbYJdEtsvH9TxqdKhQWUSbE6urGK87JMNqDzxGzZAMwTPJ9BlJSMc3DTpT7XSBsCS+NuZge6xSunUOD57ibT/CoXw4GRCp7rSeYqLyK9q0jpTQluxAmCSieIpHQAT1YeP3hNMIyamvdy76/XHIzk6ENXmZwt55U1V1GDbBK70nYq7pZP6eTF5Y4NBiFd6B9xY4HQAz4IylOipfO3yzV4TpTILFW1GuWDt398ufLAtbSebub3tjajZi7bR0+3zMT2+8N2AVM="
   matrix:
     - VERSIONS_TO_BUILD=4
     - VERSIONS_TO_BUILD=5
