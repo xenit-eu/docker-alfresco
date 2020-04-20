@@ -24,7 +24,7 @@ script: travis_wait 60 ./gradlew -PrepoName=docker.io/xenit check --info
 
 deploy:
   provider: script
-  script: travis_wait 30 ./gradlew --stacktrace -PrepoName=docker.io/xenit pushDockerImage
+  script: ./gradlew --stacktrace -PrepoName=docker.io/xenit pushDockerImage
   cleanup: false
   on:
     branch: master
