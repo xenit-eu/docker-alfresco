@@ -145,19 +145,8 @@ subprojects {
 
             def composeDir = "${project.parent.projectDir}/src/integrationTest/resources";
 
-            if (project.alfresco.version.major.toInteger() < 6) {
-                useComposeFiles = ["$composeDir/docker-compose-alfresco.yml", "$composeDir/docker-compose-share.yml",
-                                   "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml"];
-
-            } else {
-                useComposeFiles = ["$composeDir/docker-compose-alfresco.yml", "$composeDir/docker-compose-share.yml",
-                                   "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml", "$composeDir/docker-compose-transformers.yml"];
-		if (project.alfresco.flavor == "enterprise") {
-                    useComposeFiles = ["$composeDir/docker-compose-alfresco.yml", "$composeDir/docker-compose-share.yml",
-                                       "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml", "$composeDir/docker-compose-transformers.yml", "$composeDir/docker-compose-enterprise-only.yml"];		    
-		}
-		
-            }
+            useComposeFiles = ["$composeDir/docker-compose-alfresco-minimal.yml",
+                               "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml"];
 
             changedPorts {
                 isRequiredBy(project.tasks.integrationTestChangedPorts)
@@ -168,7 +157,7 @@ subprojects {
                 environment.put 'SOLR_PORT_SSL', '2324'
 
                 useComposeFiles = ["$composeDir/docker-compose-alfresco-changed-ports.yml", "$composeDir/docker-compose-solr-changed-ports.yml",
-                                   "$composeDir/docker-compose-db.yml", "$composeDir/docker-compose-transformers.yml"];
+                                   "$composeDir/docker-compose-db.yml"];
             }
         }
     }
