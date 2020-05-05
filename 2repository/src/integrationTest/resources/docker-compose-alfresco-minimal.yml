@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+ alfresco:
+   image: ${DOCKER_IMAGE}
+   ports:
+     - 8080
+     - 8443
+   depends_on:
+     - postgresql
+   environment:
+   - SOLR_HOST=solr
+   - GLOBAL_legacy.transform.service.enabled=false
+   - GLOBAL_local.transform.service.enabled=false
+
