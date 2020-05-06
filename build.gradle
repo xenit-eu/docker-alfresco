@@ -14,6 +14,15 @@ static def calcTags(version) {
     return tags
 }
 
+def calcRepository(flavor) {
+    def repoName = project.properties.getOrDefault("repoName", "hub.xenit.eu");
+    if(repoName == "hub.xenit.eu") {
+        def namespace = (flavor == "enterprise" ? "alfresco-enterprise" : "public");
+        repoName += "/" + namespace;
+    }
+    return "${repoName}/alfresco-repository-${flavor}";
+}
+
 subprojects {
     apply plugin: 'java'
 
