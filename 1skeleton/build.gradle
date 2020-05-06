@@ -54,24 +54,23 @@ subprojects {
                     "${repoName}" + "/" + namespace + "/" + "alfresco-repository-${project.alfresco.flavor}" :
                     "${repoName}" + "/" + "alfresco-repository-${project.alfresco.flavor}")
             tags = calcTags(project.alfresco.version)
-	    pull = true
-            automaticTags = false
+            pull = true
         }
     }
 
     buildDockerImage {
-        buildArgs = [
+        buildArgs.putAll([
                 'ALFRESCO_VERSION_MAJOR': "${project.alfresco.version.major}",
                 'ALFRESCO_VERSION_MINOR': "${project.alfresco.version.minor}",
                 'ALFRESCO_VERSION_REV'  : "${project.alfresco.version.rev}",
                 'ALFRESCO_FLAVOR'       : "${project.alfresco.flavor}",
                 'BASE_IMAGE'            : "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu",
                 'XENIT_VERSION'         :  xenitVersion
-	    
-        ] << (project.hasProperty('extraBuildArgs')?project.extraBuildArgs:[:])
 
-
-        println buildArgs
+        ])
+        if(project.hasProperty('extraBuildArgs')) {
+            buildArgs.putAll(project.extraBuildArgs)
+        }
     }
 
     docker {
@@ -84,6 +83,4 @@ subprojects {
             logger.debug "using default credentials"
         }
     }
-
-    composeDown.enabled = false
 }
