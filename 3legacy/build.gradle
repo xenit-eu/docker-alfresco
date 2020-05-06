@@ -25,15 +25,22 @@ subprojects {
 
     buildDockerImage.dependsOn(parentImage, processDockerResources)
 
-    afterEvaluate {
-        createDockerFile {
-            environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
-            environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
+    createDockerFile {
+        copyFile 'share-config-custom.xml', '/docker-config/'
+        copyFile '91-init-share-customized.sh', '/docker-entrypoint.d/'
+        runCommand '''\
+chmod u+x /docker-entrypoint.d/91-init-share-customized.sh && \
+mkdir -p "${CATALINA_HOME}/shared/classes/alfresco/web-extension/" && \
+chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
+        '''
+        environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
+        environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
 
-            if(!configurations.sharedLib.isEmpty()) {
+        doFirst {
+            if (!configurations.sharedLib.isEmpty()) {
                 smartCopy(configurations.sharedLib, '${CATALINA_HOME}/shared/lib/')
             }
-            if(!configurations.sharedBin.isEmpty()) {
+            if (!configurations.sharedBin.isEmpty()) {
                 smartCopy(tarTree(resources.gzip(configurations.sharedBin.singleFile)), '/opt/alfresco')
             }
         }
@@ -46,15 +53,5 @@ subprojects {
             tags = parentProject.extensions.findByName("dockerAlfresco").dockerBuild.tags
             pull = false
         }
-    }
-
-    createDockerFile {
-        copyFile 'share-config-custom.xml', '/docker-config/'
-        copyFile '91-init-share-customized.sh', '/docker-entrypoint.d/'
-        runCommand '''\
-chmod u+x /docker-entrypoint.d/91-init-share-customized.sh && \
-mkdir -p "${CATALINA_HOME}/shared/classes/alfresco/web-extension/" && \
-chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
-        '''
     }
 }

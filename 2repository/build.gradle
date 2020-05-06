@@ -47,33 +47,25 @@ subprojects {
         }
     }
 
-    afterEvaluate {
-        createDockerFile.dependsOn(parentImage)
+    createDockerFile {
+        environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
+        environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
+        def date = new Date().getTime().toString()
+        environmentVariable('BUILD_DATE', date.substring(0,date.length()-3))  // do not consider milliseconds
 
-        if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
-            changedPortsComposeUp.dependsOn(buildDockerImage)
-        else
-            changedPortsComposeUp.enabled = false
+        smartCopy(configurations.sharedLib, '${CATALINA_HOME}/shared/lib/')
 
-        // nested configurations do not get the DOCKER_IMAGE
-        buildDockerImage {
-            doLast {
-                if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
-                    dockerCompose.changedPorts.environment.put 'DOCKER_IMAGE', getImageId().get()
-            }
-        }
+        if (!configurations.sharedBin.isEmpty())
+            smartCopy(tarTree(resources.gzip(configurations.sharedBin.singleFile)), '/opt/alfresco')
+    }
 
+    createDockerFile.dependsOn(parentImage)
 
-        createDockerFile {
-            environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
-            environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
-            def date = new Date().getTime().toString()
-            environmentVariable('BUILD_DATE', date.substring(0,date.length()-3))  // do not consider milliseconds
-
-            if(!configurations.sharedLib.isEmpty())
-                smartCopy(configurations.sharedLib, '${CATALINA_HOME}/shared/lib/')
-            if(!configurations.sharedBin.isEmpty())
-                smartCopy(tarTree(resources.gzip(configurations.sharedBin.singleFile)), '/opt/alfresco')
+    // nested configurations do not get the DOCKER_IMAGE
+    buildDockerImage {
+        doLast {
+            if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
+                dockerCompose.changedPorts.environment.put 'DOCKER_IMAGE', getImageId().get()
         }
     }
 
@@ -148,4 +140,10 @@ subprojects {
     task composeDownAll {
         dependsOn project.tasks.withType(ComposeDown)
     }
+
+    if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
+        changedPortsComposeUp.dependsOn(buildDockerImage)
+    else
+        changedPortsComposeUp.enabled = false
+
 }
