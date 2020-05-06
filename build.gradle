@@ -1,5 +1,5 @@
 plugins {
-    id "eu.xenit.docker-alfresco" version "4.1.1" apply false
+    id "eu.xenit.docker-alfresco" version "5.0.5" apply false
 }
 
 static def calcTags(version) {

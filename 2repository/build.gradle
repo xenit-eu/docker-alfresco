@@ -2,6 +2,7 @@ import com.avast.gradle.dockercompose.tasks.ComposeDown
 
 subprojects {
     apply plugin: 'eu.xenit.docker-alfresco'
+    apply plugin: 'eu.xenit.docker-compose'
 
     configurations {
         sharedLib
@@ -38,7 +39,7 @@ subprojects {
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
     dockerAlfresco {
-        baseImage = { parentImage.getImageId().get() }
+        baseImage = parentImage.getImageId()
         dockerBuild {
             if (!(project.hasProperty("repoName"))) {
                 ext.repoName = "hub.xenit.eu"
@@ -49,7 +50,6 @@ subprojects {
                     "${repoName}" + "/" + "alfresco-repository-${project.alfresco.flavor}")
             tags = calcTags(project.alfresco.version)
             pull = false
-            automaticTags = false
         }
     }
 
