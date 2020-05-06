@@ -11,5 +11,4 @@ ext {
 
 dependencies {
     baseShareWar 'org.alfresco:share:6.1.1.1@war'
-    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
 }

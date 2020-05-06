@@ -1,9 +1,4 @@
 subprojects {
-    configurations {
-        sharedLib
-        sharedBin
-    }
-
     apply plugin: 'eu.xenit.docker-alfresco'
 
     if (new File("${project.projectDir}/overload.gradle").exists())
@@ -35,15 +30,6 @@ chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
         '''
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
-
-        doFirst {
-            if (!configurations.sharedLib.isEmpty()) {
-                smartCopy(configurations.sharedLib, '${CATALINA_HOME}/shared/lib/')
-            }
-            if (!configurations.sharedBin.isEmpty()) {
-                smartCopy(tarTree(resources.gzip(configurations.sharedBin.singleFile)), '/opt/alfresco')
-            }
-        }
     }
 
     dockerAlfresco {
