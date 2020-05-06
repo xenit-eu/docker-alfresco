@@ -74,14 +74,4 @@ subprojects {
         }
     }
 
-    docker {
-        if (System.getenv("DOCKER_USER") != null) {
-            registryCredentials {
-                username = System.getenv("DOCKER_USER")
-                password = System.getenv("DOCKER_PASSWORD")
-            }
-        } else {
-            logger.debug "using default credentials"
-        }
-    }
 }
