@@ -6,7 +6,16 @@ subprojects {
 
     def workingDir = "$project.buildDir/dockerbuild"
 
-    task copyDockerfile(type: Copy) {
+    configurations {
+        initScript
+    }
+
+    dependencies {
+        initScript project(':docker-init-script')
+    }
+
+    task copyDockerResources(type: Sync) {
+        from "$rootProject.projectDir/src/main/resources/global"
         from("$rootProject.projectDir/src/main/resources/dockerfiles/") {
             if (project.alfresco.version.major.toInteger() < 6) {
                 include "Dockerfile-skeleton-pre6"
@@ -16,33 +25,12 @@ subprojects {
                 rename "Dockerfile-skeleton", 'Dockerfile'
             }
         }
-        into workingDir
-    }
-
-    configurations {
-        initScript
-    }
-
-    dependencies {
-        initScript project(':docker-init-script')
-    }
-
-    task copyGlobalResources(type: Copy) {
-        from "$rootProject.projectDir/src/main/resources/global"
+        from "$project.projectDir/local"
         from(configurations.initScript) {
             rename { "90-init-alfresco.jar" }
         }
         into workingDir
     }
-
-    task copyLocalResources(type: Copy) {
-        from "$project.projectDir/local"
-        into workingDir
-    }
-
-    buildDockerImage.dependsOn(copyDockerfile)
-    buildDockerImage.dependsOn(copyGlobalResources)
-    buildDockerImage.dependsOn(copyLocalResources)
 
     dockerFile {
         dockerFile = file("$workingDir/Dockerfile")
@@ -66,6 +54,8 @@ subprojects {
         if(project.hasProperty('extraBuildArgs')) {
             buildArgs.putAll(project.extraBuildArgs)
         }
+
+        dependsOn(copyDockerResources)
     }
 
 }

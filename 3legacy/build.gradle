@@ -4,21 +4,16 @@ subprojects {
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
-    task copyLocalResources(type: Copy) {
+    task copyDockerResources(type: Sync) {
         from "$project.projectDir/../local"
-        into "${project.buildDir}/docker"
-    }
-
-    task processDockerResources(type: Copy) {
         from "${project.parent.projectDir}/src/main/resources/"
-        into "${project.buildDir}/docker"
-        dependsOn(copyLocalResources)
+        into "${createDockerFile.destDir.get().asFile.absolutePath}"
     }
 
     def parentProject = project(":2repository:${project.projectDir.name}")
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
-    buildDockerImage.dependsOn(parentImage, processDockerResources)
+    buildDockerImage.dependsOn(parentImage, copyDockerResources)
 
     createDockerFile {
         copyFile 'share-config-custom.xml', '/docker-config/'
