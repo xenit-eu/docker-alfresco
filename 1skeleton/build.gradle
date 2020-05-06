@@ -19,19 +19,20 @@ subprojects {
         into workingDir
     }
 
-    task configureCopyGlobalResources {
-        doFirst {
-            copyGlobalResources.from(project(':docker-init-script').tasks.jar.outputs.files.singleFile) {
-                rename { "90-init-alfresco.jar" }
-            }
-        }
-        dependsOn(":docker-init-script:jar")
+    configurations {
+        initScript
+    }
+
+    dependencies {
+        initScript project(':docker-init-script')
     }
 
     task copyGlobalResources(type: Copy) {
         from "$rootProject.projectDir/src/main/resources/global"
+        from(configurations.initScript) {
+            rename { "90-init-alfresco.jar" }
+        }
         into workingDir
-        dependsOn(configureCopyGlobalResources)
     }
 
     task copyLocalResources(type: Copy) {
