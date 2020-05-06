@@ -105,8 +105,10 @@ Environment variables:
 | ENABLE_CIFS                 | cifs.enabled                      |                                                              | false                                                        |  |
 | ENABLE_FTP                  | ftp.enabled                       |                                                              | false                                                        |  |
 | ENABLE_CLUSTERING           | alfresco.cluster.enabled          |                                                              | false                                                        |  |
+| ALFRESCO_JSON_LOGGING       |                                   |                                                              | false                                                        |  If true => alfresco logs will be in json format (\*)|
 | GLOBAL_\<variable\>           | \<variable\>                        |                                                              |                                                              |  |
 
+(\*) Note: tomcat logs are still non-json
 
 ## Support & Collaboration
 
