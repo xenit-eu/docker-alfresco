@@ -1,4 +1,10 @@
 pipeline {
+    environment {
+        ORG_GRADLE_PROJECT_buildDate = """${sh(
+            returnStdout: true,
+            script: 'date +%s',
+        )}"""
+    }
     agent any
     stages {
         stage("Unit Tests") {

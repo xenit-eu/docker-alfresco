@@ -17,8 +17,8 @@ env:
     - VERSIONS_TO_BUILD=5
     - VERSIONS_TO_BUILD=6
 
-# https://github.com/travis-ci/travis-ci/issues/8667
-install: true
+install:
+  - "echo 'buildDate='$(date +%s) >> ~/.gradle/gradle.properties"
 
 script: travis_wait 60 ./gradlew -PrepoName=docker.io/xenit check --info
 
