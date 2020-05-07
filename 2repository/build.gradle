@@ -48,15 +48,17 @@ subprojects {
     }
 
     createDockerFile {
-        environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
-        environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
-        def date = new Date().getTime().toString()
-        environmentVariable('BUILD_DATE', date.substring(0,date.length()-3))  // do not consider milliseconds
-
         smartCopy(configurations.sharedLib, '${CATALINA_HOME}/shared/lib/')
-
         if (!configurations.sharedBin.isEmpty())
             smartCopy(tarTree(resources.gzip(configurations.sharedBin.singleFile)), '/opt/alfresco')
+
+        environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
+        environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
+
+        doFirst {
+            def date = new Date().getTime().toString()
+            environmentVariable('BUILD_DATE', date.substring(0, date.length() - 3))  // do not consider milliseconds
+        }
     }
 
     createDockerFile.dependsOn(parentImage)
