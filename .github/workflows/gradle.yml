@@ -23,7 +23,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Write build date
-      run: "echo 'buildDate='$(date +%s) >> ~/.gradle/gradle.properties"
+      run: "mkdir -p ~/.gradle && echo 'buildDate='$(date +%s) >> ~/.gradle/gradle.properties"
     - name: Build with Gradle
       run: ./gradlew -PrepoName=docker.io/xenit check --info
     - name: Push images
