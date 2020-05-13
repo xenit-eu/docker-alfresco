@@ -27,4 +27,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew -PrepoName=docker.io/xenit check --info
     - name: Push images
+      env:
+       DOCKER_USER: ${{ secrets.DOCKER_USER }}
+       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: ./gradlew -PrepoName=docker.io/xenit pushDockerImage
