@@ -1,0 +1,21 @@
+ext {
+    alfresco = [
+	version: [
+	    major: 6,
+            minor: 2,
+            rev: 1
+	],
+	flavor: 'enterprise'
+    ]
+    solrimage = 'docker.io/xenit/alfresco-solr6:1.4.0'
+    shareimage = 'docker.io/xenit/alfresco-share-community:6.2.0'
+    tests = true
+}
+
+dependencies {
+    alfrescoAmp 'org.alfresco:alfresco-share-services:6.2.0@amp'
+    baseAlfrescoWar 'org.alfresco:content-services:6.2.1@war'
+
+    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
+}
+
