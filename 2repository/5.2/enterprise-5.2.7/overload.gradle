@@ -4,6 +4,7 @@ ext {
 	    major: 5,
             minor: 2,
             rev: 7,
+            label: 3
 	],
 	flavor: 'enterprise'
     ]
