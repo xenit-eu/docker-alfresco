@@ -3,14 +3,9 @@ ext {
 	version: [
 	    major: 6,
             minor: 0,
-            rev: 0
+            rev: 1
 	],
 	flavor: 'skeleton'	
     ]
-
-	// 6.0.7-ga, 6.0.0 only working with java 8, 6.0.1 works with both java 8 and java 11
-	extraBuildArgs = [
-			'BASE_IMAGE': 'docker.io/xenit/tomcat:alfresco-5.2-ubuntu'
-	]
 }
 
