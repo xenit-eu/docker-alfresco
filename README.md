@@ -28,7 +28,7 @@ Community images are built by [Travis](https://travis-ci.org/xenit-eu/) and publ
 
 These are the images used for a multi-container Alfresco enterprise deployment in production. To be used together with [`docker-share`](https://github.com/xenit-eu/docker-share), [`docker-solr`](https://github.com/xenit-eu/docker-solr), [`postgres`](https://github.com/xenit-eu/docker-postgres).
 
-The most basic setup uses the docker-compose files from [`src/master/src/integrationTest/resources/`](https://github.com/xenit-eu/docker-alfresco/tree/master/src/integrationTest/resources). These files are used in the integration tests.
+The most basic setup uses the docker-compose files from [`2repository/src/integrationTest/resources`](https://github.com/xenit-eu/docker-alfresco/tree/master/2repository/src/integrationTest/resources). These files are used in the integration tests.
 
 ### Repository and share:
 * alfresco-enterprise:<version>
