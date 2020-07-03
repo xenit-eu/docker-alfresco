@@ -1,5 +1,5 @@
 plugins {
-    id "eu.xenit.docker-alfresco" version "5.0.5" apply false
+    id "eu.xenit.docker-alfresco" version "5.0.6" apply false
     id "be.vbgn.ci-detect" version "0.3.0"
 }
 
