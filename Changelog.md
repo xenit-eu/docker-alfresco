@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Disable pulling image when using an image id
 
 ### Fixed
+* [DOCKER-339] Init script was installing xmlstarlet and required internet connection
 * [DOCKER-251] Init script was duplicating JAVA_OPTS_<var> variables
 * [DOCKER-288] Make sure java executable points to the Adopt openjdk
 * [DOCKER-335] Fix bug where `SOLR_SSL=none` deleted too much from server.xml
