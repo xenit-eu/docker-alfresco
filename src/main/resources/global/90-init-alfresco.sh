@@ -20,7 +20,6 @@ ${JAVA_HOME}/bin/java -jar /90-init-alfresco.jar "$CONFIG_FILE" "$TOMCAT_CONFIG_
 
 if [[ $SOLR_SSL == none ]] && [[ $ALFRESCO_VERSION != "5.0"* ]] && [[ $ALFRESCO_VERSION != "3"* ]] && [[ $ALFRESCO_VERSION != "4"* ]]; then
   #remove the SSL connector
-  apt-get update && apt-get install -y xmlstarlet #TODO: remove this when xml-starlet is no longer purged in docker-tomcat
   xmlstarlet edit --inplace --delete "/Server/Service[@name='Catalina']/Connector[@SSLEnabled='true' and @port='\${TOMCAT_PORT_SSL}']" $TOMCAT_SERVER_FILE
 fi
 
