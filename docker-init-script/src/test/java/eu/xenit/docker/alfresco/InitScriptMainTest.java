@@ -3,10 +3,11 @@ package eu.xenit.docker.alfresco;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.sun.org.apache.bcel.internal.generic.ATHROW;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -170,6 +171,17 @@ public class InitScriptMainTest {
     public void testDefaultSettings() throws IOException {
         Map<String, String> env = getDefaultEnvironment();
         InitScriptMain main = checkProperties("testDefaultSettings", env);
+        testDefaultSSLSettings(main);
+    }
+
+    private void testDefaultSSLSettings(InitScriptMain main) {
+        assertTrue("JAVA_OPTS contains default values for SSL store configuration",
+                main.getJavaOptions().containsAll(Arrays.asList(
+                        "-DTOMCAT_SSL_KEYSTORE=/opt/alfresco/keystore/ssl.keystore",
+                        "-DTOMCAT_SSL_KEYSTORE_PASSWORD=kT9X6oe68t",
+                        "-DTOMCAT_SSL_TRUSTSTORE=/opt/alfresco/keystore/ssl.truststore",
+                        "-DTOMCAT_SSL_TRUSTSTORE_PASSWORD=kT9X6oe68t"
+                )));
     }
 
     @Test
@@ -210,6 +222,45 @@ public class InitScriptMainTest {
         Map<String, String> env = getDefaultEnvironment();
         env.put("LOG4J_logger.eu.xenit.test", "DEBUG");
         checkLoggers("testSetCustomLoggerLevels", env);
+    }
+
+    @Test
+    public void testSetCustomDirKeystore() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        String customKeystoreDir = "/ssl/keystores";
+        env.put("DIR_KEYSTORE", customKeystoreDir);
+        InitScriptMain main = new InitScriptMain(env, new HashMap<String, String>(), new HashMap<String, String>());
+        main.process();
+        assertTrue("JAVA_OPTS contains values for custom key- and truststore locations.",
+                main.getJavaOptions().containsAll(
+                        Arrays.asList("-DTOMCAT_SSL_KEYSTORE=".concat(customKeystoreDir).concat("/ssl.keystore"),
+                                "-DTOMCAT_SSL_TRUSTSTORE=".concat(customKeystoreDir).concat("/ssl.truststore"))));
+    }
+
+    @Test
+    public void testSetCustomKeystores() throws IOException {
+        Map<String, String> env = getDefaultEnvironment();
+        String methodname = "testSetCustomKeystores";
+        String testKeystoreLocation = methodname.concat("/");
+        List<String> keystorePasswordJavaOpts = new ArrayList<>();
+        keystorePasswordJavaOpts.add("-DTOMCAT_SSL_KEYSTORE_PASSWORD=keystore");
+        keystorePasswordJavaOpts.add("-DTOMCAT_SSL_TRUSTSTORE_PASSWORD=truststore");
+        env.put("DIR_KEYSTORE", getClass().getResource(methodname).getPath());
+        env.put("CUSTOM_KEYSTORES", "true");
+        InitScriptMain main = new InitScriptMain(env, new HashMap<String, String>(), new HashMap<String, String>());
+        main.process();
+        assertTrue("JAVA_OPTS contains custom values for key- and truststore passwords.",
+                main.getJavaOptions().containsAll(keystorePasswordJavaOpts));
+    }
+
+    private String getKeystorePasswordFromProps(String pathToPropsFile) throws IOException {
+        Properties properties = new Properties();
+        try (InputStream propertiesInputStream = getClass().getResourceAsStream(pathToPropsFile)) {
+            if (propertiesInputStream != null) {
+                properties.load(propertiesInputStream);
+            }
+        }
+        return (String) properties.get("keystore.password");
     }
 
 }

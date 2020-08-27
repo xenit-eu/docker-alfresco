@@ -60,6 +60,13 @@ Since in practice the [`remote jod converter`](https://github.com/xenit-eu/jodco
 
 Images can be customized further by using environment variables - see section Environment Variables.
 
+## TLS with Custom keystores
+
+It is advisable when enabling TLS to use newly create key- and truststores for keeping your keys and certificates. These stores should follow
+conventions as set out in the [alfresco documentation](https://docs.alfresco.com/search-enterprise/concepts/generate-keys-overview.html), but their location can be changed with the `DIR_KEYSTORE` environment variable.
+The system and application are provided access to these stores by adding a store-password.properties file for each respective store in the store 
+directory (see Alfresco documentation), and requires the environment variable `CUSTOM_KEYSTORES` to be set to true. 
+
 ## Environment variables
 
 There are several environment variables available to tweak the behaviour. While none of the variables are required, they may significantly aid you in using these images.
@@ -79,6 +86,7 @@ Environment variables:
 | --------------------------- | --------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------- |
 | DIR_ROOT                    | dir.root                          |                                                              | /opt/alfresco/alf_data                                                        |  |
 | DIR_KEYSTORE                | dir.keystore                      |                                                              | /opt/alfresco/keystore                                                        |  |
+| CUSTOM_KEYSTORES            | N/A                               |                                                              | false                                                        | Triggers whether during init the system will attempt to fill in password values into the tomcat connector definition from the store-password.properties files |
 | ALFRESCO_HOST               | alfresco.host                     |                                                              | alfresco                                                    |  |
 | ALFRESCO_PORT               | alfresco.port                     |                                                              | 8080                                                         |  |
 | ALFRESCO_PROTOCOL           | alfresco.protocol                 |                                                              | http                                                         |  |
