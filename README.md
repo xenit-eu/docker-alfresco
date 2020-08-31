@@ -60,12 +60,6 @@ Since in practice the [`remote jod converter`](https://github.com/xenit-eu/jodco
 
 Images can be customized further by using environment variables - see section Environment Variables.
 
-## TLS with Custom keystores
-
-It is advisable when enabling TLS to use newly create key- and truststores for keeping your keys and certificates. These stores should follow
-conventions as set out in the [alfresco documentation](https://docs.alfresco.com/search-enterprise/concepts/generate-keys-overview.html), but their location can be changed with the `DIR_KEYSTORE` environment variable.
-The system and application are provided access to these stores by adding a store-password.properties file for each respective store in the store 
-directory (see Alfresco documentation), and requires the environment variable `CUSTOM_KEYSTORES` to be set to true. 
 
 ## Environment variables
 
@@ -79,6 +73,20 @@ The alfresco-global.properties can be set via a generic mechanism by setting env
 A subset of the alfresco-global.properties have also dedicated environment variables e.g. SOLR_SSL. Generic variables take precedence.
 
 See also environment variables from lower layers: [`docker-openjdk`](https://github.com/xenit-eu/docker-openjdk) and [`docker-tomcat`](https://github.com/xenit-eu/docker-tomcat).
+
+* TLS with Custom keystores
+
+It is advisable when enabling TLS to use newly create key- and truststores for keeping your keys and certificates. These stores should follow
+conventions as set out in the [alfresco documentation](https://docs.alfresco.com/search-enterprise/concepts/generate-keys-overview.html), but their location can be changed with the `DIR_KEYSTORE` environment variable.
+The system and application are provided access to these stores by adding a store-password.properties file for each respective store in the store 
+directory (see Alfresco documentation), and requires the environment variable `CUSTOM_KEYSTORES` to be set to true. 
+
+* Log4j properties
+
+It is possible to set the loglevel for a given log4j logger by adding entries of the format`LOG4J_logger.fully.qualified.classname=LOGLEVEL`. The first step on the property path (`log4j`) will be added by the script.
+**note:**
+The current implementation will break generation of a custom image where the unexploded alfresco war is `COPY`ed into the image via Dockerfile ([See issue 32](https://github.com/xenit-eu/docker-alfresco/issues/32)).
+This issue can be worked around by `COPY`ing the exploded war, or by using the [alfresco-docker-gradle-plugin](https://github.com/xenit-eu/alfresco-docker-gradle-plugin).
 
 Environment variables:
 
@@ -114,6 +122,7 @@ Environment variables:
 | ENABLE_FTP                  | ftp.enabled                       |                                                              | false                                                        |  |
 | ENABLE_CLUSTERING           | alfresco.cluster.enabled          |                                                              | false                                                        |  |
 | GLOBAL_\<variable\>           | \<variable\>                        |                                                              |                                                              |  |
+| LOG4J_\<property-path\>     | N/A                               | N/A                                                          | N/A                                                          | Add the given property path and value to the alfresco log4j properties file. |
 
 
 ## Support & Collaboration
