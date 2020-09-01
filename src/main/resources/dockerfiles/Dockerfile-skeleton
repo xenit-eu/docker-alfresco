@@ -23,13 +23,13 @@ RUN	mkdir -p /opt/alfresco && \
             --insert '$connector' --type attr --name SSLEnabled --value true \
             --insert '$connector' --type attr --name maxThreads --value \$\{TOMCAT_MAX_THREADS\} \
             --insert '$connector' --type attr --name scheme --value https \
-            --insert '$connector' --type attr --name keystoreFile --value /opt/alfresco/keystore/ssl.keystore \
-            --insert '$connector' --type attr --name keystorePass --value kT9X6oe68t \
+            --insert '$connector' --type attr --name keystoreFile --value \$\{TOMCAT_SSL_KEYSTORE\} \
+            --insert '$connector' --type attr --name keystorePass --value \$\{TOMCAT_SSL_KEYSTORE_PASSWORD\} \
             --insert '$connector' --type attr --name keystoreType --value JCEKS \
             --insert '$connector' --type attr --name secure --value true \
             --insert '$connector' --type attr --name connectionTimeout --value 240000 \
-            --insert '$connector' --type attr --name truststoreFile --value /opt/alfresco/keystore/ssl.truststore \
-            --insert '$connector' --type attr --name truststorePass --value kT9X6oe68t \
+            --insert '$connector' --type attr --name truststoreFile --value \$\{TOMCAT_SSL_TRUSTSTORE\} \
+            --insert '$connector' --type attr --name truststorePass --value \$\{TOMCAT_SSL_TRUSTSTORE_PASSWORD\} \
             --insert '$connector' --type attr --name truststoreType --value JCEKS \
             --insert '$connector' --type attr --name clientAuth --value want \
             --insert '$connector' --type attr --name sslProtocol --value TLS \

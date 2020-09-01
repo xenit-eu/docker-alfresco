@@ -77,7 +77,7 @@ public class InitScriptMain {
         globalProperties.put(option, environment.containsKey(environmentVariable)?environment.get(environmentVariable):defaultValue);
     }
 
-    public void process() {
+    public void process() throws IOException {
         setGlobalOptionFromEnvironment("dir.root", "DIR_ROOT", "/opt/alfresco/alf_data");
         setGlobalOptionFromEnvironment("dir.keystore", "DIR_KEYSTORE", "/opt/alfresco/keystore");
 
@@ -119,9 +119,30 @@ public class InitScriptMain {
         setGlobalOptionFromEnvironment("solr.useDynamicShardRegistration", "DYNAMIC_SHARD_REGISTRATION", "false");
         setGlobalOptionFromEnvironment("solr.secureComms", "SOLR_SSL", "https");
 
+        // SSL
         if ("none".equalsIgnoreCase(environment.get("SOLR_SSL")) && alfrescoVersion.isGreaterThan("5.0")) {
             // TODO: remove SSL connector from tomcat server.xml
         }
+
+        String dirKeystore = environment.containsKey("DIR_KEYSTORE") ? environment.get("DIR_KEYSTORE") : "/opt/alfresco/keystore";
+        boolean customKeystores = environment.containsKey("CUSTOM_KEYSTORES") && Boolean.parseBoolean(environment.get("CUSTOM_KEYSTORES"));
+        Properties keystoreProperties = new Properties();
+        Properties truststoreProperties = new Properties();
+        if (customKeystores) {
+            try (InputStream keystorePropertiesInputStream = new FileInputStream(dirKeystore.concat("/ssl-keystore-passwords.properties"))) {
+                keystoreProperties.load(keystorePropertiesInputStream);
+            }
+            try (InputStream truststorePropertiesInputStream = new FileInputStream(dirKeystore.concat("/ssl-truststore-passwords.properties"))) {
+                truststoreProperties.load(truststorePropertiesInputStream);
+            }
+        }
+        // Get or default is not available in the interface in older versions, replaced it with a custom method.
+        String keystorePassword = getKeystorePassword(keystoreProperties);
+        String truststorePassword = getKeystorePassword(truststoreProperties);
+        javaOptions.add("-DTOMCAT_SSL_KEYSTORE=".concat(dirKeystore.concat("/ssl.keystore")));
+        javaOptions.add("-DTOMCAT_SSL_KEYSTORE_PASSWORD=".concat(keystorePassword));
+        javaOptions.add("-DTOMCAT_SSL_TRUSTSTORE=".concat(dirKeystore.concat("/ssl.truststore")));
+        javaOptions.add("-DTOMCAT_SSL_TRUSTSTORE_PASSWORD=".concat(truststorePassword));
 
         // System
         setGlobalOptionFromEnvironment("mail.host", "MAIL_HOST", "localhost");
@@ -187,6 +208,14 @@ public class InitScriptMain {
         }
 
         return "solr6";
+    }
+
+    private String getKeystorePassword(Properties properties) {
+        String password = (String) properties.get("keystore.password");
+        if (password == null) {
+            password = "kT9X6oe68t";
+        }
+        return password;
     }
 
 }
