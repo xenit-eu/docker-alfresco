@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 ### Added
+* [DOCKER-341] Added configuration for custom ssl key- & truststores
 * [DOCKER-266] Added enterprise 5.2.6
 * [DOCKER-291] Added enterprise 6.2.0 and community 6.2.0-ga
 * [DOCKER-309] Added enterprise 6.1.1
