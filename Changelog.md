@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [DOCKER-294] Install fontconfig in the skeleton image
 * [DOCKER-284] Allow setting log levels through docker-compose
 * [DOCKER-312] Start a release procedure: add Xenit version to the images tags
+* [DOCKER-344] Added Alfresco 5.0 legacy builds
 	
 ### Changed
 * [DOCKER-278] Move java specific variables (jmx, debug, memory settings) to java layer
