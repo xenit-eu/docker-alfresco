@@ -20,7 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [DOCKER-255] Continue to build some legacy images, with both Alfresco and Share inside
 * [DOCKER-253] Move handling of properties to Java code instead of shell in the init
 * [DOCKER-263], [DOCKER-259], [DOCKER-258], [DOCKER-257], [DOCKER-256] Refactorings, better handling of failures, notifications
-* [DOCKER-292] Bump versions transformers. Use transform router + queue based transformations.	
+* [DOCKER-292] Bump versions transformers. Use transform router + queue based transformations.
+* [DOCKER-344] Enabled building of legacy Alfresco enterprise 5.0 images
 * Increase number of tries in healthcheck
 * Upgrade gradle and docker-alfresco plugin
 * Use smartCopy functionality
