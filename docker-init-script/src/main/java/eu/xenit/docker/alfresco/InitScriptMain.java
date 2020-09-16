@@ -16,6 +16,8 @@ import java.util.Properties;
 
 public class InitScriptMain {
 
+    public static final String LOG4J_CONFIG_FILE = "LOG4J_CONFIG_FILE";
+
     public static void main(String[] argv) throws IOException {
         String globalPropertiesFile = argv[0];
         String tomcatConfigFile = argv[1];
@@ -188,7 +190,7 @@ public class InitScriptMain {
             if (entry.getKey().startsWith("GLOBAL_")) {
                 String globalProperty = entry.getKey().substring("GLOBAL_".length());
                 globalProperties.put(globalProperty, entry.getValue());
-            } else if (entry.getKey().startsWith("LOG4J_")) {
+            } else if (entry.getKey().startsWith("LOG4J_") && !LOG4J_CONFIG_FILE.equals(entry.getKey())) {
                 String log4jProperty = entry.getKey().substring("LOG4J_".length());
                 log4jProperties.put("log4j." + log4jProperty, entry.getValue());
             }
