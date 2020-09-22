@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # we should get env ${CATALINA_HOME} from upstream container docker
-set -e
+set -exv
 
 echo "Alfresco init start"
 
@@ -11,7 +11,7 @@ export DB_NAME=${DB_NAME:-'alfresco'}
 export SOLR_SSL=${SOLR_SSL:-'https'}
 export JAVA_OPTS
 
-ENABLE_CHOWNCUTOFF=${ENABLE_CHOWNCUTOFF:-true}
+ENABLE_CHOWNCUTOFF=${ENABLE_CHOWNCUTOFF:-'true'}
 CHOWNCUTOFF=${CHOWN_CUTOFF:-10000}
 
 CONFIG_FILE=${CONFIG_FILE:-${CATALINA_HOME}'/shared/classes/alfresco-global.properties'}
@@ -30,7 +30,7 @@ if [ -n "$CATALINA_HOME" ]; then
 
   user="tomcat"
   if [[ ($(stat -c %U /opt/alfresco/alf_data) != "$user" && $(stat -c %a /opt/alfresco/alf_data) -lt 766) ]]; then
-    if [[ ${ENABLE_CHOWNCUTOFF} ]]; then
+    if [[ "$ENABLE_CHOWNCUTOFF" == 'true' ]]; then
         # check if number of files exceeds cutoff value to prevent longrunning chown process.
         find /opt/alfresco/alf_data | head -n $CHOWNCUTOFF > /dev/null
         # * pipestatus will be 0 if the above find ended before head ended.
@@ -48,7 +48,7 @@ if [ -n "$CATALINA_HOME" ]; then
     fi
   fi
   if [[ ($(stat -c %U "$CATALINA_HOME/temp") != "$user" && $(stat -c %a "$CATALINA_HOME/temp") -lt 766) ]]; then
-    if [[ ${ENABLE_CHOWNCUTOFF} ]]; then
+    if [[ "$ENABLE_CHOWNCUTOFF" == 'true' ]]; then
         find "$CATALINA_HOME/temp" | head -n $CHOWNCUTOFF > /dev/null
         if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
           chown -R $user:$user "$CATALINA_HOME"/temp
