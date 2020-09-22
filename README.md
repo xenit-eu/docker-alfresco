@@ -112,7 +112,7 @@ Environment variables:
 | DB_URL                      | db.url                            |                                                              | jdbc:postgresql://postgresql:5432/alfresco                   |  |
 | DB_QUERY                    | db.pool.validate.query            |                                                              | select 1                                                     |  |
 | INDEX                       | index.subsystem.name              |                                                              | solr for alfresco 4 <br>solr4 for alfresco 5<br>solr6 for alfresco >=5.2 |  |
-| SOLR_HOST             | solr.host                         |                                                              | solr                                                         |  |
+| SOLR_HOST                   | solr.host                         |                                                              | solr                                                         |  |
 | SOLR_PORT                   | solr.port                         |                                                              | 8080                                                         |  |
 | SOLR_PORT_SSL               | solr.port.ssl                     |                                                              | 8443                                                         |  |
 | DYNAMIC_SHARD_REGISTRATION  | solr.useDynamicShardRegistration  |                                                              | false                                                        |  |
@@ -121,8 +121,9 @@ Environment variables:
 | ENABLE_CIFS                 | cifs.enabled                      |                                                              | false                                                        |  |
 | ENABLE_FTP                  | ftp.enabled                       |                                                              | false                                                        |  |
 | ENABLE_CLUSTERING           | alfresco.cluster.enabled          |                                                              | false                                                        |  |
-| GLOBAL_\<variable\>           | \<variable\>                        |                                                              |                                                              |  |
+| GLOBAL_\<variable\>         | \<variable\>                        |                                                              |                                                              |  |
 | LOG4J_\<property-path\>     | N/A                               | N/A                                                          | N/A                                                          | Add the given property path and value to the alfresco log4j properties file. |
+| CHOWN_CUTOFF                | N/A                               | N/A                                                          | 10 000                                                       | In case a `chown` on `alf_data` or `${CATALINA_HOME}/temp` is required, determine the maximum number of items alf_data can contain to proceed automatically with the chown. Will error with code 64 or 65 if exceeded. |
 
 
 ## Support & Collaboration

@@ -11,6 +11,8 @@ export DB_NAME=${DB_NAME:-'alfresco'}
 export SOLR_SSL=${SOLR_SSL:-'https'}
 export JAVA_OPTS
 
+CHOWNCUTOFF=${CHOWN_CUTOFF:-10000}
+
 CONFIG_FILE=${CONFIG_FILE:-${CATALINA_HOME}'/shared/classes/alfresco-global.properties'}
 LOG4J_CONFIG_FILE=${LOG4J_CONFIG_FILE:-${CATALINA_HOME}'/webapps/alfresco/WEB-INF/classes/alfresco/extension/dev-log4j.properties'}
 TOMCAT_CONFIG_FILE=${CATALINA_HOME}'/bin/setenv.sh'
@@ -26,11 +28,27 @@ fi
 if [ -n "$CATALINA_HOME" ]; then
 
   user="tomcat"
-  if [[ $(stat -c %U /opt/alfresco/alf_data) != "$user" ]]; then
-    chown -R $user:$user /opt/alfresco/alf_data
+  if [[ ($(stat -c %U /opt/alfresco/alf_data) != "$user" && $(stat -c %a /opt/alfresco/alf_data) -lt 766) ]]; then
+    # check if number of files exceeds cutoff value to prevent longrunning chown process.
+    find /opt/alfresco/alf_data | head -n $CHOWNCUTOFF > /dev/null
+    # * pipestatus will be 0 if the above find ended before head ended.
+    # * pipestatus will be 141 if the above head ends before find -which implies there are more than CHOWNCUTOFF files,
+    #   which means the following chown would be expensive in time.
+    #   sigpipe will cause the find to end.
+    if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+      chown -R $user:$user /opt/alfresco/alf_data
+    else
+      # custom exit code for debug to this script
+      exit 64
+    fi
   fi
-  if [[ $(stat -c %U "$CATALINA_HOME/temp") != "$user" ]]; then
-    chown -R $user:$user "$CATALINA_HOME"/temp
+  if [[ ($(stat -c %U "$CATALINA_HOME/temp") != "$user" && $(stat -c %a "$CATALINA_HOME/temp") -lt 766) ]]; then
+    find "$CATALINA_HOME/temp" | head -n $CHOWNCUTOFF > /dev/null
+    if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+      chown -R $user:$user "$CATALINA_HOME"/temp
+    else
+      exit 65
+    fi
   fi
 
 fi
