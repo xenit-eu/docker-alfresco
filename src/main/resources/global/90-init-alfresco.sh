@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # we should get env ${CATALINA_HOME} from upstream container docker
-set -exv
+set -e
 
 echo "Alfresco init start"
 
