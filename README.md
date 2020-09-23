@@ -123,8 +123,6 @@ Environment variables:
 | ENABLE_CLUSTERING           | alfresco.cluster.enabled          |                                                              | false                                                        |  |
 | GLOBAL_\<variable\>         | \<variable\>                      |                                                              |                                                              |  |
 | LOG4J_\<property-path\>     | N/A                               | N/A                                                          | N/A                                                          | Add the given property path and value to the alfresco log4j properties file. |
-| CHOWN_CUTOFF                | N/A                               | N/A                                                          | 10 000                                                       | In case a `chown` on `alf_data` or `${CATALINA_HOME}/temp` is required, determine the maximum number of items alf_data can contain to proceed automatically with the chown. Will error with code 64 or 65 if exceeded. |
-| ENABLE_CHOWNCUTOFF          | N/A                               | N/A                                                          | true                                                         | Toggles whether `90-init-alfresco.sh` will test the viability of a possible chown on `alf_data` or `${CATALINA_HOME}/temp` |
 
 
 ## Support & Collaboration
