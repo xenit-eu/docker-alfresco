@@ -30,13 +30,14 @@ if [ -n "$CATALINA_HOME" ]; then
   # -> if dir exists, check if the permissions are incorrect
   # --> if permissions are incorrect, exit with error code
   # -> else if not exists, chown only alf_data
-  if [[ -e /opt/alfresco/alf_data/contentstore \
-   && ($(stat -c %U /opt/alfresco/alf_data) != "$user" && $(stat -c %a /opt/alfresco/alf_data) -lt 766) ]]; then
-     # custom exit code for debug to this script
-     echo "Contentstore exists within /opt/alfresco/alf_data , but directory does not have correct ownership/permission to run alfresco. Exiting with code 64."
-     exit 64
+  if [[ -e /opt/alfresco/alf_data/contentstore && -e /opt/alfresco/alf_data/contentstore.deleted\
+   && ($(stat -c %U /opt/alfresco/alf_data/contentstore) != "$user" && $(stat -c %a /opt/alfresco/alf_data/contentstore) -lt 766)\
+   && ($(stat -c %U /opt/alfresco/alf_data/contentstore.deleted) != "$user" && $(stat -c %a /opt/alfresco/alf_data/contentstore.deleted) -lt 766) ]]; then
+    # custom exit code for debug to this script
+    echo "Contentstores exists within /opt/alfresco/alf_data , but do not have correct ownership/permission to run alfresco. Exiting with code 64."
+    exit 64
   else
-    echo "No contentstore in alf_data, chowning directory to tomcat user."
+    echo "No contentstore in alf_data ; assuming dev/test environment, chowning alf_data to tomcat user."
     chown $user:$user /opt/alfresco/alf_data
   fi
 
