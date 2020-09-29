@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * [DOCKER-312] Start a release procedure: add Xenit version to the images tags
 	
 ### Changed
+* [DOCKER-311] Change requirements for `chown` in `90-init-alfresco.sh` to prevent costly chown operations
 * [DOCKER-278] Move java specific variables (jmx, debug, memory settings) to java layer
 * [DOCKER-236] Separate out share: see https://github.com/xenit-eu/docker-share
 * [DOCKER-255] Continue to build some legacy images, with both Alfresco and Share inside
