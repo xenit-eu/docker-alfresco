@@ -1,4 +1,5 @@
 # Alfresco in Docker
+Alfresco-specific docker images, starting with Alfresco 4.2.
 
 ## Images created 
 
