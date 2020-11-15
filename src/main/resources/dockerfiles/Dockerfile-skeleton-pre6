@@ -13,13 +13,13 @@ RUN	mkdir -p /opt/alfresco && \
     cd /opt/alfresco && \
 	apt-get update && \
 	apt-get install -y curl unzip vim locate xmlstarlet jq gettext-base && \
-
+    #
 	apt-get install -y ghostscript imagemagick && \
 	apt-get install -y libice6 libsm6 libxt6 libxrender1 libxinerama1 libfontconfig1 libcups2 libdbus-glib-1-2 libglu1 libreoffice && \
-
+    #
 	# http://fcorti.com/2014/10/13/how-to-install-alfresco-5-0-ubuntu-14-04-lts/
 	apt-get install -y -f libjpeg62 libart-2.0-2 && \
-
+    #
 	# libgif4 not available in Ubuntu Xenial, but not needed on Alfresco 5.2: https://docs.alfresco.com/5.2/concepts/install-GhostScript.html
 	if apt-cache show libgif4 2>/dev/null ; \
 	then \
@@ -28,16 +28,16 @@ RUN	mkdir -p /opt/alfresco && \
     else \
       echo "Package libgif4 is not available. Will not install swftools" ; \
     fi && \
-
+    #
     # make sure the Java executable used is the Adopt Openjdk
     if test -f /opt/java/openjdk/bin/java ; then rm -f /usr/bin/java ; ln -s /opt/java/openjdk/bin/java /usr/bin/java ; fi && \
-
-
+    #
+    #
     rm /tmp/swftools_0.9.0-0ubuntu2_amd64.deb && \
 	rm -rf ${CATALINA_HOME}/webapps/* && \
 	mkdir -p ${CATALINA_HOME}/bin && \
 	touch ${CATALINA_HOME}/bin/setenv.sh && \
-
+    #
     # Configure server.xml
     xmlstarlet edit --inplace \
         --append "/Server/Service/Connector" --type elem --name Connector \
@@ -62,7 +62,7 @@ RUN	mkdir -p /opt/alfresco && \
             --insert '$connector' --type attr --name maxHttpHeaderSize --value \$\{TOMCAT_MAX_HTTP_HEADER_SIZE\} \
             --insert '$connector' --type attr --name maxSavePostSize --value -1 \
         ${CATALINA_HOME}/conf/server.xml && \
-
+    #
     xmlstarlet edit --inplace -N apache="http://tomcat.apache.org/xml" \
         --subnode "/apache:tomcat-users" --type elem --name user \
             --var user '$prev' \
@@ -75,10 +75,10 @@ RUN	mkdir -p /opt/alfresco && \
             --insert '$user' --type attr --name roles --value "repository" \
             --insert '$user' --type attr --name password --value "null" \
         ${CATALINA_HOME}/conf/tomcat-users.xml && \
-
-
-# clean up
-	apt-get --purge -y remove unzip && \
+    #
+    #
+    # clean up
+    apt-get --purge -y remove unzip && \
         apt-get --purge -y autoremove && \
         rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -93,10 +93,10 @@ RUN	mkdir -p /docker-entrypoint.d
 COPY 	90-init-alfresco.sh /docker-entrypoint.d/
 COPY    90-init-alfresco.jar /
 RUN	chmod u+x /docker-entrypoint.d/90-init-alfresco.sh && \
-
-# permissions
- 	chown -hR tomcat /opt/alfresco && \
-	chown -hR tomcat ${CATALINA_HOME} 
+    #
+    # permissions
+    chown -hR tomcat /opt/alfresco && \
+    chown -hR tomcat ${CATALINA_HOME}
 
 # named volumes
 VOLUME 	/opt/alfresco/alf_data ${CATALINA_HOME}/temp ${CATALINA_HOME}/logs
