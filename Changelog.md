@@ -3,9 +3,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
-## 2020-11.0
+## 2020-11.0 (2020-11-15)
 ### Changed
-* [2020-11-15] [PR #52](https://github.com/xenit-eu/docker-alfresco/pull/52) Update PostgreSQL JDBC driver to 42.2.18
+* [PR #52](https://github.com/xenit-eu/docker-alfresco/pull/52) Update PostgreSQL JDBC driver to 42.2.18
 
 ## Unreleased
 ### Added
