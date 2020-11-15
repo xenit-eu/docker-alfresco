@@ -38,12 +38,11 @@ subprojects {
     def parentProject = project(":1skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}")
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
-    dockerAlfresco {
-        baseImage = parentImage.getImageId()
-        dockerBuild {
-            repository = calcRepository(project.alfresco.flavor)
-            tags = calcTags(project.alfresco.version)
-            pull = false
+    dockerBuild {
+        repositories = [calcRepository(project.alfresco.flavor)]
+        tags = calcTags(project.alfresco.version)
+        alfresco {
+            baseImage = parentImage.getImageId()
         }
     }
 
@@ -63,6 +62,7 @@ subprojects {
 
     // nested configurations do not get the DOCKER_IMAGE
     buildDockerImage {
+        pull = false
         doLast {
             if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
                 dockerCompose.changedPorts.environment.put 'DOCKER_IMAGE', getImageId().get()

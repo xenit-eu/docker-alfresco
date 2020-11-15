@@ -32,13 +32,10 @@ subprojects {
         into workingDir
     }
 
-    dockerFile {
+    dockerBuild {
         dockerFile = file("$workingDir/Dockerfile")
-        dockerBuild {
-            repository = calcRepository(project.alfresco.flavor)
-            tags = calcTags(project.alfresco.version)
-            pull = true
-        }
+        repositories = [calcRepository(project.alfresco.flavor)]
+        tags = calcTags(project.alfresco.version)
     }
 
     buildDockerImage {
