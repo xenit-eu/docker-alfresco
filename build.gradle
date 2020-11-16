@@ -1,6 +1,6 @@
 plugins {
-    id "eu.xenit.docker-alfresco" version "5.0.6" apply false
-    id "be.vbgn.ci-detect" version "0.3.0"
+    id "eu.xenit.docker-alfresco" version "5.1.0" apply false
+    id "be.vbgn.ci-detect" version "0.5.0"
 }
 
 import java.util.stream.Collectors

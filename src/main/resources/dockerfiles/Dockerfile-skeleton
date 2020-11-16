@@ -12,7 +12,7 @@ RUN	mkdir -p /opt/alfresco && \
 	rm -rf ${CATALINA_HOME}/webapps/* && \
 	mkdir -p ${CATALINA_HOME}/bin && \
 	touch ${CATALINA_HOME}/bin/setenv.sh && \
-
+    #
     # Configure server.xml
     xmlstarlet edit --inplace \
         --append "/Server/Service/Connector" --type elem --name Connector \
@@ -37,7 +37,7 @@ RUN	mkdir -p /opt/alfresco && \
             --insert '$connector' --type attr --name maxHttpHeaderSize --value \$\{TOMCAT_MAX_HTTP_HEADER_SIZE\} \
             --insert '$connector' --type attr --name maxSavePostSize --value -1 \
         ${CATALINA_HOME}/conf/server.xml && \
-
+    #
     xmlstarlet edit --inplace -N apache="http://tomcat.apache.org/xml" \
         --subnode "/apache:tomcat-users" --type elem --name user \
             --var user '$prev' \
@@ -50,10 +50,10 @@ RUN	mkdir -p /opt/alfresco && \
             --insert '$user' --type attr --name roles --value "repository" \
             --insert '$user' --type attr --name password --value "null" \
         ${CATALINA_HOME}/conf/tomcat-users.xml && \
-
-
-# clean up
-	apt-get --purge -y remove unzip && \
+    #
+    #
+    # clean up
+    apt-get --purge -y remove unzip && \
         apt-get --purge -y autoremove && \
         rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -68,8 +68,8 @@ RUN	mkdir -p /docker-entrypoint.d
 COPY 	90-init-alfresco.sh /docker-entrypoint.d/
 COPY    90-init-alfresco.jar /
 RUN	chmod u+x /docker-entrypoint.d/90-init-alfresco.sh && \
-
-# permissions
+    #
+    # permissions
  	chown -hR tomcat /opt/alfresco && \
 	chown -hR tomcat ${CATALINA_HOME} 
 

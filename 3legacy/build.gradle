@@ -27,12 +27,15 @@ chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
     }
 
-    dockerAlfresco {
-        baseImage = parentImage.getImageId()
-        dockerBuild {
-            repository = calcRepository("legacy")
-            tags = parentProject.extensions.findByName("dockerAlfresco").dockerBuild.tags
-            pull = false
+    dockerBuild {
+        repositories = [calcRepository("legacy")]
+        tags = parentProject.extensions.findByName("dockerAlfresco").dockerBuild.tags
+        alfresco {
+            baseImage = parentImage.getImageId()
         }
+    }
+
+    buildDockerImage {
+        pull = false
     }
 }
