@@ -35,7 +35,12 @@ chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
         }
     }
 
+    // nested configurations do not get the DOCKER_IMAGE
     buildDockerImage {
         pull = false
+        doLast {
+            if (project.hasProperty('testsChangedPorts') && project.testsChangedPorts)
+                dockerCompose.changedPorts.environment.put 'DOCKER_IMAGE', getImageId().get()
+        }
     }
 }
