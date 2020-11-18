@@ -3,12 +3,13 @@ ext {
             version: [
                     major: 5,
                     minor: 2,
-                    rev: 5,
+                    rev: 7,
+                    label: 3
             ],
             flavor: 'enterprise'
     ]
 }
 
 dependencies {
-    baseShareWar 'org.alfresco:share:5.2.5@war'
+    baseShareWar 'org.alfresco:share:5.2.7.3@war'
 }
