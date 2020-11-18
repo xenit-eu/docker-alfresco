@@ -10,7 +10,9 @@ subprojects {
         into "${createDockerFile.destDir.get().asFile.absolutePath}"
     }
 
-    def parentProject = project(":2repository:${project.projectDir.name}")
+    def parentProjectName = ":2repository:${project.projectDir.name}"
+    def parentProject = project(parentProjectName)
+    evaluationDependsOn(parentProjectName)
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
     buildDockerImage.dependsOn(parentImage, copyDockerResources)
@@ -29,7 +31,7 @@ chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
 
     dockerBuild {
         repositories = [calcRepository("legacy")]
-        tags = parentProject.extensions.findByName("dockerAlfresco").dockerBuild.tags
+        tags = parentProject.extensions.findByName("dockerBuild").tags
         alfresco {
             baseImage = parentImage.getImageId()
         }
