@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+
 subprojects {
     apply plugin: 'eu.xenit.docker-alfresco'
 
@@ -17,6 +19,7 @@ subprojects {
 
     buildDockerImage.dependsOn(parentImage, copyDockerResources)
 
+    createDockerFile.dependsOn(parentImage)
     createDockerFile {
         removeExistingWar = false
         copyFile 'share-config-custom.xml', '/docker-config/'
@@ -28,6 +31,17 @@ chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
         '''
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
+        doFirst {
+            def instrs = instructions.get()
+            def newInstrs = []
+            for (Dockerfile.Instruction instruction : instrs) {
+                newInstrs.add(instruction)
+                if (instruction.keyword == "COPY") {
+                    newInstrs.add(new Dockerfile.RunCommandInstruction("true"))
+                }
+            }
+            instructions.set(newInstrs)
+        }
     }
 
     dockerBuild {
