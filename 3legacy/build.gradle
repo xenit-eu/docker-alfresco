@@ -18,6 +18,7 @@ subprojects {
     buildDockerImage.dependsOn(parentImage, copyDockerResources)
 
     createDockerFile {
+        removeExistingWar = false
         copyFile 'share-config-custom.xml', '/docker-config/'
         copyFile '91-init-share-customized.sh', '/docker-entrypoint.d/'
         runCommand '''\
@@ -33,7 +34,6 @@ chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
         repositories = [calcRepository("legacy")]
         tags = parentProject.extensions.findByName("dockerBuild").tags
         alfresco {
-            leanImage = true
             baseImage = parentImage.getImageId()
         }
     }
