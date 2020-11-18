@@ -33,6 +33,7 @@ chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
         repositories = [calcRepository("legacy")]
         tags = parentProject.extensions.findByName("dockerBuild").tags
         alfresco {
+            leanImage = true
             baseImage = parentImage.getImageId()
         }
     }
