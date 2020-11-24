@@ -31,17 +31,6 @@ chown -R tomcat:tomcat "${CATALINA_HOME}/shared/classes/alfresco/web-extension/"
         '''
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
-        doFirst {
-            def instrs = instructions.get()
-            def newInstrs = []
-            for (Dockerfile.Instruction instruction : instrs) {
-                newInstrs.add(instruction)
-                if (instruction.keyword == "COPY") {
-                    newInstrs.add(new Dockerfile.RunCommandInstruction("true"))
-                }
-            }
-            instructions.set(newInstrs)
-        }
     }
 
     dockerBuild {
