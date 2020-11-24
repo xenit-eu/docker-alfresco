@@ -16,6 +16,6 @@ dependencies {
     baseAlfrescoWar 'org.alfresco:alfresco-enterprise:5.2.4@war'
 
     sharedBin(group: 'org.alfresco', name: 'alfresco-pdf-renderer', version: '1.1', classifier: 'linux', ext: 'tgz')
-    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
+    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '42.2.18')
 }
 

@@ -16,5 +16,5 @@ dependencies {
     alfrescoAmp 'org.alfresco:alfresco-share-services:6.1.0.2@amp'
     baseAlfrescoWar 'org.alfresco:content-services-community:6.1.2-ga@war'
 
-    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
+    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '42.2.18')
 }
