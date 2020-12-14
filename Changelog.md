@@ -1,39 +1,97 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
-## Unreleased
-### Added
-* [DOCKER-341] Added configuration for custom ssl key- & truststores
-* [DOCKER-266] Added enterprise 5.2.6
-* [DOCKER-291] Added enterprise 6.2.0 and community 6.2.0-ga
-* [DOCKER-309] Added enterprise 6.1.1
-* [DOCKER-294] Install fontconfig in the skeleton image
-* [DOCKER-284] Allow setting log levels through docker-compose
-* [DOCKER-312] Start a release procedure: add Xenit version to the images tags
-	
+## 2020-09.4 (2020-09-29)
 ### Changed
-* [DOCKER-311] Change requirements for `chown` in `90-init-alfresco.sh` to prevent costly chown operations
-* [DOCKER-278] Move java specific variables (jmx, debug, memory settings) to java layer
+* [PR #50](https://github.com/xenit-eu/docker-alfresco/pull/50) DOCKER-311 Change requirements for `chown` in `90-init-alfresco.sh` to prevent costly chown operations
+
+## 2020-09.3 (2020-09-21)
+### Removed
+* [PR #49](https://github.com/xenit-eu/docker-alfresco/pull/49) DOCKER-345 Disabled building of legacy Alfresco enterprise 5.0 images
+
+## 2020-09.2 (2020-09-16)
+### Fixed
+* [PR #48](https://github.com/xenit-eu/docker-alfresco/pull/48) [Issue47](https://github.com/xenit-eu/docker-alfresco/issues/47) Fix ambiguity in envvar handling in java initscript
+
+## 2020-09.1 (2020-09-15)
+### Added
+* [PR #46](https://github.com/xenit-eu/docker-alfresco/pull/46) DOCKER-344 Enabled building of legacy Alfresco enterprise 5.0 images
+
+## 2020-09.0 (2020-09-01)
+### Added
+* [PR #44](https://github.com/xenit-eu/docker-alfresco/pull/44) [Issue43](https://github.com/xenit-eu/docker-alfresco/issues/43) DOCKER-341 Added configuration for custom ssl key- & truststores
+
+## 2020-07.0 (2020-07-03)
+### Fixed
+* [PR #41](https://github.com/xenit-eu/docker-alfresco/pull/41) DOCKER-339 Init script was installing xmlstarlet and required internet connection
+
+## 2020-05.1 (2020-05-29)
+### Fixed
+* [PR #38](https://github.com/xenit-eu/docker-alfresco/pull/38) DOCKER-335 Fix bug where `SOLR_SSL=none` deleted too much from server.xml
+
+## 2020-05.0 (2020-05-26)
+### Changed
+* [PR #37](https://github.com/xenit-eu/docker-alfresco/pull/37) Update to last 5.2 (5.2.7.3 - added), 6.0 (6.0.1.3), 6.1 (6.1.1.3) and 6.2 (6.2.1 - added) versions
+
+## 2020-04.0 (2020-04-17)
+### Fixed
+* [PR #34](https://github.com/xenit-eu/docker-alfresco/pull/34) DOCKER-321 Fix issues that the Tomcat SSL connector no longer configured since upgrade to latest version
+
+## 2020-03.0 (2020-03-13)
+### Added
+* [PR #33](https://github.com/xenit-eu/docker-alfresco/pull/33) DOCKER-312 Start a release procedure: add Xenit version to the images tags
+
+## 2020-02.1 (2020-02-24)
+### Changed
+* [PR #30](https://github.com/xenit-eu/docker-alfresco/pull/30) DOCKER-309 Update Alfresco Enterprise 6.1.0 to 6.1.1 
+
+## 2020-02.0 (2020-02-10)
+### Added
+* [PR #28](https://github.com/xenit-eu/docker-alfresco/pull/28) DOCKER-284 Allow setting log levels through docker-compose
+
+## 2019-12.1 (2019-12-05)
+### Added
+* [PR #25](https://github.com/xenit-eu/docker-alfresco/pull/25) DOCKER-294 Install fontconfig in the skeleton image
+
+## 2019-12.0 (2019-12-02)
+### Changed
+* [PR #24](https://github.com/xenit-eu/docker-alfresco/pull/24) DOCKER-292 Bump versions transformers. Use transform router + queue based transformations.
+
+## 2019-11.2 (2019-11-29)
+### Added
+* [PR #23](https://github.com/xenit-eu/docker-alfresco/pull/23) DOCKER-291 Added enterprise 6.2.0 and community 6.2.0-ga
+
+## 2019-11.1 (2019-11-28)
+### Fixed
+* [PR #22](https://github.com/xenit-eu/docker-alfresco/pull/22) DOCKER-288 Make sure java executable points to AdoptOpenJDK
+
+## 2019-11.0 (2019-11-05)
+### Changed
+* [PR #17](https://github.com/xenit-eu/docker-alfresco/pull/17) DOCKER-278 Move java specific variables (jmx, debug, memory settings) to java layer
+
+## 2019-09.0 (2019-09-13)
+### Added
+* [PR #13](https://github.com/xenit-eu/docker-alfresco/pull/13) DOCKER-266 Added enterprise 5.2.6
+
+### Changed
+* [PR #11](https://github.com/xenit-eu/docker-alfresco/pull/11) DOCKER-263, DOCKER-259, DOCKER-258, DOCKER-257, DOCKER-256 Refactorings, better handling of failures, notifications
+  * Increase number of tries in healthcheck
+  * Use smartCopy functionality
+  * Disable pulling image when using an image id
+
+### Removed
+* [PR #14](https://github.com/xenit-eu/docker-alfresco/pull/14) DOCKER-267 Removed enterprise 5.1.1, 5.2.0, 5.2.2 and 5.2.3
+
+## [v1.0.1] - 2019-08-30
+### Changed
 * [DOCKER-236] Separate out share: see https://github.com/xenit-eu/docker-share
 * [DOCKER-255] Continue to build some legacy images, with both Alfresco and Share inside
 * [DOCKER-253] Move handling of properties to Java code instead of shell in the init
-* [DOCKER-263], [DOCKER-259], [DOCKER-258], [DOCKER-257], [DOCKER-256] Refactorings, better handling of failures, notifications
-* [DOCKER-292] Bump versions transformers. Use transform router + queue based transformations.
-* [DOCKER-344] Enabled building of legacy Alfresco enterprise 5.0 images
-* [DOCKER-345] Disabled building of legacy Alfresco enterprise 5.0 images
-* Increase number of tries in healthcheck
-* Upgrade gradle and docker-alfresco plugin
-* Use smartCopy functionality
-* Disable pulling image when using an image id
 
 ### Fixed
-* [DOCKER-339] Init script was installing xmlstarlet and required internet connection
 * [DOCKER-251] Init script was duplicating JAVA_OPTS_<var> variables
-* [DOCKER-288] Make sure java executable points to the Adopt openjdk
-* [DOCKER-335] Fix bug where `SOLR_SSL=none` deleted too much from server.xml
 
 ## [v1.0.0] Make it public
 ### Changed
