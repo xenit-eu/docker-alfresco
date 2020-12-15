@@ -1,26 +1,17 @@
-# This workflow will build a Java project with Gradle
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
-
+name: 'Scheduled Build'
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  schedule:
+    - cron: '7 0 * * SUN'
 
 jobs:
-  build:
-
+  scheduledBuild:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
        version:
         - 4
         - 5
         - 6
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
@@ -35,9 +26,11 @@ jobs:
       env:
        VERSIONS_TO_BUILD: ${{ matrix.version }}    
       run: ./gradlew -PrepoName=docker.io/xenit check --info
-    - name: Push images
+    - name: Publish docker images
+      if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
       env:
        VERSIONS_TO_BUILD: ${{ matrix.version }}            
        DOCKER_USER: ${{ secrets.DOCKER_USER }}
        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: ./gradlew -PrepoName=docker.io/xenit pushDockerImage
+
