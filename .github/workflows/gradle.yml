@@ -5,7 +5,7 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ master ]
+    branches: [ '*' ]
   pull_request:
     branches: [ master ]
 
@@ -40,4 +40,5 @@ jobs:
        VERSIONS_TO_BUILD: ${{ matrix.version }}            
        DOCKER_USER: ${{ secrets.DOCKER_USER }}
        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      if: contains(github.ref, 'master')
       run: ./gradlew -PrepoName=docker.io/xenit pushDockerImage
