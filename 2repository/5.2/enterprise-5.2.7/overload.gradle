@@ -4,17 +4,17 @@ ext {
 	    major: 5,
             minor: 2,
             rev: 7,
-            label: 3
+            label: 8
 	],
 	flavor: 'enterprise'
     ]
     solrimage = 'docker.io/xenit/alfresco-solr6:1.3.0.1'
-    shareimage = 'hub.xenit.eu/alfresco-enterprise/alfresco-share-enterprise:5.2.5'
+    shareimage = 'hub.xenit.eu/alfresco-enterprise/alfresco-share-enterprise:5.2.7'
     tests = true
 }
 
 dependencies {
-    baseAlfrescoWar 'org.alfresco:alfresco-enterprise:5.2.7.3@war'
+    baseAlfrescoWar 'org.alfresco:alfresco-enterprise:5.2.7.8@war'
 
     sharedBin(group: 'org.alfresco', name: 'alfresco-pdf-renderer', version: '1.1', classifier: 'linux', ext: 'tgz')
     sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
