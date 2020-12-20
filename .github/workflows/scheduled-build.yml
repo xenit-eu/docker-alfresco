@@ -8,12 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-       version:
-        - 4
-        - 5
-        - 6
+       version: [4,5,6]
+       branch: [master, release]       
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ matrix.branch }}        
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
