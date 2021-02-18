@@ -3,7 +3,7 @@ version: '3.2'
 services:
 
  postgresql:
-   image: docker.io/xenit/postgres
+   image: hub.xenit.eu/public/postgres:12
    environment:
    - POSTGRES_USER=alfresco
    - POSTGRES_PASSWORD=admin
