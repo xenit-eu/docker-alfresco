@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## 2021-02.1 (2021-02-18)
 ### Changed
-* [PR #62](https://github.com/xenit-eu/docker-alfresco/pull/62) DOCKER-368 Add build for alfresco 6.2.2 images; pull pg and solr images from xenit repository to avoid dockerhub rate limits
+* [PR #62](https://github.com/xenit-eu/docker-alfresco/pull/62) DOCKER-368 Add build for alfresco 6.2.2 images; pull pg and solr images from xenit repository public section to avoid dockerhub rate limits
 
 ## 2020-09.4 (2020-09-29)
 ### Changed
