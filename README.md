@@ -130,10 +130,6 @@ Environment variables:
 
 These images are updated via pull requests to the [xenit-eu/docker-alfresco/](https://github.com/xenit-eu/docker-alfresco/) Github-repository.
 
-**Maintained by:**
-
-Roxana Angheluta <roxana.angheluta@xenit.eu>
-
 ### How to build
 
 To build a local version of the _alfresco_ images:
