@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## 2021-02.1 (2021-02-18)
+### Changed
+* [PR #62](https://github.com/xenit-eu/docker-alfresco/pull/62) DOCKER-368 Add build for alfresco 6.2.2 images; pull pg and solr images from harbour
+
 ## 2020-09.4 (2020-09-29)
 ### Changed
 * [PR #50](https://github.com/xenit-eu/docker-alfresco/pull/50) DOCKER-311 Change requirements for `chown` in `90-init-alfresco.sh` to prevent costly chown operations
