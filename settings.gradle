@@ -46,7 +46,7 @@ def includeSubprojectPerVersion(major,flavor,includeLegacy) {
 }
 
 def includeSubProjectsPerVersionIfEnabled(major) {
-    if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("${major}")) {
+    if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD") == "${major}") {
         includeSubprojectPerVersion("${major}.","community",hasProperty("legacy"))
         if(hasProperty("enterprise")) {
             includeSubprojectPerVersion("${major}.","enterprise",hasProperty("legacy"))
