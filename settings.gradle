@@ -45,28 +45,20 @@ def includeSubprojectPerVersion(major,flavor,includeLegacy) {
             }
 }
 
+def includeSubProjectsPerVersionIfEnabled(major) {
+    if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("${major}")) {
+        includeSubprojectPerVersion("${major}.","community",hasProperty("legacy"))
+        if(hasProperty("enterprise")) {
+            includeSubprojectPerVersion("${major}.","enterprise",hasProperty("legacy"))
+        }
+    }
+}
+
 rootProject.name = 'docker-alfresco'
 
 include 'docker-init-script'
 
-if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("4")) {
-    includeSubprojectPerVersion("4.","community",hasProperty("legacy"))
-    if(hasProperty("enterprise")) {
-        includeSubprojectPerVersion("4.","enterprise",hasProperty("legacy"))
-    }
-}
-
-
-if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("5")) {
-    includeSubprojectPerVersion("5.","community",hasProperty("legacy"))
-    if(hasProperty("enterprise")) {
-        includeSubprojectPerVersion("5.","enterprise",hasProperty("legacy"))
-    }
-}
-
-if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD").equals("6")) {
-    includeSubprojectPerVersion("6.","community",hasProperty("legacy"))
-    if(hasProperty("enterprise")) {
-        includeSubprojectPerVersion("6.","enterprise",hasProperty("legacy"))
-    }
-}
+includeSubProjectsPerVersionIfEnabled("4")
+includeSubProjectsPerVersionIfEnabled("5")
+includeSubProjectsPerVersionIfEnabled("6")
+includeSubProjectsPerVersionIfEnabled("7")
