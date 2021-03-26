@@ -1,11 +1,11 @@
 package eu.xenit.docker.alfresco;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -33,7 +34,7 @@ public class InitScriptMainTest {
     @Parameters(name = "Alfresco {0}-{1}")
     public static Collection<String[]> getVersionsAndFlavors() {
         Collection<String[]> versions = new ArrayList<>();
-        String[] alfrescoVersions = {"4.2", "5.0", "5.1", "5.2", "6.0", "6.1"};
+        String[] alfrescoVersions = {"4.2", "5.0", "5.1", "5.2", "6.0", "6.1", "6.2", "7.0"};
         String[] alfrescoFlavors = {"enterprise", "community"};
 
         for (String alfrescoVersion : alfrescoVersions) {
@@ -253,14 +254,54 @@ public class InitScriptMainTest {
                 main.getJavaOptions().containsAll(keystorePasswordJavaOpts));
     }
 
-    private String getKeystorePasswordFromProps(String pathToPropsFile) throws IOException {
-        Properties properties = new Properties();
-        try (InputStream propertiesInputStream = getClass().getResourceAsStream(pathToPropsFile)) {
-            if (propertiesInputStream != null) {
-                properties.load(propertiesInputStream);
-            }
-        }
-        return (String) properties.get("keystore.password");
+    @Test
+    public void keystoreJavaOpts_default() throws IOException {
+        Assume.assumeTrue(
+                "keystore configuration via Java options is the default since 6.2",
+                AlfrescoVersion.parse(alfrescoVersion).isGreaterThanOrEqual("6.2"));
+
+        Map<String, String> env = getDefaultEnvironment();
+        InitScriptMain main = new InitScriptMain(env, new HashMap<String, String>(), new HashMap<String, String>());
+        main.process();
+        assertTrue(main.getJavaOptions().contains("-Dmetadata-keystore.password=mp6yc0UD9e"));
+        assertTrue(main.getJavaOptions().contains("-Dmetadata-keystore.aliases=metadata"));
+        assertTrue(main.getJavaOptions().contains("-Dmetadata-keystore.metadata.password=oKIWzVdEdA"));
+        assertTrue(main.getJavaOptions().contains("-Dmetadata-keystore.metadata.algorithm=DESede"));
+        assertTrue(main.getJavaOptions().contains("-Dssl-keystore.password=kT9X6oe68t"));
+        assertTrue(main.getJavaOptions().contains("-Dssl-keystore.aliases=ssl.alfresco.ca,ssl.repo"));
+        assertTrue(main.getJavaOptions().contains("-Dssl-keystore.ssl.alfresco.ca.password=kT9X6oe68t"));
+        assertTrue(main.getJavaOptions().contains("-Dssl-keystore.ssl.repo.password=kT9X6oe68t"));
+    }
+
+    @Test
+    public void keyStoreJavaOpts_custom() throws IOException {
+        Assume.assumeTrue(
+                "keystore configuration via Java options is the default since 6.2",
+                AlfrescoVersion.parse(alfrescoVersion).isGreaterThanOrEqual("6.2"));
+
+        Map<String, String> env = getDefaultEnvironment();
+        env.put("ENCRYPTION_KEYSTORE_TYPE", "secret");
+        env.put("ENCRYPTION_CIPHERALGORITHM", "foo/bar/baz");
+        env.put("ENCRYPTION_KEYALGORITHM", "foo");
+        env.put("ENCRYPTION_KEYSTORE_LOCATION", "/my/special/location");
+        env.put("METADATA_KEYSTORE_PASSWORD", "foo");
+        env.put("METADATA_KEYSTORE_ALIASES", "a,b");
+        env.put("METADATA_KEYSTORE_A_PASSWORD", "a-password");
+        env.put("METADATA_KEYSTORE_A_ALGORITHM", "a-algorithm");
+        env.put("SSL_KEYSTORE_PASSWORD", "bar");
+        InitScriptMain main = new InitScriptMain(env, new HashMap<String, String>(), new HashMap<String, String>());
+        main.process();
+
+        assertTrue(main.getJavaOptions().contains("-Dmetadata-keystore.password=foo"));
+        assertTrue(main.getJavaOptions().contains("-Dmetadata-keystore.aliases=a,b"));
+        assertTrue(main.getJavaOptions().contains("-Dmetadata-keystore.a.password=a-password"));
+        assertTrue(main.getJavaOptions().contains("-Dmetadata-keystore.a.algorithm=a-algorithm"));
+        assertFalse(main.getJavaOptions().contains("-Dmetadata-keystore.metadata.password=oKIWzVdEdA"));
+        assertFalse(main.getJavaOptions().contains("-Dmetadata-keystore.metadata.algorithm=DESede"));
+        assertTrue(main.getJavaOptions().contains("-Dssl-keystore.password=bar"));
+        assertTrue(main.getJavaOptions().contains("-Dssl-keystore.aliases=ssl.alfresco.ca,ssl.repo"));
+        assertTrue(main.getJavaOptions().contains("-Dssl-keystore.ssl.alfresco.ca.password=kT9X6oe68t"));
+        assertTrue(main.getJavaOptions().contains("-Dssl-keystore.ssl.repo.password=kT9X6oe68t"));
     }
 
 }

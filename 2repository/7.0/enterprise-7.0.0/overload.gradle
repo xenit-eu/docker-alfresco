@@ -1,0 +1,22 @@
+ext {
+    alfresco = [
+            version: [
+                    major: 7,
+                    minor: 0,
+                    rev: 0
+            ],
+            flavor: 'enterprise'
+    ]
+    solrimage = 'hub.xenit.eu/alfresco-enterprise/alfresco-solr6:2.0.1'
+    shareimage = 'docker.io/xenit/alfresco-share-community:7.0.0'
+    tests = true
+}
+
+dependencies {
+    alfrescoAmp 'org.alfresco:alfresco-share-services:7.0.0@amp'
+    // content-services version based on:
+    // https://github.com/Alfresco/acs-packaging/blob/7.0.0/pom.xml#L17
+    baseAlfrescoWar 'org.alfresco:content-services:8.482@war'
+
+    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
+}

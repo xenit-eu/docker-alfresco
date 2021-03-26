@@ -1,5 +1,6 @@
 package eu.xenit.docker.alfresco;
 
+import eu.xenit.docker.alfresco.KeystoreDefaults.AliasDefaults;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,7 +10,10 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -62,6 +66,10 @@ public class InitScriptMain {
         return Collections.unmodifiableList(javaOptions);
     }
 
+    public Map<String, String> getGlobalProperties() {
+        return Collections.unmodifiableMap(globalProperties);
+    }
+
     private final List<String> javaOptions = new ArrayList<>();
 
     public InitScriptMain(Map<String, String> environment, Map<String, String> globalProperties,
@@ -77,6 +85,12 @@ public class InitScriptMain {
 
     private void setGlobalOptionFromEnvironment(String option, String environmentVariable, String defaultValue) {
         globalProperties.put(option, environment.containsKey(environmentVariable)?environment.get(environmentVariable):defaultValue);
+    }
+
+    private void setJavaOptionFromEnvironment(String javaOptKey, String envVarKey, String defaultValue) {
+        String value = environment.containsKey(envVarKey) ? environment.get(envVarKey) : defaultValue;
+        String javaOpt = "-D" + javaOptKey + "=" + value;
+        javaOptions.add(javaOpt);
     }
 
     public void process() throws IOException {
@@ -126,6 +140,17 @@ public class InitScriptMain {
             // TODO: remove SSL connector from tomcat server.xml
         }
 
+        if (alfrescoVersion.isGreaterThanOrEqual("6.2")) {
+            setGlobalOptionFromEnvironment("encryption.keystore.type", "ENCRYPTION_KEYSTORE_TYPE", "JCEKS");
+            setGlobalOptionFromEnvironment("encryption.cipherAlgorithm", "ENCRYPTION_CIPHERALGORITHM", "DESede/CBC/PKCS5Padding");
+            setGlobalOptionFromEnvironment("encryption.keyAlgorithm", "ENCRYPTION_KEYALGORITHM", "DESede");
+            setGlobalOptionFromEnvironment("encryption.keystore.location", "ENCRYPTION_KEYSTORE_LOCATION", "/opt/alfresco/keystore/keystore");
+            processKeyStore("metadata-keystore", KeystoreDefaults.METADATA_KEYSTORE);
+            processKeyStore("metadata-backup-keystore", new KeystoreDefaults());
+            processKeyStore("ssl-keystore", KeystoreDefaults.SSL_KEYSTORE);
+            processKeyStore("ssl-truststore", KeystoreDefaults.SSL_TRUSTSTORE);
+        }
+
         String dirKeystore = environment.containsKey("DIR_KEYSTORE") ? environment.get("DIR_KEYSTORE") : "/opt/alfresco/keystore";
         boolean customKeystores = environment.containsKey("CUSTOM_KEYSTORES") && Boolean.parseBoolean(environment.get("CUSTOM_KEYSTORES"));
         Properties keystoreProperties = new Properties();
@@ -139,8 +164,10 @@ public class InitScriptMain {
             }
         }
         // Get or default is not available in the interface in older versions, replaced it with a custom method.
-        String keystorePassword = getKeystorePassword(keystoreProperties);
-        String truststorePassword = getKeystorePassword(truststoreProperties);
+        String keystorePassword = environment.containsKey("SSL_KEYSTORE_PASSWORD") ?
+                environment.get("SSL_KEYSTORE_PASSWORD") : getKeystorePassword(keystoreProperties);
+        String truststorePassword = environment.containsKey("SSL_TRUSTSTORE_PASSWORD") ?
+                environment.get("SSL_TRUSTSTORE_PASSWORD") : getKeystorePassword(truststoreProperties);
         javaOptions.add("-DTOMCAT_SSL_KEYSTORE=".concat(dirKeystore.concat("/ssl.keystore")));
         javaOptions.add("-DTOMCAT_SSL_KEYSTORE_PASSWORD=".concat(keystorePassword));
         javaOptions.add("-DTOMCAT_SSL_TRUSTSTORE=".concat(dirKeystore.concat("/ssl.truststore")));
@@ -196,6 +223,59 @@ public class InitScriptMain {
             }
             // If you're about to add a third branch to this if-structure, consider abstracting it into a function?
         }
+    }
+
+    private void processKeyStore(final String keystoreId, KeystoreDefaults defaults) {
+        final String passwordJavaOptsKey = keystoreId + ".password";
+        final String passwordEnvKey = toEnvVarKey(passwordJavaOptsKey);
+
+        setJavaOptionFromEnvironment(passwordJavaOptsKey, passwordEnvKey, defaults.getPassword());
+
+        final String aliasesJavaOptsKey = keystoreId + ".aliases";
+        final String aliasesEnvKey = toEnvVarKey(aliasesJavaOptsKey);
+
+        final Collection<String> aliases = environment.containsKey(aliasesEnvKey) ?
+                Arrays.asList(environment.get(aliasesEnvKey).split(",")) : defaults.getAliases().keySet();
+
+        javaOptions.add("-D" + aliasesJavaOptsKey + "=" + commaJoin(aliases));
+
+        for (String alias : aliases) {
+            processKeyStoreAlias(keystoreId, alias, defaults.getAliases().get(alias));
+        }
+    }
+
+    private void processKeyStoreAlias(final String keystoreId, final String aliasName, AliasDefaults aliasDefaults) {
+        final String keyDataJavaOptsKey = keystoreId + "." + aliasName + ".keyData";
+        final String keyDataJavaEnvKey = toEnvVarKey(keyDataJavaOptsKey);
+        setJavaOptionFromEnvironment(keyDataJavaEnvKey, keyDataJavaEnvKey,
+                aliasDefaults == null ? null : aliasDefaults.getKeyData());
+
+        final String passwordJavaOptsKey = keystoreId + "." + aliasName + ".password";
+        final String passwordJavaEnvKey = toEnvVarKey(passwordJavaOptsKey);
+        setJavaOptionFromEnvironment(passwordJavaOptsKey, passwordJavaEnvKey,
+                aliasDefaults == null ? null : aliasDefaults.getPassword());
+
+        final String algorithmJavaOptsKey = keystoreId + "." + aliasName + ".algorithm";
+        final String algorithmJavaEnvKey = toEnvVarKey(algorithmJavaOptsKey);
+        setJavaOptionFromEnvironment(algorithmJavaOptsKey, algorithmJavaEnvKey,
+                aliasDefaults == null ? null : aliasDefaults.getAlgorithm());
+    }
+
+    private static String toEnvVarKey(final String javaOptsKey) {
+        return javaOptsKey.replace("-", "_").replace(".", "_").toUpperCase();
+    }
+
+    private static String commaJoin(Collection<String> toJoin) {
+        StringBuilder ret = new StringBuilder();
+        Iterator<String> it = toJoin.iterator();
+        while (it.hasNext()) {
+            String next = it.next();
+            ret.append(next);
+            if (it.hasNext()) {
+                ret.append(",");
+            }
+        }
+        return ret.toString();
     }
 
     /**
