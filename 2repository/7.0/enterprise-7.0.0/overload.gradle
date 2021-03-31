@@ -14,9 +14,9 @@ ext {
 
 dependencies {
     alfrescoAmp 'org.alfresco:alfresco-share-services:7.0.0@amp'
-    // content-services version based on:
-    // https://github.com/Alfresco/acs-packaging/blob/7.0.0/pom.xml#L17
-    baseAlfrescoWar 'org.alfresco:content-services:8.482@war'
+
+    baseAlfrescoWar platform('org.alfresco:acs-packaging:7.0.0')
+    baseAlfrescoWar 'org.alfresco:content-services@war'
 
     sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
 }
