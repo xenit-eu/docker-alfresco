@@ -122,6 +122,20 @@ Environment variables:
 | ENABLE_CIFS                 | cifs.enabled                      |                                                              | false                                                        |  |
 | ENABLE_FTP                  | ftp.enabled                       |                                                              | false                                                        |  |
 | ENABLE_CLUSTERING           | alfresco.cluster.enabled          |                                                              | false                                                        |  |
+| ENCRYPTION_KEYSTORE_TYPE    | encryption.keystore.type          |                                                              | JCEKS                                                        |  |
+| ENCRYPTION_CIPHERALGORITHM  | encryption.cipherAlgorithm        |                                                              | DESede/CBC/PKCS5Padding                                      |  |
+| ENCRYPTION_KEYALGORITHM     | encryption.keyAlgorithm           |                                                              | DESede                                                       |  |
+| ENCRYPTION_KEYSTORE_LOCATION| encryption.keystore.location      |                                                              | /opt/alfresco/keystore/keystore                              |  |
+| METADATA_KEYSTORE_PASSWORD  |                                   | metadata-keystore.password                                   | mp6yc0UD9e                                                   |  |
+| METADATA_KEYSTORE_ALIASES   |                                   | metadata-keystore.aliases                                    | metadata                                                     |  |
+| METADATA_KEYSTORE_${alias}_PASSWORD  |                          | metadata-keystore.${alias}.password                          | oKIWzVdEdA (for default alias `metadata`)                    |  |
+| METADATA_KEYSTORE_${alias}_ALGORITHM |                          | metadata-keystore.${alias}.algorithm                         | DESede (for default alias `metadata`)                        |  |
+| SSL_KEYSTORE_PASSWORD       |                                   | ssl-keystore.password                                        | kT9X6oe68t                                                   |  |
+| SSL_KEYSTORE_ALIASES        |                                   | ssl-keystore.aliases                                         | ssl.alfresco.ca, ssl.repo                                    |  |
+| SSL_KEYSTORE_${alias}_PASSWORD       |                          | ssl-keystore.${alias}.password                               | kT9X6oe68t (for default alias `ssl.alfresco.ca`)             |  |
+| SSL_TRUSTSTORE_PASSWORD     |                                   | ssl-truststore.password                                      | kT9X6oe68t                                                   |  |
+| SSL_TRUSTSTORE_ALIASES      |                                   | ssl-truststore.aliases                                       | alfresco.ca                                                  |  |
+| SSL_TRUSTSTORE_${alias}_PASSWORD     |                          | ssl-truststore.${alias}.password                             | kT9X6oe68t (for default alias `alfresco.ca`)                 |  |
 | GLOBAL_\<variable\>         | \<variable\>                      |                                                              |                                                              |  |
 | LOG4J_\<property-path\>     | N/A                               | N/A                                                          | N/A                                                          | Add the given property path and value to the alfresco log4j properties file. |
 
