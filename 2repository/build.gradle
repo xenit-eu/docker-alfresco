@@ -116,6 +116,9 @@ subprojects {
 
             environment.put 'SHARE_IMAGE', project.shareimage
             environment.put 'SOLR_IMAGE', project.solrimage
+            if (project.hasProperty("psqlimage")) {
+                environment.put 'PSQL_IMAGE', project.psqlimage
+            }
             environment.put 'SOLR_PORT_SSL', '8443'
 
             def composeDir = "${project.parent.projectDir}/src/integrationTest/resources";

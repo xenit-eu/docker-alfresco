@@ -9,6 +9,7 @@ ext {
     ]
     solrimage = 'hub.xenit.eu/alfresco-enterprise/alfresco-solr6:2.0.1'
     shareimage = 'docker.io/xenit/alfresco-share-community:7.0.0'
+    psqlimage = 'docker.io/xenit/postgres:13.1'
     tests = true
 }
 
@@ -18,5 +19,5 @@ dependencies {
     baseAlfrescoWar platform('org.alfresco:acs-packaging:7.0.0')
     baseAlfrescoWar 'org.alfresco:content-services@war'
 
-    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
+    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '42.2.19')
 }
