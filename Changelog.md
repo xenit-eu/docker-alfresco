@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## 2021-03.1 (2021-03-31)
+### Changed
+* [PR #65](https://github.com/xenit-eu/docker-alfresco/pull/65) DOCKER-373 Add build for alfresco 7.0.0 images; enhanced support for keystore env variables
+
 ## 2021-02.1 (2021-02-18)
 ### Changed
 * [PR #62](https://github.com/xenit-eu/docker-alfresco/pull/62) DOCKER-368 Add build for alfresco 6.2.2 images; pull pg and solr images from xenit repository public section to avoid dockerhub rate limits

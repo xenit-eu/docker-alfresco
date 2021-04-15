@@ -80,6 +80,28 @@ pipeline {
                         }
                     }
                 }
+                stage("Version 7") {
+                    environment {
+                        VERSIONS_TO_BUILD = "7"
+                    }
+                    stages {
+                        stage("Build Docker Image") {
+                            steps {
+                                sh "./gradlew -Penterprise -Plegacy buildDockerImage"
+                            }
+                        }
+                        stage("Integration test") {
+                            steps {
+                                sh "./gradlew -Penterprise integrationTests --info"
+                            }
+                            post {
+                                always {
+                                    sh "./gradlew -Penterprise composeDownAll"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
