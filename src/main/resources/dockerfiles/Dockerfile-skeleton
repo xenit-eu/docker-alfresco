@@ -37,7 +37,7 @@ RUN	mkdir -p /opt/alfresco && \
             --insert '$connector' --type attr --name maxHttpHeaderSize --value \$\{TOMCAT_MAX_HTTP_HEADER_SIZE\} \
             --insert '$connector' --type attr --name maxSavePostSize --value -1 \
         ${CATALINA_HOME}/conf/server.xml && \
-    #
+    # Configure tomcat-users
     xmlstarlet edit --inplace -N apache="http://tomcat.apache.org/xml" \
         --subnode "/apache:tomcat-users" --type elem --name user \
             --var user '$prev' \
@@ -50,9 +50,12 @@ RUN	mkdir -p /opt/alfresco && \
             --insert '$user' --type attr --name roles --value "repository" \
             --insert '$user' --type attr --name password --value "null" \
         ${CATALINA_HOME}/conf/tomcat-users.xml && \
-    #
-    #
-    # clean up
+    # Configure logging.properties
+    echo "1catalina.org.apache.juli.AsyncFileHandler.maxDays = \${APPLICATIONLOG_MAXDAYS}" >>${CATALINA_HOME}/conf/logging.properties && \
+    echo "2localhost.org.apache.juli.AsyncFileHandler.maxDays = \${APPLICATIONLOG_MAXDAYS}" >>${CATALINA_HOME}/conf/logging.properties && \
+    echo "3manager.org.apache.juli.AsyncFileHandler.maxDays = \${APPLICATIONLOG_MAXDAYS}" >>${CATALINA_HOME}/conf/logging.properties && \
+    echo "4host-manager.org.apache.juli.AsyncFileHandler.maxDays = \${APPLICATIONLOG_MAXDAYS}" >>${CATALINA_HOME}/conf/logging.properties && \
+    # Clean up
     apt-get --purge -y remove unzip && \
         apt-get --purge -y autoremove && \
         rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -76,7 +79,7 @@ RUN	chmod u+x /docker-entrypoint.d/90-init-alfresco.sh && \
 # named volumes
 VOLUME 	/opt/alfresco/alf_data ${CATALINA_HOME}/temp ${CATALINA_HOME}/logs
 
-WORKDIR /opt/alfresco
+WORKDIR /usr/local/tomcat/logs
 
 HEALTHCHECK --interval=10s --timeout=3s --retries=30 --start-period=20s CMD curl -f http://localhost:${TOMCAT_PORT}/alfresco/s/api/server || exit 1
 
