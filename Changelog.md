@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## 2021-04.1 (2021-04-16)
 ### Changed
-* [PR #66](https://github.com/xenit-eu/docker-alfresco/pull/66) DOCKER-376 Add support for limiting the number of application logs being kept. Changed WORKDIR
+* [PR #66](https://github.com/xenit-eu/docker-alfresco/pull/66) DOCKER-376 Changed WORKDIR
 	
 ## 2021-03.1 (2021-03-31)
 ### Changed
