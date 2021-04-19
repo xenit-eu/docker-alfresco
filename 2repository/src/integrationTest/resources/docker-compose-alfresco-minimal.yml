@@ -12,4 +12,3 @@ services:
    - SOLR_HOST=solr
    - GLOBAL_legacy.transform.service.enabled=false
    - GLOBAL_local.transform.service.enabled=false
-

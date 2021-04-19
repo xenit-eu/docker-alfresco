@@ -139,7 +139,6 @@ Environment variables:
 | GLOBAL_\<variable\>         | \<variable\>                      |                                                              |                                                              |  |
 | LOG4J_\<property-path\>     | N/A                               | N/A                                                          | N/A                                                          | Add the given property path and value to the alfresco log4j properties file. |
 
-
 ## Support & Collaboration
 
 These images are updated via pull requests to the [xenit-eu/docker-alfresco/](https://github.com/xenit-eu/docker-alfresco/) Github-repository.
