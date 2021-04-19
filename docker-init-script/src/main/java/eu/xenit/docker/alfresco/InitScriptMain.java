@@ -204,9 +204,6 @@ public class InitScriptMain {
         javaOptions.add("-Dfile.encoding=UTF-8");
 
 
-        // logging
-        javaOptions.add("-DAPPLICATIONLOG_MAXDAYS=".concat(environment.containsKey("APPLICATIONLOG_MAXDAYS")?environment.get("APPLICATIONLOG_MAXDAYS"):"5"));
-
         // Special handling for alfresco 4 - set MaxPermSize
         if (alfrescoVersion.major == 4) {
             javaOptions.add("-XX:MaxPermSize=256m");

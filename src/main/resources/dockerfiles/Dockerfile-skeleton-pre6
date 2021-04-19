@@ -75,11 +75,6 @@ RUN	mkdir -p /opt/alfresco && \
             --insert '$user' --type attr --name roles --value "repository" \
             --insert '$user' --type attr --name password --value "null" \
         ${CATALINA_HOME}/conf/tomcat-users.xml && \
-    # Configure logging.properties
-    echo "1catalina.org.apache.juli.AsyncFileHandler.maxDays = \${APPLICATIONLOG_MAXDAYS}" >>${CATALINA_HOME}/conf/logging.properties && \
-    echo "2localhost.org.apache.juli.AsyncFileHandler.maxDays = \${APPLICATIONLOG_MAXDAYS}" >>${CATALINA_HOME}/conf/logging.properties && \
-    echo "3manager.org.apache.juli.AsyncFileHandler.maxDays = \${APPLICATIONLOG_MAXDAYS}" >>${CATALINA_HOME}/conf/logging.properties && \
-    echo "4host-manager.org.apache.juli.AsyncFileHandler.maxDays = \${APPLICATIONLOG_MAXDAYS}" >>${CATALINA_HOME}/conf/logging.properties && \
     # Clean up
     apt-get --purge -y remove unzip && \
         apt-get --purge -y autoremove && \
