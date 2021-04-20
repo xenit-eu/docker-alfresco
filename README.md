@@ -1,5 +1,5 @@
 # Alfresco in Docker
-Alfresco-specific docker images, starting with Alfresco 4.2.
+This project builds Alfresco-specific docker images used by Xenit, starting with Alfresco 4.2.
 
 ## Images created 
 
