@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## 2021-04.1 (2021-04-16)
+
+### Fixed
+* [PR #69](https://github.com/xenit-eu/docker-alfresco/pull/69) DOCKER-372 Exclude directories left behind when a subproject was renamed
+	
 ### Changed
 * [PR #66](https://github.com/xenit-eu/docker-alfresco/pull/66) DOCKER-376 Changed WORKDIR
 	
