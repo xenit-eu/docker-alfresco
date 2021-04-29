@@ -17,6 +17,7 @@ def includeSubprojectPerVersion(major,flavor,includeLegacy) {
                 def projectRepository = "2repository:${revision}"
                 def projectLegacy = "3legacy:${revision}"
 		
+                // exclude directories left behind when a subproject was renamed
 		if(new File("$repositoryFile/overload.gradle").exists()) {
 		    
                     if(flavor.equals("community")) {
