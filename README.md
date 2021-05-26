@@ -146,6 +146,7 @@ Environment variables:
 | SSL_TRUSTSTORE_${alias}_PASSWORD     |                          | ssl-truststore.${alias}.password                             | kT9X6oe68t (for default alias `alfresco.ca`)                 |  |
 | GLOBAL_\<variable\>         | \<variable\>                      |                                                              |                                                              |  |
 | LOG4J_\<property-path\>     | N/A                               | N/A                                                          | N/A                                                          | Add the given property path and value to the alfresco log4j properties file. |
+| DEBUG                      | N/A                                | N/A                                                          | false | Enables debug server when set to `true`. The debug server listens on port 8000. |
 
 ## Support & Collaboration
 
