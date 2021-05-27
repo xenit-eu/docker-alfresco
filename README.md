@@ -73,6 +73,9 @@ Images can be customized further by using environment variables - see section En
 ## Environment variables
 
 There are several environment variables available to tweak the behaviour. While none of the variables are required, they may significantly aid you in using these images.
+
+This image inherits the environment variables from its parent images: [docker-tomcat](https://github.com/xenit-eu/docker-tomcat/#environment-variables) and [docker-openjdk](https://github.com/xenit-eu/docker-openjdk/#environment-variables).
+
 The variables are read by an init script which further replaces them in the relevant files. Such relevant files include:
 
 * alfresco-global.properties
@@ -146,7 +149,6 @@ Environment variables:
 | SSL_TRUSTSTORE_${alias}_PASSWORD     |                          | ssl-truststore.${alias}.password                             | kT9X6oe68t (for default alias `alfresco.ca`)                 |  |
 | GLOBAL_\<variable\>         | \<variable\>                      |                                                              |                                                              |  |
 | LOG4J_\<property-path\>     | N/A                               | N/A                                                          | N/A                                                          | Add the given property path and value to the alfresco log4j properties file. |
-| DEBUG                      | N/A                                | N/A                                                          | false | Enables debug server when set to `true`. The debug server listens on port 8000. |
 
 ## Support & Collaboration
 
