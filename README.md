@@ -73,6 +73,9 @@ Images can be customized further by using environment variables - see section En
 ## Environment variables
 
 There are several environment variables available to tweak the behaviour. While none of the variables are required, they may significantly aid you in using these images.
+
+See also environment variables from lower layers: [`docker-openjdk`](https://github.com/xenit-eu/docker-openjdk) and [`docker-tomcat`](https://github.com/xenit-eu/docker-tomcat).
+
 The variables are read by an init script which further replaces them in the relevant files. Such relevant files include:
 
 * alfresco-global.properties
@@ -81,7 +84,6 @@ The alfresco-global.properties can be set via a generic mechanism by setting env
 
 A subset of the alfresco-global.properties have also dedicated environment variables e.g. SOLR_SSL. Generic variables take precedence.
 
-See also environment variables from lower layers: [`docker-openjdk`](https://github.com/xenit-eu/docker-openjdk) and [`docker-tomcat`](https://github.com/xenit-eu/docker-tomcat).
 
 * TLS with Custom keystores
 
