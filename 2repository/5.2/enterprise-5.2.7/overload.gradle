@@ -4,7 +4,7 @@ ext {
 	    major: 5,
             minor: 2,
             rev: 7,
-            label: 3
+            label: 12
 	],
 	flavor: 'enterprise'
     ]
@@ -14,7 +14,10 @@ ext {
 }
 
 dependencies {
-    baseAlfrescoWar 'org.alfresco:alfresco-enterprise:5.2.7.3@war'
+    alfrescoAmp 'org.alfresco:alfresco-share-services:5.2.7.12@amp'
+
+    baseAlfrescoWar platform('org.alfresco:alfresco-platform-enterprise:5.2.7.12')
+    baseAlfrescoWar 'org.alfresco:alfresco-platform-enterprise@war'
 
     sharedBin(group: 'org.alfresco', name: 'alfresco-pdf-renderer', version: '1.1', classifier: 'linux', ext: 'tgz')
     sharedLib(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212')
