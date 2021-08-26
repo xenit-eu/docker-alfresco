@@ -3,7 +3,8 @@ ext {
             version: [
                     major: 7,
                     minor: 0,
-                    rev: 0
+                    rev: 0,
+                    label: 3
             ],
             flavor: 'enterprise'
     ]
@@ -14,9 +15,9 @@ ext {
 }
 
 dependencies {
-    alfrescoAmp 'org.alfresco:alfresco-share-services:7.0.0@amp'
+    alfrescoAmp 'org.alfresco:alfresco-share-services:7.0.0.3@amp'
 
-    baseAlfrescoWar platform('org.alfresco:acs-packaging:7.0.0')
+    baseAlfrescoWar platform('org.alfresco:acs-packaging:7.0.0.3')
     baseAlfrescoWar 'org.alfresco:content-services@war'
 
     sharedLib(group: 'org.postgresql', name: 'postgresql', version: '42.2.19')
