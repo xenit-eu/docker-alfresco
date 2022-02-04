@@ -21,7 +21,7 @@ subprojects {
                 include "Dockerfile-skeleton-7"
                 rename "Dockerfile-skeleton-7", 'Dockerfile'
             }
-            if (project.alfresco.version.major.toInteger() < 6) {
+            else if (project.alfresco.version.major.toInteger() < 6) {
                 include "Dockerfile-skeleton-pre6"
                 rename "Dockerfile-skeleton-pre6", 'Dockerfile'
             } else {
