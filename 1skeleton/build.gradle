@@ -17,12 +17,16 @@ subprojects {
     task copyDockerResources(type: Sync) {
         from "$rootProject.projectDir/src/main/resources/global"
         from("$rootProject.projectDir/src/main/resources/dockerfiles/") {
+            if(project.alfresco.version.major.toInteger() > 6) {
+                include "Dockerfile-skeleton-7"
+                rename "Dockerfile-skeleton-7", 'Dockerfile'
+            }
             if (project.alfresco.version.major.toInteger() < 6) {
                 include "Dockerfile-skeleton-pre6"
                 rename "Dockerfile-skeleton-pre6", 'Dockerfile'
             } else {
-                include "Dockerfile-skeleton"
-                rename "Dockerfile-skeleton", 'Dockerfile'
+                include "Dockerfile-skeleton-6"
+                rename "Dockerfile-skeleton-6", 'Dockerfile'
             }
         }
         from "$project.projectDir/local"
