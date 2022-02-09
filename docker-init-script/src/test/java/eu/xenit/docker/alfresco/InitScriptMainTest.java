@@ -34,7 +34,7 @@ public class InitScriptMainTest {
     @Parameters(name = "Alfresco {0}-{1}")
     public static Collection<String[]> getVersionsAndFlavors() {
         Collection<String[]> versions = new ArrayList<>();
-        String[] alfrescoVersions = {"4.2", "5.0", "5.1", "5.2", "6.0", "6.1", "6.2", "7.0"};
+        String[] alfrescoVersions = {"4.2", "5.0", "5.1", "5.2", "6.0", "6.1", "6.2", "7.0", "7.1"};
         String[] alfrescoFlavors = {"enterprise", "community"};
 
         for (String alfrescoVersion : alfrescoVersions) {
