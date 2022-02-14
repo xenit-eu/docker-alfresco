@@ -3,7 +3,7 @@ ext {
 			version: [
 					major: 6,
 					minor: 2,
-					rev: 0
+					rev: 2
 			],
 			flavor: 'skeleton'
 	]
