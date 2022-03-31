@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+
+## unreleased
+
+### Added
+* [PR #74](https://github.com/xenit-eu/docker-alfresco/pull/74) DOCKER-406 Added Alfresco 7.2 to subprojects
+
 ## 2022-02.03 (2022-02-03)
 
 ### Added
