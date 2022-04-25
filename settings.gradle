@@ -36,7 +36,7 @@ def includeSubprojectPerVersion(major,flavor,includeLegacy) {
 			project(":${projectLegacy}").projectDir = file("3legacy/${version}/${revision}")
                     }
 		}
-              }
+    }
 }
 
 def includeSubProjectsPerVersionIfEnabled(major) {
