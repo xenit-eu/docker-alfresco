@@ -55,7 +55,7 @@ include 'tomcat-base'
 include 'tomcat-base:tomcat-8.5'
 include 'tomcat-base:tomcat-9'
 
-includeSubProjectsPerVersionIfEnabled("4")
-includeSubProjectsPerVersionIfEnabled("5")
+//includeSubProjectsPerVersionIfEnabled("4")
+//includeSubProjectsPerVersionIfEnabled("5")
 includeSubProjectsPerVersionIfEnabled("6")
 includeSubProjectsPerVersionIfEnabled("7")

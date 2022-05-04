@@ -84,58 +84,21 @@ subprojects {
         into workingDir
     }
 
-//    createDockerFile {
-//        var tomcatProjectName = getTomcatProject(project)
-//        var tomcatBaseImage = "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
-//        if (tomcatProjectName != null) {
-//            var tomcatProject = project(getTomcatProject(project))
-//            var buildDockerImageTask = tomcatProject.getTasks().getByName('buildDockerImage')
-//            tomcatBaseImage = buildDockerImageTask.getImageId()
-//        }
-//
-//        println "tomcatBaseImage: ${tomcatBaseImage}"
-//        baseImage = tomcatBaseImage
-//        //baseImage = "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
-//    }
-
-    def tomcatProject = project(":tomcat-base:tomcat-9")
+    def tomcatProject = project(getTomcatProject(project))
     def tomcatImage = tomcatProject.getTasks().getByName('buildDockerImage')
     println "tomcatImage: ${tomcatImage.getImageId()}"
 
     dockerBuild {
         repositories = [calcRepository(project.alfresco.flavor)]
         tags = calcTags(project.alfresco.version)
-        alfresco {
-            baseImage = tomcatImage.getImageId()
-        }
     }
 
-    createDockerFile.dependsOn(tomcatImage)
+    createDockerFile {
+        dependsOn(tomcatImage)
+        baseImage = tomcatImage.getImageId()
+    }
 
     buildDockerImage {
         pull = false
     }
-
-//    dockerBuild {
-////        var tomcatProjectName = getTomcatProject(project)
-////        var tomcatBaseImage = "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
-////        if (tomcatProjectName != null) {
-////            var tomcatProject = project(getTomcatProject(project))
-////            var buildDockerImageTask = tomcatProject.getTasks().getByName('buildDockerImage')
-////            tomcatBaseImage = buildDockerImage.getImageId()
-////        }
-//
-//        repositories = [calcRepository(project.alfresco.flavor)]
-//        tags = calcTags(project.alfresco.version)
-////        alfresco {
-////            baseImage = tomcatBaseImage
-////        }
-//    }
-//
-////    buildDockerImage {
-////        var tomcatProjectName = getTomcatProject(project)
-////        if (tomcatProjectName != null) {
-////            dependsOn("${tomcatProjectName}:buildDockerImage")
-////        }
-////    }
 }
