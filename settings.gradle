@@ -51,6 +51,9 @@ def includeSubProjectsPerVersionIfEnabled(major) {
 rootProject.name = 'docker-alfresco'
 
 include 'docker-init-script'
+include 'tomcat-base'
+include 'tomcat-base:tomcat-8.5'
+include 'tomcat-base:tomcat-9'
 
 includeSubProjectsPerVersionIfEnabled("4")
 includeSubProjectsPerVersionIfEnabled("5")

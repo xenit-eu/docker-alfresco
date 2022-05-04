@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=docker.io/xenit/tomcat:alfresco-6.0-ubuntu
+ARG BASE_IMAGE=docker.io/xenit/tomcat:alfresco-7.0-ubuntu
 FROM $BASE_IMAGE
 
 # ${CATALINA_HOME} is set to ${CATALINA_HOME} in upstream
