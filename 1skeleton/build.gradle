@@ -1,5 +1,53 @@
+evaluationDependsOn(':tomcat-base')
+
+Property getBaseImage(Project p) {
+    if (p.alfresco.version.major < 6) {
+        return "docker.io/xenit/tomcat:alfresco-${p.alfresco.version.major}.${p.alfresco.version.minor}-ubuntu"
+    }
+
+    String projectName
+    switch (p.alfresco.version.major) {
+        case 6:
+            println 'using tomcat 8.5 image'
+            projectName = ':tomcat-base:tomcat-8.5'
+            break
+        case 7:
+            println 'using tomcat 9 image'
+            projectName = ':tomcat-base:tomcat-9'
+            break
+        default:
+            println 'returning null WTF'
+            return null
+    }
+
+    println "projectName: ${projectName}"
+    var tomcatProject = project(projectName)
+    var buildDockerImageTask = tomcatProject.getTasks().getByName('buildDockerImage')
+    var imageId = buildDockerImageTask.getImageId()
+    println "imageId: ${imageId}"
+    return imageId
+}
+
+String getTomcatProject(Project p) {
+    println "p.alfresco.version.major: ${p.alfresco.version.major}"
+    if (p.alfresco.version.major == 6) {
+        println 'tomcat-8.5'
+        return ":tomcat-base:tomcat-8.5"
+    }
+
+    if (p.alfresco.version.major == 7) {
+        println 'tomcat-9'
+        return ":tomcat-base:tomcat-9"
+    }
+
+    //println 'docker.io/xenit/tomcat:8-bionic'
+    return null
+}
+
 subprojects {
     apply plugin: 'eu.xenit.docker'
+    apply plugin: 'eu.xenit.docker-alfresco'
+    apply plugin: 'eu.xenit.docker-compose'
 
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
@@ -22,11 +70,11 @@ subprojects {
                 rename "Dockerfile-skeleton-7", 'Dockerfile'
             }
             else if (project.alfresco.version.major.toInteger() == 6) {
-                include "Dockerfile-skeleton-pre6"
-                rename "Dockerfile-skeleton-pre6", 'Dockerfile'
-            } else {
                 include "Dockerfile-skeleton-6"
                 rename "Dockerfile-skeleton-6", 'Dockerfile'
+            } else {
+                include "Dockerfile-skeleton-pre6"
+                rename "Dockerfile-skeleton-pre6", 'Dockerfile'
             }
         }
         from "$project.projectDir/local"
@@ -36,27 +84,58 @@ subprojects {
         into workingDir
     }
 
+//    createDockerFile {
+//        var tomcatProjectName = getTomcatProject(project)
+//        var tomcatBaseImage = "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
+//        if (tomcatProjectName != null) {
+//            var tomcatProject = project(getTomcatProject(project))
+//            var buildDockerImageTask = tomcatProject.getTasks().getByName('buildDockerImage')
+//            tomcatBaseImage = buildDockerImageTask.getImageId()
+//        }
+//
+//        println "tomcatBaseImage: ${tomcatBaseImage}"
+//        baseImage = tomcatBaseImage
+//        //baseImage = "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
+//    }
+
+    def tomcatProject = project(":tomcat-base:tomcat-9")
+    def tomcatImage = tomcatProject.getTasks().getByName('buildDockerImage')
+    println "tomcatImage: ${tomcatImage.getImageId()}"
+
     dockerBuild {
-        dockerFile = file("$workingDir/Dockerfile")
         repositories = [calcRepository(project.alfresco.flavor)]
         tags = calcTags(project.alfresco.version)
+        alfresco {
+            baseImage = tomcatImage.getImageId()
+        }
     }
+
+    createDockerFile.dependsOn(tomcatImage)
 
     buildDockerImage {
-        buildArgs.putAll([
-                'ALFRESCO_VERSION_MAJOR': "${project.alfresco.version.major}",
-                'ALFRESCO_VERSION_MINOR': "${project.alfresco.version.minor}",
-                'ALFRESCO_VERSION_REV'  : "${project.alfresco.version.rev}",
-                'ALFRESCO_FLAVOR'       : "${project.alfresco.flavor}",
-                'BASE_IMAGE'            : "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu",
-                'XENIT_VERSION'         :  xenitVersion
-
-        ])
-        if(project.hasProperty('extraBuildArgs')) {
-            buildArgs.putAll(project.extraBuildArgs)
-        }
-
-        dependsOn(copyDockerResources)
+        pull = false
     }
 
+//    dockerBuild {
+////        var tomcatProjectName = getTomcatProject(project)
+////        var tomcatBaseImage = "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu"
+////        if (tomcatProjectName != null) {
+////            var tomcatProject = project(getTomcatProject(project))
+////            var buildDockerImageTask = tomcatProject.getTasks().getByName('buildDockerImage')
+////            tomcatBaseImage = buildDockerImage.getImageId()
+////        }
+//
+//        repositories = [calcRepository(project.alfresco.flavor)]
+//        tags = calcTags(project.alfresco.version)
+////        alfresco {
+////            baseImage = tomcatBaseImage
+////        }
+//    }
+//
+////    buildDockerImage {
+////        var tomcatProjectName = getTomcatProject(project)
+////        if (tomcatProjectName != null) {
+////            dependsOn("${tomcatProjectName}:buildDockerImage")
+////        }
+////    }
 }
