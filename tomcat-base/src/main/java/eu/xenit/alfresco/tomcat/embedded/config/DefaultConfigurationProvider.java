@@ -5,6 +5,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
     @Override
     public Configuration getConfiguration(Configuration baseConfiguration) {
         baseConfiguration.setWebappsPath("/usr/local/tomcat/webapps");
+        baseConfiguration.setLogsLocation("/usr/local/tomcat/logs");
         baseConfiguration.setPort(8080);
         baseConfiguration.setEnableJsonLogging(true);
         baseConfiguration.setLogLibraryDir("/loglibrarydir");

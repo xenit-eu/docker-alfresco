@@ -54,5 +54,33 @@ public class Configuration {
         globalProperties.put(key, value);
     }
 
+    private String alfrescoVersion;
 
+    public String getAlfrescoVersion() {
+        return alfrescoVersion;
+    }
+
+    public void setAlfrescoVersion(String alfrescoVersion) {
+        this.alfrescoVersion = alfrescoVersion;
+    }
+
+    private String alfrescoFlavour;
+
+    public String getAlfrescoFlavour() {
+        return alfrescoFlavour;
+    }
+
+    public void setAlfrescoFlavour(String alfrescoFlavour) {
+        this.alfrescoFlavour = alfrescoFlavour;
+    }
+
+    private String logsLocation;
+
+    public String getLogsLocation() {
+        return logsLocation;
+    }
+
+    public void setLogsLocation(String logsLocation) {
+        this.logsLocation = logsLocation;
+    }
 }

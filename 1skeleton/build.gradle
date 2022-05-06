@@ -1,33 +1,5 @@
 evaluationDependsOn(':tomcat-base')
 
-Property getBaseImage(Project p) {
-    if (p.alfresco.version.major < 6) {
-        return "docker.io/xenit/tomcat:alfresco-${p.alfresco.version.major}.${p.alfresco.version.minor}-ubuntu"
-    }
-
-    String projectName
-    switch (p.alfresco.version.major) {
-        case 6:
-            println 'using tomcat 8.5 image'
-            projectName = ':tomcat-base:tomcat-8.5'
-            break
-        case 7:
-            println 'using tomcat 9 image'
-            projectName = ':tomcat-base:tomcat-9'
-            break
-        default:
-            println 'returning null WTF'
-            return null
-    }
-
-    println "projectName: ${projectName}"
-    var tomcatProject = project(projectName)
-    var buildDockerImageTask = tomcatProject.getTasks().getByName('buildDockerImage')
-    var imageId = buildDockerImageTask.getImageId()
-    println "imageId: ${imageId}"
-    return imageId
-}
-
 String getTomcatProject(Project p) {
     println "p.alfresco.version.major: ${p.alfresco.version.major}"
     if (p.alfresco.version.major == 6) {
@@ -40,7 +12,6 @@ String getTomcatProject(Project p) {
         return ":tomcat-base:tomcat-9"
     }
 
-    //println 'docker.io/xenit/tomcat:8-bionic'
     return null
 }
 
@@ -96,6 +67,8 @@ subprojects {
     createDockerFile {
         dependsOn(tomcatImage)
         baseImage = tomcatImage.getImageId()
+        user('root')
+        volume('/opt/alfresco/alf_data', '/usr/local/tomcat/temp', '/usr/local/tomcat/logs')
     }
 
     buildDockerImage {
