@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 * [PR #74](https://github.com/xenit-eu/docker-alfresco/pull/74) DOCKER-406 Added Alfresco 7.2 to subprojects
 * [PR #76](https://github.com/xenit-eu/docker-alfresco/pull/74) Allow manual triggers of workflow
 
+### Fixed
+* [PR #78](https://github.com/xenit-eu/docker-alfresco/pull/78) DOCKER-408 Add timeout to health check commands
+
 ## 2022-02.03 (2022-02-03)
 
 ### Added
