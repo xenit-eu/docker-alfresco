@@ -7,6 +7,13 @@ public class Configuration {
 
     private String webappsPath;
     private int port;
+    private String logLibraryDir;
+    private boolean enableJsonLogging;
+    private Map<String, String> globalProperties = new HashMap<>();
+    private String alfrescoVersion;
+    private String alfrescoFlavour;
+    private String logsLocation;
+    private String alfrescoLocation;
 
     public String getLogLibraryDir() {
         return logLibraryDir;
@@ -16,8 +23,6 @@ public class Configuration {
         this.logLibraryDir = logLibraryDir;
     }
 
-    private String logLibraryDir;
-
     public boolean isEnableJsonLogging() {
         return enableJsonLogging;
     }
@@ -26,13 +31,9 @@ public class Configuration {
         this.enableJsonLogging = enableJsonLogging;
     }
 
-    private boolean enableJsonLogging;
-
     public Map<String, String> getGlobalProperties() {
         return globalProperties;
     }
-
-    private Map<String, String> globalProperties = new HashMap<>();
 
     public String getWebappsPath() {
         return webappsPath;
@@ -54,8 +55,6 @@ public class Configuration {
         globalProperties.put(key, value);
     }
 
-    private String alfrescoVersion;
-
     public String getAlfrescoVersion() {
         return alfrescoVersion;
     }
@@ -63,8 +62,6 @@ public class Configuration {
     public void setAlfrescoVersion(String alfrescoVersion) {
         this.alfrescoVersion = alfrescoVersion;
     }
-
-    private String alfrescoFlavour;
 
     public String getAlfrescoFlavour() {
         return alfrescoFlavour;
@@ -74,13 +71,19 @@ public class Configuration {
         this.alfrescoFlavour = alfrescoFlavour;
     }
 
-    private String logsLocation;
-
     public String getLogsLocation() {
         return logsLocation;
     }
 
     public void setLogsLocation(String logsLocation) {
         this.logsLocation = logsLocation;
+    }
+
+    public String getAlfrescoLocation() {
+        return alfrescoLocation;
+    }
+
+    public void setAlfrescoLocation(String alfrescoLocation) {
+        this.alfrescoLocation = alfrescoLocation;
     }
 }

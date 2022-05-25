@@ -6,13 +6,17 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.Valve;
 import org.apache.catalina.WebResourceRoot;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.util.TLSUtil;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
+import org.apache.tomcat.util.net.SSLHostConfig;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,7 +33,8 @@ public class TomcatFactory {
     public Tomcat getTomcat() throws IOException {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(configuration.getPort());
-        tomcat.getConnector();
+        //tomcat.getConnector();
+        tomcat.setConnector(createConnector());
 
         Path webapps = Paths.get(configuration.getWebappsPath());
         if (Files.exists(webapps)) {
@@ -45,6 +50,7 @@ public class TomcatFactory {
                                 if (event.getType().equals("before_start") && configuration.isEnableJsonLogging()) {
                                     redirectLog4j(path);
                                     WebResourceRoot resources = new StandardRoot(ctx);
+                                    //Load extra jars in classpath for json application logging
                                     resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib",
                                             configuration.getLogLibraryDir(), "/"));
                                     ctx.setResources(resources);
@@ -65,6 +71,32 @@ public class TomcatFactory {
         }
         
         return tomcat;
+    }
+
+    private Connector createConnector() {
+        Connector connector = new Connector("HTTP/1.1");
+        connector.setPort(configuration.getPort());
+        connector.setURIEncoding(StandardCharsets.UTF_8.name());
+        connector.setProperty("SSLEnabled", "true");
+        connector.setProperty("maxThreads", "something");
+        connector.setScheme("https");
+        SSLHostConfig sslHostConfig = new SSLHostConfig();
+        sslHostConfig.setCertificateKeystoreFile("path");
+        sslHostConfig.setCertificateKeystorePassword("password");
+        sslHostConfig.setCertificateKeystoreType("type");
+        sslHostConfig.setTruststoreFile("path");
+        sslHostConfig.setTruststorePassword("password");
+        sslHostConfig.setTruststoreType("type");
+        sslHostConfig.setSslProtocol("TLS");
+        connector.addSslHostConfig(sslHostConfig);
+        connector.setSecure(true);
+        connector.setProperty("connectionTimeout", "240000");
+        connector.setProperty("clientAuth", "want");
+        connector.setProperty("allowUnsafeLegacyRenegotiation", "true");
+        connector.setProperty("maxHttpHeaderSize", "TOMCAT_MAX_HTTP_HEADER_SIZE");
+        connector.setMaxSavePostSize(-1);
+
+        return connector;
     }
 
     private void redirectLog4j(Path path) {
