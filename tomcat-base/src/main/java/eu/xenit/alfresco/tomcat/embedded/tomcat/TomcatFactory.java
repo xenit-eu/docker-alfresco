@@ -1,5 +1,6 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
+import eu.xenit.alfresco.tomcat.embedded.Main;
 import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
 import eu.xenit.alfresco.tomcat.embedded.valve.JsonAccessLogValve;
 import org.apache.catalina.LifecycleException;
@@ -21,8 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TomcatFactory {
+
+    private static final Logger LOG = Logger.getLogger(TomcatFactory.class.getName());
 
     private Configuration configuration;
 
@@ -33,8 +38,16 @@ public class TomcatFactory {
     public Tomcat getTomcat() throws IOException {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(configuration.getPort());
-        //tomcat.getConnector();
-        tomcat.setConnector(createConnector());
+//        tomcat.getConnector();
+        try {
+            tomcat.setConnector(createConnector());
+        }
+        catch (Exception ex) {
+            LOG.log(Level.INFO, "Creating connector failed. Using default connector instead", ex);
+            tomcat.getConnector();
+        }
+        addUserWithRole(tomcat, "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repoclient");
+        addUserWithRole(tomcat, "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repository");
 
         Path webapps = Paths.get(configuration.getWebappsPath());
         if (Files.exists(webapps)) {
@@ -81,12 +94,12 @@ public class TomcatFactory {
         connector.setProperty("maxThreads", "something");
         connector.setScheme("https");
         SSLHostConfig sslHostConfig = new SSLHostConfig();
-        sslHostConfig.setCertificateKeystoreFile("path");
-        sslHostConfig.setCertificateKeystorePassword("password");
-        sslHostConfig.setCertificateKeystoreType("type");
-        sslHostConfig.setTruststoreFile("path");
-        sslHostConfig.setTruststorePassword("password");
-        sslHostConfig.setTruststoreType("type");
+        sslHostConfig.setCertificateKeystoreFile("testpath");
+        sslHostConfig.setCertificateKeystorePassword("testpassword");
+        sslHostConfig.setCertificateKeystoreType("testype");
+        sslHostConfig.setTruststoreFile("testpath");
+        sslHostConfig.setTruststorePassword("testpassword");
+        sslHostConfig.setTruststoreType("testtype");
         sslHostConfig.setSslProtocol("TLS");
         connector.addSslHostConfig(sslHostConfig);
         connector.setSecure(true);
@@ -97,6 +110,11 @@ public class TomcatFactory {
         connector.setMaxSavePostSize(-1);
 
         return connector;
+    }
+
+    private void addUserWithRole(Tomcat tomcat, String username, String password, String role) {
+        tomcat.addUser(username, password);
+        tomcat.addRole(username, role);
     }
 
     private void redirectLog4j(Path path) {

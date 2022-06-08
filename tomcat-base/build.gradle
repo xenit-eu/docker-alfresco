@@ -83,5 +83,6 @@ subprojects {
         environmentVariable('BUILD_DATE', buildDate)
 
         entryPoint('java', '-cp', "/app/tomcat-embedded/${archivesBaseName}.jar:/app/tomcat-embedded/lib/*", 'eu.xenit.alfresco.tomcat.embedded.Main')
+
     }
 }

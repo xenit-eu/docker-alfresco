@@ -18,6 +18,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
+            LOG.log(Level.INFO, "This is just a test");
             Configuration configuration = new DefaultConfigurationProvider().getConfiguration();
             configuration = new EnvironmentVariableConfigurationProvider().getConfiguration(configuration);
 
