@@ -1,20 +1,7 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
-import eu.xenit.alfresco.tomcat.embedded.Main;
 import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
 import eu.xenit.alfresco.tomcat.embedded.valve.JsonAccessLogValve;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.LifecycleListener;
-import org.apache.catalina.Valve;
-import org.apache.catalina.WebResourceRoot;
-import org.apache.catalina.connector.Connector;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.util.TLSUtil;
-import org.apache.catalina.webresources.DirResourceSet;
-import org.apache.catalina.webresources.StandardRoot;
-import org.apache.tomcat.util.net.SSLHostConfig;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +11,16 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.Valve;
+import org.apache.catalina.WebResourceRoot;
+import org.apache.catalina.connector.Connector;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.webresources.DirResourceSet;
+import org.apache.catalina.webresources.StandardRoot;
+import org.apache.tomcat.util.net.SSLHostConfig;
 
 public class TomcatFactory {
 

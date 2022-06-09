@@ -7,6 +7,9 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
     private static final String LOGLIBRARY_DIR = "LOGLIBRARY_DIR";
     private static final String ALFRESCO_VERSION = "ALFRESCO_VERSION";
     private static final String ALFRESCO_FLAVOUR = "ALFRESCO_FLAVOUR";
+    private static final String DB_HOST = "DB_HOST";
+    private static final String DB_PORT = "DB_PORT";
+    private static final String DB_NAME = "DB_NAME";
 
     @Override
     public Configuration getConfiguration(Configuration baseConfiguration) {
@@ -24,6 +27,15 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         }
         if (System.getenv(ALFRESCO_FLAVOUR) != null) {
             baseConfiguration.setAlfrescoFlavour(System.getenv(ALFRESCO_FLAVOUR));
+        }
+        if (System.getenv(DB_HOST) != null) {
+            baseConfiguration.setGlobalProperty("db.host", System.getenv(DB_HOST));
+        }
+        if (System.getenv(DB_PORT) != null) {
+            baseConfiguration.setGlobalProperty("db.port", System.getenv(DB_PORT));
+        }
+        if (System.getenv(DB_NAME) != null) {
+            baseConfiguration.setGlobalProperty("db.name", System.getenv(DB_NAME));
         }
         setGlobalProperties(baseConfiguration);
 
