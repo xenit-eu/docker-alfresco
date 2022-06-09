@@ -35,14 +35,14 @@ public class TomcatFactory {
     public Tomcat getTomcat() throws IOException {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(configuration.getPort());
-//        tomcat.getConnector();
-        try {
-            tomcat.setConnector(createConnector());
-        }
-        catch (Exception ex) {
-            LOG.log(Level.INFO, "Creating connector failed. Using default connector instead", ex);
-            tomcat.getConnector();
-        }
+        tomcat.getConnector();
+//        try {
+//            tomcat.setConnector(createConnector());
+//        }
+//        catch (Exception ex) {
+//            LOG.log(Level.INFO, "Creating connector failed. Using default connector instead", ex);
+//            tomcat.getConnector();
+//        }
         addUserWithRole(tomcat, "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repoclient");
         addUserWithRole(tomcat, "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repository");
 
