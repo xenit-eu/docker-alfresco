@@ -14,28 +14,28 @@ pipeline {
         }
         stage("Build and integrationtest") {
             parallel {
-                stage("Version 5") {
-                    environment {
-                        VERSIONS_TO_BUILD = "5"
-                    }
-                    stages {
-                        stage("Build Docker Image") {
-                            steps {
-                                sh "./gradlew -Penterprise -Plegacy buildDockerImage"
-                            }
-                        }
-                        stage("Integration test") {
-                            steps {
-                                sh "./gradlew -Penterprise integrationTests --info"
-                            }
-                            post {
-                                always {
-                                    sh "./gradlew -Penterprise composeDownAll"
-                                }
-                            }
-                        }
-                    }
-                }
+//                 stage("Version 5") {
+//                     environment {
+//                         VERSIONS_TO_BUILD = "5"
+//                     }
+//                     stages {
+//                         stage("Build Docker Image") {
+//                             steps {
+//                                 sh "./gradlew -Penterprise -Plegacy buildDockerImage"
+//                             }
+//                         }
+//                         stage("Integration test") {
+//                             steps {
+//                                 sh "./gradlew -Penterprise integrationTests --info"
+//                             }
+//                             post {
+//                                 always {
+//                                     sh "./gradlew -Penterprise composeDownAll"
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
                 stage("Version 6") {
                     environment {
                         VERSIONS_TO_BUILD = "6"
