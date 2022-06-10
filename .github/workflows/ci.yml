@@ -7,7 +7,6 @@ jobs:
     strategy:
       matrix:
        version:
-        - 4
         - 5
         - 6
         - 7
@@ -24,7 +23,7 @@ jobs:
     - name: Run integration tests
       env:
        VERSIONS_TO_BUILD: ${{ matrix.version }}    
-      run: ./gradlew -PrepoName=docker.io/xenit check --info
+      run: ./gradlew -PrepoName=docker.io/xenit integrationTests --info
     - name: Publish docker images
       if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
       env:
