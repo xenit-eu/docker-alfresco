@@ -43,7 +43,7 @@ pipeline {
                     stages {
                         stage("Build Docker Image") {
                             steps {
-                                sh "./gradlew -Penterprise -Plegacy buildDockerImage"
+                                sh "./gradlew -Penterprise buildDockerImage"
                             }
                         }
                         stage("Integration test") {
@@ -65,7 +65,7 @@ pipeline {
                     stages {
                         stage("Build Docker Image") {
                             steps {
-                                sh "./gradlew -Penterprise -Plegacy buildDockerImage"
+                                sh "./gradlew -Penterprise buildDockerImage"
                             }
                         }
                         stage("Integration test") {
@@ -91,7 +91,7 @@ pipeline {
                 }
             }
             steps {
-                sh "./gradlew -Penterprise -Plegacy pushDockerImage"
+                sh "./gradlew -Penterprise pushDockerImage"
             }
         }
     }
