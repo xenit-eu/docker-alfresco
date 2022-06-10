@@ -1,29 +1,7 @@
-println 'applying plugins to tomcat-base'
-apply plugin: 'eu.xenit.docker'
-apply plugin: 'eu.xenit.docker-compose'
-apply plugin: 'eu.xenit.docker-alfresco'
-apply plugin: 'java'
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compileOnly "org.apache.tomcat.embed:tomcat-embed-core:8.5.78"
-    compileOnly "org.apache.tomcat.embed:tomcat-embed-jasper:8.5.78"
-    compileOnly "org.apache.tomcat:tomcat-jasper:8.5.78"
-    compileOnly "org.apache.tomcat:tomcat-jasper-el:8.5.78"
-    compileOnly "org.apache.tomcat:tomcat-jsp-api:8.5.78"
-    compileOnly group: 'biz.paluch.logging', name: 'logstash-gelf', version: '1.15.0'
-    compileOnly group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
-}
-
 subprojects {
-    println 'applying plugins to tomcat subproject'
     apply plugin: 'eu.xenit.docker'
-    apply plugin: 'eu.xenit.docker-compose'
-    apply plugin: 'eu.xenit.docker-alfresco'
     apply plugin: 'java'
+
     if (new File("${project.projectDir}/overload.gradle").exists()) {
         apply from: "${project.projectDir}/overload.gradle"
     }
@@ -53,7 +31,7 @@ subprojects {
     sourceSets {
         main {
             java {
-                srcDir file("$project.parent.projectDir/src/main/java")
+                srcDir file("$project.parent.projectDir/src/shared/java")
             }
         }
     }
@@ -73,7 +51,7 @@ subprojects {
     createDockerFile.dependsOn(copySharedLib)
 
     createDockerFile {
-        baseImage = 'docker.io/eclipse-temurin:11'
+        from 'docker.io/eclipse-temurin:11'
         smartCopy copySharedLib.outputs.getFiles().singleFile, '/loglibrarydir'
         smartCopy "${project.parent.projectDir}/src/main/keystore", '/keystore'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
