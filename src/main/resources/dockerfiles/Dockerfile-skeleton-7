@@ -1,80 +1,8 @@
 ARG BASE_IMAGE=docker.io/xenit/tomcat:alfresco-7.0-ubuntu
 FROM $BASE_IMAGE
 
-# ${CATALINA_HOME} is set to ${CATALINA_HOME} in upstream
-
-USER	root
-
-# downloading ALF & components
-RUN	mkdir -p /opt/alfresco && \
-	apt-get update && \
-	apt-get install -y curl unzip vim locate xmlstarlet jq gettext-base fontconfig && \
-	rm -rf ${CATALINA_HOME}/webapps/* && \
-	mkdir -p ${CATALINA_HOME}/bin && \
-	touch ${CATALINA_HOME}/bin/setenv.sh && \
-    #
-    # Configure server.xml
-    xmlstarlet edit --inplace \
-        --append "/Server/Service/Connector" --type elem --name Connector \
-            --var connector '$prev' \
-            --insert '$connector' --type attr --name port --value \$\{TOMCAT_PORT_SSL\} \
-            --insert '$connector' --type attr --name URIEncoding --value UTF-8 \
-            --insert '$connector' --type attr --name protocol --value org.apache.coyote.http11.Http11NioProtocol \
-            --insert '$connector' --type attr --name SSLEnabled --value true \
-            --insert '$connector' --type attr --name maxThreads --value \$\{TOMCAT_MAX_THREADS\} \
-            --insert '$connector' --type attr --name scheme --value https \
-            --insert '$connector' --type attr --name keystoreFile --value \$\{TOMCAT_SSL_KEYSTORE\} \
-            --insert '$connector' --type attr --name keystorePass --value \$\{TOMCAT_SSL_KEYSTORE_PASSWORD\} \
-            --insert '$connector' --type attr --name keystoreType --value JCEKS \
-            --insert '$connector' --type attr --name secure --value true \
-            --insert '$connector' --type attr --name connectionTimeout --value 240000 \
-            --insert '$connector' --type attr --name truststoreFile --value \$\{TOMCAT_SSL_TRUSTSTORE\} \
-            --insert '$connector' --type attr --name truststorePass --value \$\{TOMCAT_SSL_TRUSTSTORE_PASSWORD\} \
-            --insert '$connector' --type attr --name truststoreType --value JCEKS \
-            --insert '$connector' --type attr --name clientAuth --value want \
-            --insert '$connector' --type attr --name sslProtocol --value TLS \
-            --insert '$connector' --type attr --name allowUnsafeLegacyRenegotiation --value true \
-            --insert '$connector' --type attr --name maxHttpHeaderSize --value \$\{TOMCAT_MAX_HTTP_HEADER_SIZE\} \
-            --insert '$connector' --type attr --name maxSavePostSize --value -1 \
-        ${CATALINA_HOME}/conf/server.xml && \
-    # Configure tomcat-users
-    xmlstarlet edit --inplace -N apache="http://tomcat.apache.org/xml" \
-        --subnode "/apache:tomcat-users" --type elem --name user \
-            --var user '$prev' \
-            --insert '$user' --type attr --name username --value "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB" \
-            --insert '$user' --type attr --name roles --value "repoclient" \
-            --insert '$user' --type attr --name password --value "null" \
-        --append '$user' --type elem --name user \
-            --var user '$prev' \
-            --insert '$user' --type attr --name username --value "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB" \
-            --insert '$user' --type attr --name roles --value "repository" \
-            --insert '$user' --type attr --name password --value "null" \
-        ${CATALINA_HOME}/conf/tomcat-users.xml && \
-    # Clean up
-    apt-get --purge -y remove unzip && \
-        apt-get --purge -y autoremove && \
-        rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# add the keystore
-ADD keystore /opt/alfresco/keystore
-
-# add alfresco configuration file
-ADD 	alfresco-global.properties ${CATALINA_HOME}/shared/classes/
-
-# copy init file
-RUN	mkdir -p /docker-entrypoint.d
-COPY 	90-init-alfresco.sh /docker-entrypoint.d/
-COPY    90-init-alfresco.jar /
-RUN	chmod u+x /docker-entrypoint.d/90-init-alfresco.sh && \
-    #
-    # permissions
- 	chown -hR tomcat /opt/alfresco && \
-	chown -hR tomcat ${CATALINA_HOME}
-
 # named volumes
 VOLUME 	/opt/alfresco/alf_data ${CATALINA_HOME}/temp ${CATALINA_HOME}/logs
-
-WORKDIR /usr/local/tomcat/logs
 
 HEALTHCHECK --interval=10s --timeout=3s --retries=30 --start-period=20s CMD curl --max-time 4 -f http://localhost:${TOMCAT_PORT}/alfresco/s/api/server || exit 1
 
