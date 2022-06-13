@@ -9,6 +9,10 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setPort(8080);
         baseConfiguration.setEnableJsonLogging(false);
         baseConfiguration.setLogLibraryDir("/loglibrarydir");
+        baseConfiguration.setTomcatMaxThreads(200);
+        baseConfiguration.setTomcatMaxHttpHeaderSize(32768);
+        baseConfiguration.setTomcatSslPort(8443);
+        baseConfiguration.setTomcatServerPort(8005);
 
         baseConfiguration.setGlobalProperty("db.host", "postgresql");
         baseConfiguration.setGlobalProperty("db.port", "5432");

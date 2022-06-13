@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
@@ -35,14 +34,8 @@ public class TomcatFactory {
     public Tomcat getTomcat() throws IOException {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(configuration.getPort());
-        tomcat.getConnector();
-//        try {
-//            tomcat.setConnector(createConnector());
-//        }
-//        catch (Exception ex) {
-//            LOG.log(Level.INFO, "Creating connector failed. Using default connector instead", ex);
-//            tomcat.getConnector();
-//        }
+        tomcat.getServer().setPort(configuration.getTomcatServerPort());
+        tomcat.setConnector(createDefaultConnector());
         addUserWithRole(tomcat, "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repoclient");
         addUserWithRole(tomcat, "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repository");
 
@@ -83,13 +76,21 @@ public class TomcatFactory {
         return tomcat;
     }
 
-    private Connector createConnector() {
+    private Connector createDefaultConnector() {
         Connector connector = new Connector("HTTP/1.1");
         connector.setPort(configuration.getPort());
+        connector.setProperty("connectionTimeout", "20000");
+        connector.setRedirectPort(configuration.getTomcatSslPort());
         connector.setURIEncoding(StandardCharsets.UTF_8.name());
-        connector.setProperty("SSLEnabled", "true");
-        connector.setProperty("maxThreads", "something");
-        connector.setScheme("https");
+        connector.setProperty("SSLEnabled", "false");
+        connector.setProperty("maxThreads", String.valueOf(configuration.getTomcatMaxThreads()));
+        connector.setProperty("maxHttpHeaderSize", String.valueOf(configuration.getTomcatMaxHttpHeaderSize()));
+        connector.setScheme("http");
+        return connector;
+    }
+
+    private Connector createSSLConnector() {
+        Connector connector = new Connector("HTTP/1.1");
         SSLHostConfig sslHostConfig = new SSLHostConfig();
         sslHostConfig.setCertificateKeystoreFile("testpath");
         sslHostConfig.setCertificateKeystorePassword("testpassword");
@@ -100,12 +101,9 @@ public class TomcatFactory {
         sslHostConfig.setSslProtocol("TLS");
         connector.addSslHostConfig(sslHostConfig);
         connector.setSecure(true);
-        connector.setProperty("connectionTimeout", "240000");
         connector.setProperty("clientAuth", "want");
         connector.setProperty("allowUnsafeLegacyRenegotiation", "true");
-        connector.setProperty("maxHttpHeaderSize", "TOMCAT_MAX_HTTP_HEADER_SIZE");
         connector.setMaxSavePostSize(-1);
-
         return connector;
     }
 

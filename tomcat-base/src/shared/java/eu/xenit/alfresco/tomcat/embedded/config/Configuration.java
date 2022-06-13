@@ -7,6 +7,16 @@ public class Configuration {
 
     private String webappsPath;
     private int port;
+
+    public int getTomcatSslPort() {
+        return tomcatSslPort;
+    }
+
+    public void setTomcatSslPort(int tomcatSslPort) {
+        this.tomcatSslPort = tomcatSslPort;
+    }
+
+    private int tomcatSslPort;
     private String logLibraryDir;
     private boolean enableJsonLogging;
     private Map<String, String> globalProperties = new HashMap<>();
@@ -14,6 +24,52 @@ public class Configuration {
     private String alfrescoFlavour;
     private String logsLocation;
     private String alfrescoLocation;
+
+    public int getTomcatMaxThreads() {
+        return tomcatMaxThreads;
+    }
+
+    public void setTomcatMaxThreads(int tomcatMaxThreads) {
+        this.tomcatMaxThreads = tomcatMaxThreads;
+    }
+
+    public int getTomcatMaxHttpHeaderSize() {
+        return tomcatMaxHttpHeaderSize;
+    }
+
+    public void setTomcatMaxHttpHeaderSize(int tomcatMaxHttpHeaderSize) {
+        this.tomcatMaxHttpHeaderSize = tomcatMaxHttpHeaderSize;
+    }
+
+    public int getTomcatServerPort() {
+        return tomcatServerPort;
+    }
+
+    public void setTomcatServerPort(int tomcatServerPort) {
+        this.tomcatServerPort = tomcatServerPort;
+    }
+
+    public String getTomcatRelaxedQueryChars() {
+        return tomcatRelaxedQueryChars;
+    }
+
+    public void setTomcatRelaxedQueryChars(String tomcatRelaxedQueryChars) {
+        this.tomcatRelaxedQueryChars = tomcatRelaxedQueryChars;
+    }
+
+    public String getTomcatRelaxedPathChars() {
+        return tomcatRelaxedPathChars;
+    }
+
+    public void setTomcatRelaxedPathChars(String tomcatRelaxedPathChars) {
+        this.tomcatRelaxedPathChars = tomcatRelaxedPathChars;
+    }
+
+    private int tomcatMaxThreads;
+    private int tomcatMaxHttpHeaderSize;
+    private int tomcatServerPort;
+    private String tomcatRelaxedQueryChars;
+    private String tomcatRelaxedPathChars;
 
     public String getLogLibraryDir() {
         return logLibraryDir;
