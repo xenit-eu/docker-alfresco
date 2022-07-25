@@ -10,8 +10,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Logger;
+import org.apache.catalina.Engine;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.Service;
 import org.apache.catalina.Valve;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.connector.Connector;
@@ -20,6 +22,7 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.net.SSLHostConfig;
+import org.apache.tomcat.util.net.SSLHostConfig.CertificateVerification;
 
 public class TomcatFactory {
 
@@ -35,7 +38,10 @@ public class TomcatFactory {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(configuration.getPort());
         tomcat.getServer().setPort(configuration.getTomcatServerPort());
-        tomcat.setConnector(createDefaultConnector());
+        createDefaultConnector(tomcat);
+        if (configuration.isSolrSSLEnabled()) {
+            createSSLConnector(tomcat);
+        }
         addUserWithRole(tomcat, "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repoclient");
         addUserWithRole(tomcat, "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repository");
 
@@ -44,7 +50,7 @@ public class TomcatFactory {
             Files.newDirectoryStream(webapps).forEach(path -> {
                         if (Files.isDirectory(path)) {
                             String contextPath = "/" + path.getFileName().toString();
-                            String absolutePath = path.toAbsolutePath().toString().toString();
+                            String absolutePath = path.toAbsolutePath().toString();
                             StandardContext ctx = (StandardContext) tomcat.addWebapp(contextPath,
                                     absolutePath);
                             ctx.setParentClassLoader(Thread.currentThread().getContextClassLoader());
@@ -76,34 +82,44 @@ public class TomcatFactory {
         return tomcat;
     }
 
-    private Connector createDefaultConnector() {
-        Connector connector = new Connector("HTTP/1.1");
-        connector.setPort(configuration.getPort());
-        connector.setProperty("connectionTimeout", "20000");
+    private void createDefaultConnector(Tomcat tomcat) {
+        Connector connector = getConnector(tomcat, "HTTP/1.1", configuration.getPort(), false, "http");
         connector.setRedirectPort(configuration.getTomcatSslPort());
-        connector.setURIEncoding(StandardCharsets.UTF_8.name());
-        connector.setProperty("SSLEnabled", "false");
-        connector.setProperty("maxThreads", String.valueOf(configuration.getTomcatMaxThreads()));
-        connector.setProperty("maxHttpHeaderSize", String.valueOf(configuration.getTomcatMaxHttpHeaderSize()));
-        connector.setScheme("http");
-        return connector;
+        tomcat.setConnector(connector);
     }
 
-    private Connector createSSLConnector() {
-        Connector connector = new Connector("HTTP/1.1");
+    private void createSSLConnector(Tomcat tomcat) {
+        Connector connector = getConnector(tomcat, "org.apache.coyote.http11.Http11NioProtocol", configuration.getTomcatSslPort(), true, "https");
+
         SSLHostConfig sslHostConfig = new SSLHostConfig();
-        sslHostConfig.setCertificateKeystoreFile("testpath");
-        sslHostConfig.setCertificateKeystorePassword("testpassword");
-        sslHostConfig.setCertificateKeystoreType("testype");
-        sslHostConfig.setTruststoreFile("testpath");
-        sslHostConfig.setTruststorePassword("testpassword");
-        sslHostConfig.setTruststoreType("testtype");
+        sslHostConfig.setCertificateKeystoreFile(configuration.getTomcatSSLKeystore());
+        sslHostConfig.setCertificateKeystorePassword(configuration.getTomcatSSLKeystorePassword());
+        sslHostConfig.setCertificateKeystoreType("JCEKS");
+        sslHostConfig.setTruststoreFile(configuration.getTomcatSSLTruststore());
+        sslHostConfig.setTruststorePassword(configuration.getTomcatSSLTruststorePassword());
+        sslHostConfig.setTruststoreType("JCEKS");
         sslHostConfig.setSslProtocol("TLS");
+        sslHostConfig.setCertificateVerification(CertificateVerification.REQUIRED.name());
         connector.addSslHostConfig(sslHostConfig);
         connector.setSecure(true);
         connector.setProperty("clientAuth", "want");
         connector.setProperty("allowUnsafeLegacyRenegotiation", "true");
         connector.setMaxSavePostSize(-1);
+        tomcat.setConnector(connector);
+    }
+
+    private Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme) {
+        Connector connector = new Connector(protocol);
+        connector.setPort(port);
+        connector.setProperty("connectionTimeout", "240000");
+        connector.setURIEncoding(StandardCharsets.UTF_8.name());
+        connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
+        connector.setProperty("maxThreads", String.valueOf(configuration.getTomcatMaxThreads()));
+        connector.setProperty("maxHttpHeaderSize", String.valueOf(configuration.getTomcatMaxHttpHeaderSize()));
+        connector.setScheme(scheme);
+        Service service = tomcat.getService();
+        service.setContainer(tomcat.getEngine());
+        connector.setService(service);
         return connector;
     }
 

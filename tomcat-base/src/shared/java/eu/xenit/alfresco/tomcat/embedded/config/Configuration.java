@@ -24,6 +24,52 @@ public class Configuration {
     private String alfrescoFlavour;
     private String logsLocation;
     private String alfrescoLocation;
+    private boolean solrSSLEnabled;
+
+    public boolean isSolrSSLEnabled() {
+        return solrSSLEnabled;
+    }
+
+    public void setSolrSSLEnabled(boolean solrSSLEnabled) {
+        this.solrSSLEnabled = solrSSLEnabled;
+    }
+
+    public String getTomcatSSLKeystore() {
+        return tomcatSSLKeystore;
+    }
+
+    public void setTomcatSSLKeystore(String tomcatSSLKeystore) {
+        this.tomcatSSLKeystore = tomcatSSLKeystore;
+    }
+
+    public String getTomcatSSLKeystorePassword() {
+        return tomcatSSLKeystorePassword;
+    }
+
+    public void setTomcatSSLKeystorePassword(String tomcatSSLKeystorePassword) {
+        this.tomcatSSLKeystorePassword = tomcatSSLKeystorePassword;
+    }
+
+    public String getTomcatSSLTruststore() {
+        return tomcatSSLTruststore;
+    }
+
+    public void setTomcatSSLTruststore(String tomcatSSLTruststore) {
+        this.tomcatSSLTruststore = tomcatSSLTruststore;
+    }
+
+    public String getTomcatSSLTruststorePassword() {
+        return tomcatSSLTruststorePassword;
+    }
+
+    public void setTomcatSSLTruststorePassword(String tomcatSSLTruststorePassword) {
+        this.tomcatSSLTruststorePassword = tomcatSSLTruststorePassword;
+    }
+
+    private String tomcatSSLKeystore;
+    private String tomcatSSLKeystorePassword;
+    private String tomcatSSLTruststore;
+    private String tomcatSSLTruststorePassword;
 
     public int getTomcatMaxThreads() {
         return tomcatMaxThreads;

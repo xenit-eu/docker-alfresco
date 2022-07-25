@@ -10,6 +10,11 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
     private static final String DB_HOST = "DB_HOST";
     private static final String DB_PORT = "DB_PORT";
     private static final String DB_NAME = "DB_NAME";
+    private static final String SOLR_SSL = "SOLR_SSL";
+    private static final String TOMCAT_SSL_KEYSTORE = "TOMCAT_SSL_KEYSTORE";
+    private static final String TOMCAT_SSL_KEYSTORE_PASSWORD = "TOMCAT_SSL_KEYSTORE_PASSWORD";
+    private static final String TOMCAT_SSL_TRUSTSTORE = "TOMCAT_SSL_TRUSTSTORE";
+    private static final String TOMCAT_SSL_TRUSTSTORE_PASSWORD = "TOMCAT_SSL_TRUSTSTORE_PASSWORD";
 
     @Override
     public Configuration getConfiguration(Configuration baseConfiguration) {
@@ -37,6 +42,22 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         if (System.getenv(DB_NAME) != null) {
             baseConfiguration.setGlobalProperty("db.name", System.getenv(DB_NAME));
         }
+        if ("none".equals(System.getenv(SOLR_SSL))) {
+            baseConfiguration.setSolrSSLEnabled(false);
+        }
+        if (System.getenv(TOMCAT_SSL_KEYSTORE) != null) {
+            baseConfiguration.setTomcatSSLKeystore(System.getenv(TOMCAT_SSL_KEYSTORE));
+        }
+        if (System.getenv(TOMCAT_SSL_KEYSTORE_PASSWORD) != null) {
+            baseConfiguration.setTomcatSSLKeystorePassword(System.getenv(TOMCAT_SSL_KEYSTORE_PASSWORD));
+        }
+        if (System.getenv(TOMCAT_SSL_TRUSTSTORE) != null) {
+            baseConfiguration.setTomcatSSLTruststore(System.getenv(TOMCAT_SSL_TRUSTSTORE));
+        }
+        if (System.getenv(TOMCAT_SSL_TRUSTSTORE_PASSWORD) != null) {
+            baseConfiguration.setTomcatSSLTruststorePassword(System.getenv(TOMCAT_SSL_TRUSTSTORE_PASSWORD));
+        }
+
         setGlobalProperties(baseConfiguration);
 
         return baseConfiguration;

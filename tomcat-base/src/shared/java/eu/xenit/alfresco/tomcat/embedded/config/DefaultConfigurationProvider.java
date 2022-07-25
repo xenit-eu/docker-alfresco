@@ -13,6 +13,9 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setTomcatMaxHttpHeaderSize(32768);
         baseConfiguration.setTomcatSslPort(8443);
         baseConfiguration.setTomcatServerPort(8005);
+        baseConfiguration.setSolrSSLEnabled(true);
+        baseConfiguration.setTomcatSSLKeystore("/opt/alfresco/keystore/ssl.keystore");
+        baseConfiguration.setTomcatSSLTruststore("/opt/alfresco/keystore/ssl.truststore");
 
         baseConfiguration.setGlobalProperty("db.host", "postgresql");
         baseConfiguration.setGlobalProperty("db.port", "5432");
