@@ -10,11 +10,31 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
     private static final String DB_HOST = "DB_HOST";
     private static final String DB_PORT = "DB_PORT";
     private static final String DB_NAME = "DB_NAME";
+
+    private static final String DB_DRIVER = "DB_DRIVER";
+
+    private static final String DB_USERNAME = "DB_USERNAME";
+
+    private static final String DB_PASSWORD = "DB_PASSWORD";
+
+    private static final String DB_URL = "DB_URL";
+
+    private static final String DB_QUERY = "DB_QUERY";
+
     private static final String SOLR_SSL = "SOLR_SSL";
+
+    private static final String SOLR_HOST = "SOLR_HOST";
+
+    private static final String SOLR_PORT = "SOLR_PORT";
+
+    private static final String SOLR_PORT_SSL = "SOLR_PORT_SSL";
+
     private static final String TOMCAT_SSL_KEYSTORE = "TOMCAT_SSL_KEYSTORE";
     private static final String TOMCAT_SSL_KEYSTORE_PASSWORD = "TOMCAT_SSL_KEYSTORE_PASSWORD";
     private static final String TOMCAT_SSL_TRUSTSTORE = "TOMCAT_SSL_TRUSTSTORE";
     private static final String TOMCAT_SSL_TRUSTSTORE_PASSWORD = "TOMCAT_SSL_TRUSTSTORE_PASSWORD";
+
+    private static final String ENABLE_CLUSTERING = "ENABLE_CLUSTERING";
 
     @Override
     public Configuration getConfiguration(Configuration baseConfiguration) {
@@ -42,8 +62,35 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         if (System.getenv(DB_NAME) != null) {
             baseConfiguration.setGlobalProperty("db.name", System.getenv(DB_NAME));
         }
+        if (System.getenv(DB_DRIVER) != null) {
+            baseConfiguration.setGlobalProperty("db.driver", System.getenv(DB_DRIVER));
+        }
+        if (System.getenv(DB_USERNAME) != null) {
+            baseConfiguration.setGlobalProperty("db.username", System.getenv(DB_USERNAME));
+        }
+        if (System.getenv(DB_PASSWORD) != null) {
+            baseConfiguration.setGlobalProperty("db.password", System.getenv(DB_PASSWORD));
+        }
+        if (System.getenv(DB_URL) != null) {
+            baseConfiguration.setGlobalProperty("db.url", System.getenv(DB_URL));
+        }
+        if (System.getenv(DB_QUERY) != null) {
+            baseConfiguration.setGlobalProperty("db.query", System.getenv(DB_QUERY));
+        }
+        if (System.getenv(SOLR_HOST) != null) {
+            baseConfiguration.setGlobalProperty("solr.host", System.getenv(SOLR_HOST));
+        }
+        if (System.getenv(SOLR_PORT) != null) {
+            baseConfiguration.setGlobalProperty("solr.port", System.getenv(SOLR_PORT));
+        }
+        if (System.getenv(SOLR_PORT_SSL) != null) {
+            baseConfiguration.setGlobalProperty("solr.port.ssl", System.getenv(SOLR_PORT_SSL));
+        }
         if ("none".equals(System.getenv(SOLR_SSL))) {
             baseConfiguration.setSolrSSLEnabled(false);
+        }
+        if (System.getenv(SOLR_SSL) != null) {
+            baseConfiguration.setGlobalProperty("solr.secureComms", System.getenv(SOLR_SSL));
         }
         if (System.getenv(TOMCAT_SSL_KEYSTORE) != null) {
             baseConfiguration.setTomcatSSLKeystore(System.getenv(TOMCAT_SSL_KEYSTORE));
@@ -56,6 +103,9 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         }
         if (System.getenv(TOMCAT_SSL_TRUSTSTORE_PASSWORD) != null) {
             baseConfiguration.setTomcatSSLTruststorePassword(System.getenv(TOMCAT_SSL_TRUSTSTORE_PASSWORD));
+        }
+        if (System.getenv(ENABLE_CLUSTERING) != null) {
+            baseConfiguration.setGlobalProperty("alfresco.cluster.enabled", System.getenv(ENABLE_CLUSTERING));
         }
 
         setGlobalProperties(baseConfiguration);

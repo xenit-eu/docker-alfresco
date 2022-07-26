@@ -73,17 +73,12 @@ Environment variables:
 
 | Variable                    | alfresco-global.property variable | java variable                                                | Default                                                      | Comments |
 | --------------------------- | --------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------- |
-| DIR_ROOT                    | dir.root                          |                                                              | /opt/alfresco/alf_data                                                        |  |
-| DIR_KEYSTORE                | dir.keystore                      |                                                              | /opt/alfresco/keystore                                                        |  |
-| CUSTOM_KEYSTORES            | N/A                               |                                                              | false                                                        | Triggers whether during init the system will attempt to fill in password values into the tomcat connector definition from the store-password.properties files |
 | ALFRESCO_HOST               | alfresco.host                     |                                                              | alfresco                                                    |  |
 | ALFRESCO_PORT               | alfresco.port                     |                                                              | 8080                                                         |  |
 | ALFRESCO_PROTOCOL           | alfresco.protocol                 |                                                              | http                                                         |  |
-| ALFRESCO_CONTEXT            | alfresco.context                  |                                                              | alfresco                                                         |  |
 | SHARE_HOST                  | share.host                        |                                                              | share                                                    |  |
 | SHARE_PORT                  | share.port                        |                                                              | 8080                                                         |  |
 | SHARE_PROTOCOL              | share.protocol                    |                                                              | http                                                         |  |
-| SHARE_CONTEXT               | share.context                     |                                                              | share                                                        |  |
 | DB_DRIVER                   | db.driver                         |                                                              | org.postgresql.Driver                                        |  |
 | DB_HOST                     | db.host                           |                                                              | localhost                                                    |  |
 | DB_PORT                     | db.port                           |                                                              | 5432                                                         |  |
@@ -92,24 +87,11 @@ Environment variables:
 | DB_PASSWORD                 | db.password                       |                                                              | admin                                                        |  |
 | DB_URL                      | db.url                            |                                                              | jdbc:postgresql://postgresql:5432/alfresco                   |  |
 | DB_QUERY                    | db.pool.validate.query            |                                                              | select 1                                                     |  |
-| INDEX                       | index.subsystem.name              |                                                              | solr for alfresco 4 <br>solr4 for alfresco 5<br>solr6 for alfresco >=5.2 |  |
 | SOLR_HOST                   | solr.host                         |                                                              | solr                                                         |  |
 | SOLR_PORT                   | solr.port                         |                                                              | 8080                                                         |  |
 | SOLR_PORT_SSL               | solr.port.ssl                     |                                                              | 8443                                                         |  |
-| DYNAMIC_SHARD_REGISTRATION  | solr.useDynamicShardRegistration  |                                                              | false                                                        |  |
 | SOLR_SSL                    | solr.secureComms                  |                                                              | https                                                        | disabling only works for Alfresco>=5.1 |
-| MAIL_HOST                   | mail.host                         |                                                              | localhost                                                    |  |
-| ENABLE_CIFS                 | cifs.enabled                      |                                                              | false                                                        |  |
-| ENABLE_FTP                  | ftp.enabled                       |                                                              | false                                                        |  |
 | ENABLE_CLUSTERING           | alfresco.cluster.enabled          |                                                              | false                                                        |  |
-| ENCRYPTION_KEYSTORE_TYPE    | encryption.keystore.type          |                                                              | JCEKS                                                        |  |
-| ENCRYPTION_CIPHERALGORITHM  | encryption.cipherAlgorithm        |                                                              | DESede/CBC/PKCS5Padding                                      |  |
-| ENCRYPTION_KEYALGORITHM     | encryption.keyAlgorithm           |                                                              | DESede                                                       |  |
-| ENCRYPTION_KEYSTORE_LOCATION| encryption.keystore.location      |                                                              | /opt/alfresco/keystore/keystore                              |  |
-| METADATA_KEYSTORE_PASSWORD  |                                   | metadata-keystore.password                                   | mp6yc0UD9e                                                   |  |
-| METADATA_KEYSTORE_ALIASES   |                                   | metadata-keystore.aliases                                    | metadata                                                     |  |
-| METADATA_KEYSTORE_${alias}_PASSWORD  |                          | metadata-keystore.${alias}.password                          | oKIWzVdEdA (for default alias `metadata`)                    |  |
-| METADATA_KEYSTORE_${alias}_ALGORITHM |                          | metadata-keystore.${alias}.algorithm                         | DESede (for default alias `metadata`)                        |  |
 | SSL_KEYSTORE_PASSWORD       |                                   | ssl-keystore.password                                        | kT9X6oe68t                                                   |  |
 | SSL_KEYSTORE_ALIASES        |                                   | ssl-keystore.aliases                                         | ssl.alfresco.ca, ssl.repo                                    |  |
 | SSL_KEYSTORE_${alias}_PASSWORD       |                          | ssl-keystore.${alias}.password                               | kT9X6oe68t (for default alias `ssl.alfresco.ca`)             |  |
