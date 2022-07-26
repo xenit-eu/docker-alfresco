@@ -71,34 +71,37 @@ This issue can be worked around by `COPY`ing the exploded war, or by using the [
 
 Environment variables:
 
-| Variable                    | alfresco-global.property variable | java variable                                                | Default                                                      | Comments |
-| --------------------------- | --------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------- |
-| ALFRESCO_HOST               | alfresco.host                     |                                                              | alfresco                                                    |  |
-| ALFRESCO_PORT               | alfresco.port                     |                                                              | 8080                                                         |  |
-| ALFRESCO_PROTOCOL           | alfresco.protocol                 |                                                              | http                                                         |  |
-| SHARE_HOST                  | share.host                        |                                                              | share                                                    |  |
-| SHARE_PORT                  | share.port                        |                                                              | 8080                                                         |  |
-| SHARE_PROTOCOL              | share.protocol                    |                                                              | http                                                         |  |
-| DB_DRIVER                   | db.driver                         |                                                              | org.postgresql.Driver                                        |  |
-| DB_HOST                     | db.host                           |                                                              | localhost                                                    |  |
-| DB_PORT                     | db.port                           |                                                              | 5432                                                         |  |
-| DB_NAME                     | db.name                           |                                                              | alfresco                                                     |  |
-| DB_USERNAME                 | db.username                       |                                                              | alfresco                                                     |  |
-| DB_PASSWORD                 | db.password                       |                                                              | admin                                                        |  |
-| DB_URL                      | db.url                            |                                                              | jdbc:postgresql://postgresql:5432/alfresco                   |  |
-| DB_QUERY                    | db.pool.validate.query            |                                                              | select 1                                                     |  |
-| SOLR_HOST                   | solr.host                         |                                                              | solr                                                         |  |
-| SOLR_PORT                   | solr.port                         |                                                              | 8080                                                         |  |
-| SOLR_PORT_SSL               | solr.port.ssl                     |                                                              | 8443                                                         |  |
-| SOLR_SSL                    | solr.secureComms                  |                                                              | https                                                        | disabling only works for Alfresco>=5.1 |
-| ENABLE_CLUSTERING           | alfresco.cluster.enabled          |                                                              | false                                                        |  |
-| SSL_KEYSTORE_PASSWORD       |                                   | ssl-keystore.password                                        | kT9X6oe68t                                                   |  |
-| SSL_KEYSTORE_ALIASES        |                                   | ssl-keystore.aliases                                         | ssl.alfresco.ca, ssl.repo                                    |  |
-| SSL_KEYSTORE_${alias}_PASSWORD       |                          | ssl-keystore.${alias}.password                               | kT9X6oe68t (for default alias `ssl.alfresco.ca`)             |  |
-| SSL_TRUSTSTORE_PASSWORD     |                                   | ssl-truststore.password                                      | kT9X6oe68t                                                   |  |
-| SSL_TRUSTSTORE_ALIASES      |                                   | ssl-truststore.aliases                                       | alfresco.ca                                                  |  |
-| SSL_TRUSTSTORE_${alias}_PASSWORD     |                          | ssl-truststore.${alias}.password                             | kT9X6oe68t (for default alias `alfresco.ca`)                 |  |
-| GLOBAL_\<variable\>         | \<variable\>                      |                                                              |                                                              |  |
+| Variable                       | alfresco-global.property variable | Default                                     | Description                         |
+|--------------------------------|-----------------------------------|---------------------------------------------|-------------------------------------|
+| ALFRESCO_HOST                  | alfresco.host                     | alfresco                                    |                                     |
+| ALFRESCO_PORT                  | alfresco.port                     | 8080                                        |                                     |
+| ALFRESCO_PROTOCOL              | alfresco.protocol                 | http                                        |                                     |
+| SHARE_HOST                     | share.host                        | share                                       |                                     |
+| SHARE_PORT                     | share.port                        | 8080                                        |                                     |
+| SHARE_PROTOCOL                 | share.protocol                    | http                                        |                                     |
+| DB_DRIVER                      | db.driver                         | org.postgresql.Driver                       |                                     |
+| DB_HOST                        | db.host                           | localhost                                   |                                     |
+| DB_PORT                        | db.port                           | 5432                                        |                                     |
+| DB_NAME                        | db.name                           | alfresco                                    |                                     |
+| DB_USERNAME                    | db.username                       | alfresco                                    |                                     |
+| DB_PASSWORD                    | db.password                       | admin                                       |                                     |
+| DB_URL                         | db.url                            | jdbc:postgresql://postgresql:5432/alfresco  |                                     |
+| DB_QUERY                       | db.pool.validate.query            | select 1                                    |                                     |
+| SOLR_HOST                      | solr.host                         | solr                                        |                                     |
+| SOLR_PORT                      | solr.port                         | 8080                                        |                                     |
+| SOLR_PORT_SSL                  | solr.port.ssl                     | 8443                                        |                                     |
+| SOLR_SSL                       | solr.secureComms                  | https                                       |                                     |
+| ENABLE_CLUSTERING              | alfresco.cluster.enabled          | false                                       |                                     |
+| TOMCAT_SSL_KEYSTORE            |                                   | /opt/alfresco/keystore/ssl.keystore         | Path for the ssl keystore file      |
+| TOMCAT_SSL_KEYSTORE_PASSWORD   |                                   |                                             | Password for the ssl keystore       |
+| TOMCAT_SSL_TRUSTSTORE          |                                   | /opt/alfresco/keystore/ssl.truststore       | Path for the ssl truststore file    |
+| TOMCAT_SSL_TRUSTSTORE_PASSWORD |                                   |                                             | Password for the ssl truststore     |
+| GLOBAL_\<variable\>            | \<variable\>                      |                                             |                                     |
+| TOMCAT_PORT                    |                                   | 8080                                        | non SSL port tomcat is listening on |
+| TOMCAT_PORT_SSL                |                                   | 8443                                        | SSL port tomcat is listening on     |
+| TOMCAT_SERVER_PORT             |                                   | 8005                                        | Port for server communication       |
+| TOMCAT_MAX_HTTP_HEADER_SIZE    |                                   | 32768                                       | Maximum http header size            |
+| TOMCAT_MAX_THREADS             |                                   | 200                                         | Maximum number of threads           |
 
 ## Support & Collaboration
 

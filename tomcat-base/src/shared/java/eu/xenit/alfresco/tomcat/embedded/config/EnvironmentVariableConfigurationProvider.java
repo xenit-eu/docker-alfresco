@@ -34,6 +34,20 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
     private static final String TOMCAT_SSL_TRUSTSTORE = "TOMCAT_SSL_TRUSTSTORE";
     private static final String TOMCAT_SSL_TRUSTSTORE_PASSWORD = "TOMCAT_SSL_TRUSTSTORE_PASSWORD";
 
+    private static final String TOMCAT_PORT = "TOMCAT_PORT";
+
+    private static final String TOMCAT_PORT_SSL = "TOMCAT_PORT_SSL";
+
+    private static final String TOMCAT_SERVER_PORT = "TOMCAT_SERVER_PORT";
+
+    private static final String TOMCAT_MAX_HTTP_HEADER_SIZE = "TOMCAT_MAX_HTTP_HEADER_SIZE";
+
+    private static final String TOMCAT_MAX_THREADS = "TOMCAT_MAX_THREADS";
+
+    private static final String TOMCAT_RELAXED_QUERY_CHARS = "TOMCAT_RELAXED_QUERY_CHARS";
+
+    private static final String TOMCAT_RELAXED_PATH_CHARS = "TOMCAT_RELAXED_PATH_CHARS";
+
     private static final String ENABLE_CLUSTERING = "ENABLE_CLUSTERING";
 
     @Override
@@ -106,6 +120,27 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         }
         if (System.getenv(ENABLE_CLUSTERING) != null) {
             baseConfiguration.setGlobalProperty("alfresco.cluster.enabled", System.getenv(ENABLE_CLUSTERING));
+        }
+        if (System.getenv(TOMCAT_PORT) != null) {
+            baseConfiguration.setPort(Integer.parseInt(System.getenv(TOMCAT_PORT)));
+        }
+        if (System.getenv(TOMCAT_PORT_SSL) != null) {
+            baseConfiguration.setTomcatSslPort(Integer.parseInt(System.getenv(TOMCAT_PORT_SSL)));
+        }
+        if (System.getenv(TOMCAT_SERVER_PORT) != null) {
+            baseConfiguration.setTomcatServerPort(Integer.parseInt(System.getenv(TOMCAT_SERVER_PORT)));
+        }
+        if (System.getenv(TOMCAT_MAX_HTTP_HEADER_SIZE) != null) {
+            baseConfiguration.setTomcatMaxHttpHeaderSize(Integer.parseInt(System.getenv(TOMCAT_MAX_HTTP_HEADER_SIZE)));
+        }
+        if (System.getenv(TOMCAT_MAX_THREADS) != null) {
+            baseConfiguration.setTomcatMaxThreads(Integer.parseInt(System.getenv(TOMCAT_MAX_THREADS)));
+        }
+        if (System.getenv(TOMCAT_RELAXED_QUERY_CHARS) != null) {
+            baseConfiguration.setTomcatRelaxedQueryChars(System.getenv(TOMCAT_RELAXED_QUERY_CHARS));
+        }
+        if (System.getenv(TOMCAT_RELAXED_PATH_CHARS) != null) {
+            baseConfiguration.setTomcatRelaxedPathChars(System.getenv(TOMCAT_RELAXED_PATH_CHARS));
         }
 
         setGlobalProperties(baseConfiguration);
