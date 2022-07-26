@@ -20,11 +20,16 @@ jobs:
         run: chmod +x gradlew
       - name: Write build date
         run: "mkdir -p ~/.gradle && echo 'buildDate='$(date +%s) >> ~/.gradle/gradle.properties"
-      - name: Login to Docker
+      - name: Login to Xenit docker registry
         env:
           DOCKER_USER: ${{ secrets.XENIT_DOCKER_REGISTRY_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.XENIT_DOCKER_REGISTRY_PASSWORD }}
         run: echo "$DOCKER_PASSWORD" | docker login hub.xenit.eu --username "$DOCKER_USER" --password-stdin
+      - name: Login to Docker hub registry
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
       - name: Run integration tests
         env:
           VERSIONS_TO_BUILD: ${{ matrix.version }}
@@ -35,5 +40,5 @@ jobs:
           VERSIONS_TO_BUILD: ${{ matrix.version }}
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: ./gradlew -PrepoName=docker.io/xenit pushDockerImage
+        run: ./gradlew pushDockerImage
 
