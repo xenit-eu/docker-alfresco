@@ -56,11 +56,12 @@ subprojects {
         smartCopy "${project.parent.projectDir}/src/shared/resources/keystore", '/keystore'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
         smartCopy configurations.archives.artifacts.files, '/app/tomcat-embedded'
+        smartCopy "${project.parent.projectDir}/src/shared/shell/entrypoint.sh", '/etc/scripts/'
 
         def buildDate = project.properties.getOrDefault("buildDate", (new Date().getTime() / 1000).toString());
         environmentVariable('BUILD_DATE', buildDate)
 
-        entryPoint('java', '-cp', "/app/tomcat-embedded/${archivesBaseName}.jar:/app/tomcat-embedded/lib/*", 'eu.xenit.alfresco.tomcat.embedded.Main')
+        entryPoint('/etc/scripts/entrypoint.sh')
 
     }
 }
