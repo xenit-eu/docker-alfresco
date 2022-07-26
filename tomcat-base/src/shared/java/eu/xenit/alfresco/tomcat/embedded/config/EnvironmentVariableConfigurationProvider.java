@@ -4,6 +4,9 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
 
     public static final String TOMCAT_WEBAPPS = "TOMCAT_WEBAPPS";
     public static final String JSON_LOGGING = "JSON_LOGGING";
+
+    public static final String ACCESS_LOGGING = "ACCESS_LOGGING";
+
     private static final String LOGLIBRARY_DIR = "LOGLIBRARY_DIR";
     private static final String ALFRESCO_VERSION = "ALFRESCO_VERSION";
     private static final String ALFRESCO_FLAVOUR = "ALFRESCO_FLAVOUR";
@@ -56,7 +59,10 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
             baseConfiguration.setWebappsPath(System.getenv(TOMCAT_WEBAPPS));
         }
         if (System.getenv(JSON_LOGGING) != null) {
-            baseConfiguration.setEnableJsonLogging(Boolean.parseBoolean(System.getenv(JSON_LOGGING)));
+            baseConfiguration.setJsonLogging(Boolean.parseBoolean(System.getenv(JSON_LOGGING)));
+        }
+        if (System.getenv(ACCESS_LOGGING) != null) {
+            baseConfiguration.setAccessLogging(Boolean.parseBoolean(System.getenv(ACCESS_LOGGING)));
         }
         if (System.getenv(LOGLIBRARY_DIR) != null) {
             baseConfiguration.setLogLibraryDir(System.getenv(LOGLIBRARY_DIR));

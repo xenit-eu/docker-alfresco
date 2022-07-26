@@ -18,7 +18,17 @@ public class Configuration {
 
     private int tomcatSslPort;
     private String logLibraryDir;
-    private boolean enableJsonLogging;
+    private boolean jsonLogging;
+
+    public boolean isAccessLogging() {
+        return accessLogging;
+    }
+
+    public void setAccessLogging(boolean accessLogging) {
+        this.accessLogging = accessLogging;
+    }
+
+    private boolean accessLogging;
     private Map<String, String> globalProperties = new HashMap<>();
     private String alfrescoVersion;
     private String alfrescoFlavour;
@@ -125,12 +135,12 @@ public class Configuration {
         this.logLibraryDir = logLibraryDir;
     }
 
-    public boolean isEnableJsonLogging() {
-        return enableJsonLogging;
+    public boolean isJsonLogging() {
+        return jsonLogging;
     }
 
-    public void setEnableJsonLogging(boolean enableJsonLogging) {
-        this.enableJsonLogging = enableJsonLogging;
+    public void setJsonLogging(boolean jsonLogging) {
+        this.jsonLogging = jsonLogging;
     }
 
     public Map<String, String> getGlobalProperties() {

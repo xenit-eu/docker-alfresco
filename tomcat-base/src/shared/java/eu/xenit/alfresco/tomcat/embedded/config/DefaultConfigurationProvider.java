@@ -7,7 +7,8 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setWebappsPath("/usr/local/tomcat/webapps");
         baseConfiguration.setLogsLocation("/usr/local/tomcat/logs");
         baseConfiguration.setPort(8080);
-        baseConfiguration.setEnableJsonLogging(false);
+        baseConfiguration.setJsonLogging(false);
+        baseConfiguration.setAccessLogging(false);
         baseConfiguration.setLogLibraryDir("/loglibrarydir");
         baseConfiguration.setTomcatMaxThreads(200);
         baseConfiguration.setTomcatMaxHttpHeaderSize(32768);

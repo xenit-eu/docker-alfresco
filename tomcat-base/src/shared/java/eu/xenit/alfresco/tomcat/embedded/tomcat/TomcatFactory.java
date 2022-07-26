@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Logger;
-import org.apache.catalina.Engine;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.Service;
@@ -56,7 +55,7 @@ public class TomcatFactory {
                             ctx.setParentClassLoader(Thread.currentThread().getContextClassLoader());
 
                             LifecycleListener lifecycleListener = event -> {
-                                if (event.getType().equals("before_start") && configuration.isEnableJsonLogging()) {
+                                if (event.getType().equals("before_start") && configuration.isJsonLogging()) {
                                     redirectLog4j(path);
                                     WebResourceRoot resources = new StandardRoot(ctx);
                                     //Load extra jars in classpath for json application logging
@@ -70,10 +69,11 @@ public class TomcatFactory {
                             };
                             ctx.addLifecycleListener(lifecycleListener);
 
-                            Valve valve = new JsonAccessLogValve();
-                            ctx.addValve(valve);
-                            ctx.getAccessLog();
-
+                            if (configuration.isAccessLogging()) {
+                                Valve valve = new JsonAccessLogValve();
+                                ctx.addValve(valve);
+                                ctx.getAccessLog();
+                            }
                         }
                     }
             );

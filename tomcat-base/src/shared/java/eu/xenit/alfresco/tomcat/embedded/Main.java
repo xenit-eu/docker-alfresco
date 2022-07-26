@@ -26,7 +26,7 @@ public class Main {
             TomcatFactory tomcatFactory = new TomcatFactory(configuration);
             Tomcat tomcat = tomcatFactory.getTomcat();
             //Needs to be done after
-            if(configuration.isEnableJsonLogging()) {
+            if(configuration.isJsonLogging()) {
                 configureJsonLogging();
             }
             tomcat.start();
