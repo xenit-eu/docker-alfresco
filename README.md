@@ -21,10 +21,7 @@ This project builds Alfresco-specific docker images used by Xenit, starting with
 
 ## Overview
 
-This is our repository with _Dockerfile_ s that are the canonical source for our Alfresco Docker images. 
-
-All images are automatically built by [jenkins-2](https://jenkins-2.xenit.eu) and published to [hub.xenit.eu](https://hub.xenit.eu).
-Community images are built by [Travis](https://travis-ci.org/xenit-eu/) and published to [docker hub](https://hub.docker.com/u/xenit).
+This is our repository with _Dockerfile_ s that are the canonical source for our Alfresco Docker images.
 
 ## Image Variants
 
