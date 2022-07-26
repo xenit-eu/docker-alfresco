@@ -23,38 +23,6 @@ subprojects {
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
-    def workingDir = "$project.buildDir/dockerbuild"
-
-    configurations {
-        initScript
-    }
-
-    dependencies {
-        initScript project(':docker-init-script')
-    }
-
-    task copyDockerResources(type: Sync) {
-        from "$rootProject.projectDir/src/main/resources/global"
-        from("$rootProject.projectDir/src/main/resources/dockerfiles/") {
-            if(project.alfresco.version.major.toInteger() > 6) {
-                include "Dockerfile-skeleton-7"
-                rename "Dockerfile-skeleton-7", 'Dockerfile'
-            }
-            else if (project.alfresco.version.major.toInteger() == 6) {
-                include "Dockerfile-skeleton-6"
-                rename "Dockerfile-skeleton-6", 'Dockerfile'
-            } else {
-                include "Dockerfile-skeleton-pre6"
-                rename "Dockerfile-skeleton-pre6", 'Dockerfile'
-            }
-        }
-        from "$project.projectDir/local"
-        from(configurations.initScript) {
-            rename { "90-init-alfresco.jar" }
-        }
-        into workingDir
-    }
-
     def tomcatProject = project(getTomcatProject(project))
     def tomcatImage = tomcatProject.getTasks().getByName('buildDockerImage')
     println "tomcatImage: ${tomcatImage.getImageId()}"
