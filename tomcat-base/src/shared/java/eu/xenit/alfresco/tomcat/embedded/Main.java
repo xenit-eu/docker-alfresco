@@ -26,9 +26,7 @@ public class Main {
             TomcatFactory tomcatFactory = new TomcatFactory(configuration);
             Tomcat tomcat = tomcatFactory.getTomcat();
             //Needs to be done after
-            if(configuration.isJsonLogging()) {
-                configureJsonLogging();
-            }
+            configureLogging(configuration.isJsonLogging());
             tomcat.start();
             tomcat.getServer().await();
         } catch (Exception e) {
@@ -41,24 +39,18 @@ public class Main {
         configuration.getGlobalProperties().forEach(System::setProperty);
     }
 
-    private static void configureJsonLogging() {
-        configureLoggerToJSONStdOut(Logger.getLogger(""), "tomcat");
-        configureLoggerToJSONStdOut(LOG.getParent(), "tomcat");
+    private static void configureLogging(boolean json) {
+        configureLoggerToJSONStdOut(Logger.getLogger(""), "tomcat", json);
+        configureLoggerToJSONStdOut(LOG.getParent(), "tomcat", json);
         for (Handler handler : LOG.getHandlers()) {
             LOG.removeHandler(handler);
         }
     }
 
-    private static void configureLoggerToJSONStdOut(Logger logger, String type) {
+    private static void configureLoggerToJSONStdOut(Logger logger, String type, boolean json) {
         for (Handler handler : logger.getHandlers()) {
             logger.removeHandler(handler);
         }
-        GelfFormatter formatter = new GelfFormatter();
-        formatter.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSS");
-        formatter.setFields("Severity, Time, LoggerName");
-        formatter.setAdditionalFields("type="+type);
-        formatter.setExtractStackTrace("true");
-        formatter.setFilterStackTrace(true);
 
         //Sonar complains about the following block, but I don't know how to do it in a nicer way.
         Handler customHandler = new ConsoleHandler() {
@@ -66,7 +58,17 @@ public class Main {
                 setOutputStream(System.out);
             }
         };
-        customHandler.setFormatter(formatter);
+
+        if (json) {
+            GelfFormatter formatter = new GelfFormatter();
+            formatter.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSS");
+            formatter.setFields("Severity, Time, LoggerName");
+            formatter.setAdditionalFields("type=" + type);
+            formatter.setExtractStackTrace("true");
+            formatter.setFilterStackTrace(true);
+            customHandler.setFormatter(formatter);
+        }
+
         logger.addHandler(customHandler);
     }
 
