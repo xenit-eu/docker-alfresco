@@ -19,8 +19,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
     - name: Write build date
       run: "mkdir -p ~/.gradle && echo 'buildDate='$(date +%s) >> ~/.gradle/gradle.properties"
     - name: Login to Xenit docker registry
