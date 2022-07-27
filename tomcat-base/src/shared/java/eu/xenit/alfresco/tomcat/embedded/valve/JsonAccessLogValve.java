@@ -17,11 +17,12 @@ public class JsonAccessLogValve extends ValveBase implements AccessLog {
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
 
     @Override
-    public void log(Request request, Response response, long time) {
+    public void log(Request request, Response response, long duration) {
         JsonObject root = new JsonObject();
-        root.addProperty("Time", simpleDateFormat.format(new Date()));
+        Date date = new Date();
+        root.addProperty("Time", simpleDateFormat.format(date));
         root.addProperty("type", "accessLog");
-        root.addProperty("time", time);
+        root.addProperty("duration", duration);
         root.addProperty("responseCode", response.getCoyoteResponse().getStatus());
         root.addProperty("remoteHost", request.getRemoteHost());
         root.addProperty("method", request.getMethod());

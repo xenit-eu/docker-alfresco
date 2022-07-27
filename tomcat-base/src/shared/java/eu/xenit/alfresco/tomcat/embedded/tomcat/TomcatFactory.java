@@ -2,13 +2,16 @@ package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
 import eu.xenit.alfresco.tomcat.embedded.valve.JsonAccessLogValve;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
@@ -46,40 +49,43 @@ public class TomcatFactory {
 
         Path webapps = Paths.get(configuration.getWebappsPath());
         if (Files.exists(webapps)) {
-            Files.newDirectoryStream(webapps).forEach(path -> {
-                        if (Files.isDirectory(path)) {
-                            String contextPath = "/" + path.getFileName().toString();
-                            String absolutePath = path.toAbsolutePath().toString();
-                            StandardContext ctx = (StandardContext) tomcat.addWebapp(contextPath,
-                                    absolutePath);
-                            ctx.setParentClassLoader(Thread.currentThread().getContextClassLoader());
-
-                            LifecycleListener lifecycleListener = event -> {
-                                if (event.getType().equals("before_start") && configuration.isJsonLogging()) {
-                                    redirectLog4j(path);
-                                    WebResourceRoot resources = new StandardRoot(ctx);
-                                    //Load extra jars in classpath for json application logging
-                                    resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib",
-                                            configuration.getLogLibraryDir(), "/"));
-                                    ctx.setResources(resources);
-                                }
-                                if (event.getType().equals("after_stop")) {
-                                    stopTomcat(tomcat);
-                                }
-                            };
-                            ctx.addLifecycleListener(lifecycleListener);
-
-                            if (configuration.isAccessLogging()) {
-                                Valve valve = new JsonAccessLogValve();
-                                ctx.addValve(valve);
-                                ctx.getAccessLog();
-                            }
-                        }
-                    }
-            );
+            try (var directoryStream = Files.newDirectoryStream(webapps)) {
+                directoryStream.forEach(path -> addWebapp(tomcat, path));
+            }
         }
         
         return tomcat;
+    }
+
+    private void addWebapp(Tomcat tomcat, Path path) {
+        if (Files.isDirectory(path)) {
+            String contextPath = File.separator + path.getFileName().toString();
+            String absolutePath = path.toAbsolutePath().toString();
+            StandardContext ctx = (StandardContext) tomcat.addWebapp(contextPath,
+                    absolutePath);
+            ctx.setParentClassLoader(Thread.currentThread().getContextClassLoader());
+
+            LifecycleListener lifecycleListener = event -> {
+                if (event.getType().equals("before_start") && configuration.isJsonLogging()) {
+                    redirectLog4j(path);
+                    WebResourceRoot resources = new StandardRoot(ctx);
+                    //Load extra jars in classpath for json application logging
+                    resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib",
+                            configuration.getLogLibraryDir(), "/"));
+                    ctx.setResources(resources);
+                }
+                if (event.getType().equals("after_stop")) {
+                    stopTomcat(tomcat);
+                }
+            };
+            ctx.addLifecycleListener(lifecycleListener);
+
+            if (configuration.isAccessLogging()) {
+                Valve valve = new JsonAccessLogValve();
+                ctx.addValve(valve);
+                ctx.getAccessLog();
+            }
+        }
     }
 
     private void createDefaultConnector(Tomcat tomcat) {
@@ -132,21 +138,23 @@ public class TomcatFactory {
         Path log4JPropertiesPath = path.resolve("WEB-INF/classes/log4j.properties");
         Properties properties = new Properties();
         try {
-            properties.load(Files.newBufferedReader(log4JPropertiesPath));
-            properties.setProperty("log4j.rootLogger", "error, Console, jmxlogger1");
-            properties.setProperty("log4j.appender.Console.layout", "biz.paluch.logging.gelf.log4j.GelfLayout");
-            properties.setProperty("log4j.appender.Console.layout.AdditionalFields",
-                    "type=application/" + path.getFileName());
-            properties.setProperty("log4j.appender.Console.layout.TimestampPattern", "yyyy-MM-dd HH:mm:ss,SSS");
-            properties.setProperty("log4j.appender.Console.layout.ExtractStackTrace", "true");
-            properties.setProperty("log4j.appender.Console.layout.FilterStackTrace", "true");
-            Path tempProps = Files.createTempFile("log4j-", ".properties");
-            try (OutputStream os = Files.newOutputStream(tempProps)) {
-                properties.store(os, null);
+            try (var reader = Files.newBufferedReader(log4JPropertiesPath)) {
+                properties.load(reader);
+                properties.setProperty("log4j.rootLogger", "error, Console, jmxlogger1");
+                properties.setProperty("log4j.appender.Console.layout", "biz.paluch.logging.gelf.log4j.GelfLayout");
+                properties.setProperty("log4j.appender.Console.layout.AdditionalFields",
+                        "type=application/" + path.getFileName());
+                properties.setProperty("log4j.appender.Console.layout.TimestampPattern", "yyyy-MM-dd HH:mm:ss,SSS");
+                properties.setProperty("log4j.appender.Console.layout.ExtractStackTrace", "true");
+                properties.setProperty("log4j.appender.Console.layout.FilterStackTrace", "true");
+                Path tempProps = Files.createTempFile("log4j-", ".properties");
+                try (OutputStream os = Files.newOutputStream(tempProps)) {
+                    properties.store(os, null);
+                }
+                System.setProperty("log4j.configuration", "file:" + tempProps.toAbsolutePath());
             }
-            System.setProperty("log4j.configuration", "file:" + tempProps.toAbsolutePath());
         } catch (IOException e) {
-
+            LOG.log(Level.WARNING, "Unable to process log4j.properties", e);
         }
     }
 

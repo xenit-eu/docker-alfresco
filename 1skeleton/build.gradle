@@ -41,7 +41,6 @@ subprojects {
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.version.flavor}")
     }
 
-    buildDockerImage {
-        pull = false
-    }
+    // Disable pull because base image is built locally and not pushed to a repo
+    buildDockerImage.pull = false
 }

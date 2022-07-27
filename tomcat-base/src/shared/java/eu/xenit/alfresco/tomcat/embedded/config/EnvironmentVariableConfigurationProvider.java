@@ -1,5 +1,7 @@
 package eu.xenit.alfresco.tomcat.embedded.config;
 
+import java.util.function.Consumer;
+
 public class EnvironmentVariableConfigurationProvider implements ConfigurationProvider {
 
     public static final String TOMCAT_WEBAPPS = "TOMCAT_WEBAPPS";
@@ -55,99 +57,39 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
 
     @Override
     public Configuration getConfiguration(Configuration baseConfiguration) {
-        if (System.getenv(TOMCAT_WEBAPPS) != null) {
-            baseConfiguration.setWebappsPath(System.getenv(TOMCAT_WEBAPPS));
-        }
-        if (System.getenv(JSON_LOGGING) != null) {
-            baseConfiguration.setJsonLogging(Boolean.parseBoolean(System.getenv(JSON_LOGGING)));
-        }
-        if (System.getenv(ACCESS_LOGGING) != null) {
-            baseConfiguration.setAccessLogging(Boolean.parseBoolean(System.getenv(ACCESS_LOGGING)));
-        }
-        if (System.getenv(LOGLIBRARY_DIR) != null) {
-            baseConfiguration.setLogLibraryDir(System.getenv(LOGLIBRARY_DIR));
-        }
-        if (System.getenv(ALFRESCO_VERSION) != null) {
-            baseConfiguration.setAlfrescoVersion(System.getenv(ALFRESCO_VERSION));
-        }
-        if (System.getenv(ALFRESCO_FLAVOUR) != null) {
-            baseConfiguration.setAlfrescoFlavour(System.getenv(ALFRESCO_FLAVOUR));
-        }
-        if (System.getenv(DB_HOST) != null) {
-            baseConfiguration.setGlobalProperty("db.host", System.getenv(DB_HOST));
-        }
-        if (System.getenv(DB_PORT) != null) {
-            baseConfiguration.setGlobalProperty("db.port", System.getenv(DB_PORT));
-        }
-        if (System.getenv(DB_NAME) != null) {
-            baseConfiguration.setGlobalProperty("db.name", System.getenv(DB_NAME));
-        }
-        if (System.getenv(DB_DRIVER) != null) {
-            baseConfiguration.setGlobalProperty("db.driver", System.getenv(DB_DRIVER));
-        }
-        if (System.getenv(DB_USERNAME) != null) {
-            baseConfiguration.setGlobalProperty("db.username", System.getenv(DB_USERNAME));
-        }
-        if (System.getenv(DB_PASSWORD) != null) {
-            baseConfiguration.setGlobalProperty("db.password", System.getenv(DB_PASSWORD));
-        }
-        if (System.getenv(DB_URL) != null) {
-            baseConfiguration.setGlobalProperty("db.url", System.getenv(DB_URL));
-        }
-        if (System.getenv(DB_QUERY) != null) {
-            baseConfiguration.setGlobalProperty("db.query", System.getenv(DB_QUERY));
-        }
-        if (System.getenv(SOLR_HOST) != null) {
-            baseConfiguration.setGlobalProperty("solr.host", System.getenv(SOLR_HOST));
-        }
-        if (System.getenv(SOLR_PORT) != null) {
-            baseConfiguration.setGlobalProperty("solr.port", System.getenv(SOLR_PORT));
-        }
-        if (System.getenv(SOLR_PORT_SSL) != null) {
-            baseConfiguration.setGlobalProperty("solr.port.ssl", System.getenv(SOLR_PORT_SSL));
-        }
+        setPropertyFromEnv(TOMCAT_WEBAPPS, baseConfiguration::setWebappsPath);
+        setPropertyFromEnv(JSON_LOGGING, value -> baseConfiguration.setJsonLogging(Boolean.parseBoolean(value)));
+        setPropertyFromEnv(ACCESS_LOGGING, value -> baseConfiguration.setAccessLogging(Boolean.parseBoolean(value)));
+        setPropertyFromEnv(LOGLIBRARY_DIR, baseConfiguration::setLogLibraryDir);
+        setPropertyFromEnv(ALFRESCO_VERSION, baseConfiguration::setAlfrescoVersion);
+        setPropertyFromEnv(ALFRESCO_FLAVOUR, baseConfiguration::setAlfrescoFlavour);
+        setGlobalPropertyFromEnv(DB_HOST, baseConfiguration, "db.host");
+        setGlobalPropertyFromEnv(DB_NAME, baseConfiguration, "db.NAME");
+        setGlobalPropertyFromEnv(DB_PORT, baseConfiguration, "db.port");
+        setGlobalPropertyFromEnv(DB_DRIVER, baseConfiguration, "db.driver");
+        setGlobalPropertyFromEnv(DB_USERNAME, baseConfiguration, "db.username");
+        setGlobalPropertyFromEnv(DB_PASSWORD, baseConfiguration, "db.password");
+        setGlobalPropertyFromEnv(DB_URL, baseConfiguration, "db.url");
+        setGlobalPropertyFromEnv(DB_QUERY, baseConfiguration, "db.query");
+        setGlobalPropertyFromEnv(SOLR_HOST, baseConfiguration, "solr.host");
+        setGlobalPropertyFromEnv(SOLR_PORT, baseConfiguration, "solr.port");
+        setGlobalPropertyFromEnv(SOLR_PORT_SSL, baseConfiguration, "solr.port.ssl");
         if ("none".equals(System.getenv(SOLR_SSL))) {
             baseConfiguration.setSolrSSLEnabled(false);
         }
-        if (System.getenv(SOLR_SSL) != null) {
-            baseConfiguration.setGlobalProperty("solr.secureComms", System.getenv(SOLR_SSL));
-        }
-        if (System.getenv(TOMCAT_SSL_KEYSTORE) != null) {
-            baseConfiguration.setTomcatSSLKeystore(System.getenv(TOMCAT_SSL_KEYSTORE));
-        }
-        if (System.getenv(TOMCAT_SSL_KEYSTORE_PASSWORD) != null) {
-            baseConfiguration.setTomcatSSLKeystorePassword(System.getenv(TOMCAT_SSL_KEYSTORE_PASSWORD));
-        }
-        if (System.getenv(TOMCAT_SSL_TRUSTSTORE) != null) {
-            baseConfiguration.setTomcatSSLTruststore(System.getenv(TOMCAT_SSL_TRUSTSTORE));
-        }
-        if (System.getenv(TOMCAT_SSL_TRUSTSTORE_PASSWORD) != null) {
-            baseConfiguration.setTomcatSSLTruststorePassword(System.getenv(TOMCAT_SSL_TRUSTSTORE_PASSWORD));
-        }
-        if (System.getenv(ENABLE_CLUSTERING) != null) {
-            baseConfiguration.setGlobalProperty("alfresco.cluster.enabled", System.getenv(ENABLE_CLUSTERING));
-        }
-        if (System.getenv(TOMCAT_PORT) != null) {
-            baseConfiguration.setPort(Integer.parseInt(System.getenv(TOMCAT_PORT)));
-        }
-        if (System.getenv(TOMCAT_PORT_SSL) != null) {
-            baseConfiguration.setTomcatSslPort(Integer.parseInt(System.getenv(TOMCAT_PORT_SSL)));
-        }
-        if (System.getenv(TOMCAT_SERVER_PORT) != null) {
-            baseConfiguration.setTomcatServerPort(Integer.parseInt(System.getenv(TOMCAT_SERVER_PORT)));
-        }
-        if (System.getenv(TOMCAT_MAX_HTTP_HEADER_SIZE) != null) {
-            baseConfiguration.setTomcatMaxHttpHeaderSize(Integer.parseInt(System.getenv(TOMCAT_MAX_HTTP_HEADER_SIZE)));
-        }
-        if (System.getenv(TOMCAT_MAX_THREADS) != null) {
-            baseConfiguration.setTomcatMaxThreads(Integer.parseInt(System.getenv(TOMCAT_MAX_THREADS)));
-        }
-        if (System.getenv(TOMCAT_RELAXED_QUERY_CHARS) != null) {
-            baseConfiguration.setTomcatRelaxedQueryChars(System.getenv(TOMCAT_RELAXED_QUERY_CHARS));
-        }
-        if (System.getenv(TOMCAT_RELAXED_PATH_CHARS) != null) {
-            baseConfiguration.setTomcatRelaxedPathChars(System.getenv(TOMCAT_RELAXED_PATH_CHARS));
-        }
+        setGlobalPropertyFromEnv(SOLR_SSL, baseConfiguration, "solr.secureComms");
+        setPropertyFromEnv(TOMCAT_SSL_KEYSTORE, baseConfiguration::setTomcatSSLKeystore);
+        setPropertyFromEnv(TOMCAT_SSL_KEYSTORE_PASSWORD, baseConfiguration::setTomcatSSLKeystorePassword);
+        setPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE, baseConfiguration::setTomcatSSLTruststore);
+        setPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE_PASSWORD, baseConfiguration::setTomcatSSLTruststorePassword);
+        setGlobalPropertyFromEnv(ENABLE_CLUSTERING, baseConfiguration, "alfresco.cluster.enabled");
+        setPropertyFromEnv(TOMCAT_PORT, value -> baseConfiguration.setPort(Integer.parseInt(value)));
+        setPropertyFromEnv(TOMCAT_PORT_SSL, value -> baseConfiguration.setTomcatSslPort(Integer.parseInt(value)));
+        setPropertyFromEnv(TOMCAT_SERVER_PORT, value -> baseConfiguration.setTomcatServerPort(Integer.parseInt(value)));
+        setPropertyFromEnv(TOMCAT_MAX_HTTP_HEADER_SIZE, value -> baseConfiguration.setTomcatMaxHttpHeaderSize(Integer.parseInt(value)));
+        setPropertyFromEnv(TOMCAT_MAX_THREADS, value -> baseConfiguration.setTomcatMaxThreads(Integer.parseInt(value)));
+        setPropertyFromEnv(TOMCAT_RELAXED_QUERY_CHARS, baseConfiguration::setTomcatRelaxedQueryChars);
+        setPropertyFromEnv(TOMCAT_RELAXED_PATH_CHARS, baseConfiguration::setTomcatRelaxedPathChars);
 
         setGlobalProperties(baseConfiguration);
 
@@ -161,5 +103,15 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
                 baseConfiguration.setGlobalProperty(prop, value);
             }
         });
+    }
+
+    private void setPropertyFromEnv(String env, Consumer<String> stringConsumer) {
+        if (System.getenv(env) != null) {
+            stringConsumer.accept(System.getenv(env));
+        }
+    }
+
+    private void setGlobalPropertyFromEnv(String env, Configuration configuration, String property) {
+        setPropertyFromEnv(env, value -> configuration.setGlobalProperty(property, value));
     }
 }

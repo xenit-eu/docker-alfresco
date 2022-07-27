@@ -38,7 +38,7 @@ public class Main {
     }
 
     private static void setGlobalProperties(Configuration configuration) {
-        configuration.getGlobalProperties().forEach((key, value) -> System.setProperty(key, value));
+        configuration.getGlobalProperties().forEach(System::setProperty);
     }
 
     private static void configureJsonLogging() {
@@ -60,6 +60,7 @@ public class Main {
         formatter.setExtractStackTrace("true");
         formatter.setFilterStackTrace(true);
 
+        //Sonar complains about the following block, but I don't know how to do it in a nicer way.
         Handler customHandler = new ConsoleHandler() {
             {
                 setOutputStream(System.out);
