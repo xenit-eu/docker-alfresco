@@ -61,6 +61,9 @@ subprojects {
         def buildDate = project.properties.getOrDefault("buildDate", (new Date().getTime() / 1000).toString());
         environmentVariable('BUILD_DATE', buildDate)
 
+        runCommand 'useradd -u 990 tomcat'
+        runCommand 'mkdir /tmp/tomcat && chown tomcat:tomcat /tmp/tomcat'
+        workingDir '/tmp/tomcat'
         entryPoint('/docker-entrypoint.sh')
         defaultCommand('java', '$JAVA_OPTS', '-cp', '/app/tomcat-embedded/xenit-tomcat-embedded.jar:/app/tomcat-embedded/lib/*', 'eu.xenit.alfresco.tomcat.embedded.Main')
     }

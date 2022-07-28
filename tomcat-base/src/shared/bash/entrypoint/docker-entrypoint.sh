@@ -17,4 +17,4 @@ echo "$(tput -Txterm dim)> exec $(eval eval echo $@)$(tput -Txterm sgr0)"
 # second 'eval' flattens arguments, so that $JAVA_OPTS expanded into is not seen as a single argument (DOCKER-136)
 # which enables us to use exec-form with $JAVA_OPTS support:
 # -> `CMD ["java", "$JAVA_OPTS", "-jar", "foo.jar"]`
-eval eval exec $@
+eval eval exec setpriv --reuid="tomcat" --regid="tomcat" --init-groups $@

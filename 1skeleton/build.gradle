@@ -35,8 +35,7 @@ subprojects {
     createDockerFile {
         dependsOn(tomcatImage)
         baseImage = tomcatImage.getImageId()
-        user('root')
-        volume('/opt/alfresco/alf_data', '/usr/local/tomcat/temp', '/usr/local/tomcat/logs')
+        volume('/opt/alfresco/alf_data')
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.version.flavor}")
     }
