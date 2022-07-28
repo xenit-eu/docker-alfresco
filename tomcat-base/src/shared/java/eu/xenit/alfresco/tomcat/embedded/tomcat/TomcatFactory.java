@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.Service;
@@ -57,7 +58,23 @@ public class TomcatFactory {
         return tomcat;
     }
 
+    private boolean isEmtpyDir(Path path) {
+        if (Files.isDirectory(path)) {
+            try (Stream<Path> entries = Files.list(path)) {
+                return !entries.findFirst().isPresent();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return false;
+    }
+
     private void addWebapp(Tomcat tomcat, Path path) {
+        if(isEmtpyDir(path)) {
+            // Our gradle plugin adds a share directory, even when baseShareWar is not configured
+            return;
+        }
         if (Files.isDirectory(path)) {
             String contextPath = File.separator + path.getFileName().toString();
             String absolutePath = path.toAbsolutePath().toString();
@@ -154,7 +171,7 @@ public class TomcatFactory {
                 System.setProperty("log4j.configuration", "file:" + tempProps.toAbsolutePath());
             }
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Unable to process log4j.properties", e);
+            throw new RuntimeException(e);
         }
     }
 
