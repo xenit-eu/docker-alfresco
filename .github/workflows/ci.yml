@@ -41,7 +41,6 @@ jobs:
        VERSIONS_TO_BUILD: ${{ matrix.version }}    
       run: ./gradlew -PrepoName=docker.io/xenit integrationTests --info
     - name: Publish docker images
-      if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
       env:
        VERSIONS_TO_BUILD: ${{ matrix.version }}
        DOCKER_USER: ${{ secrets.DOCKER_USER }}
