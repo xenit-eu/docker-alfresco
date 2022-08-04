@@ -112,6 +112,16 @@ public class TomcatFactory {
     }
 
     private void createSSLConnector(Tomcat tomcat) {
+        if (!new File(configuration.getTomcatSSLKeystore()).exists()) {
+            LOG.severe("Keystore file missing: "+configuration.getTomcatSSLKeystore());
+            System.exit(1);
+        }
+
+        if (!new File(configuration.getTomcatSSLTruststore()).exists()) {
+            LOG.severe("Truststore file missing: "+configuration.getTomcatSSLTruststore());
+            System.exit(1);
+        }
+
         Connector connector = getConnector(tomcat, "org.apache.coyote.http11.Http11NioProtocol", configuration.getTomcatSslPort(), true, "https");
 
         SSLHostConfig sslHostConfig = new SSLHostConfig();

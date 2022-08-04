@@ -26,6 +26,8 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
 
     private static final String DB_QUERY = "DB_QUERY";
 
+    private static final String INDEX = "INDEX";
+
     private static final String SOLR_SSL = "SOLR_SSL";
 
     private static final String SOLR_HOST = "SOLR_HOST";
@@ -79,9 +81,14 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         }
         setGlobalPropertyFromEnv(SOLR_SSL, baseConfiguration, "solr.secureComms");
         setPropertyFromEnv(TOMCAT_SSL_KEYSTORE, baseConfiguration::setTomcatSSLKeystore);
+        setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE, baseConfiguration, "encryption.ssl.keystore.location");
         setPropertyFromEnv(TOMCAT_SSL_KEYSTORE_PASSWORD, baseConfiguration::setTomcatSSLKeystorePassword);
+        setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE_PASSWORD, baseConfiguration, "ssl-keystore.password");
         setPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE, baseConfiguration::setTomcatSSLTruststore);
+        setGlobalPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE, baseConfiguration, "encryption.ssl.truststore.location");
         setPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE_PASSWORD, baseConfiguration::setTomcatSSLTruststorePassword);
+        setGlobalPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE_PASSWORD, baseConfiguration, "ssl-truststore.password");
+
         setGlobalPropertyFromEnv(ENABLE_CLUSTERING, baseConfiguration, "alfresco.cluster.enabled");
         setPropertyFromEnv(TOMCAT_PORT, value -> baseConfiguration.setPort(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_PORT_SSL, value -> baseConfiguration.setTomcatSslPort(Integer.parseInt(value)));
@@ -90,6 +97,7 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(TOMCAT_MAX_THREADS, value -> baseConfiguration.setTomcatMaxThreads(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_RELAXED_QUERY_CHARS, baseConfiguration::setTomcatRelaxedQueryChars);
         setPropertyFromEnv(TOMCAT_RELAXED_PATH_CHARS, baseConfiguration::setTomcatRelaxedPathChars);
+        setGlobalPropertyFromEnv(INDEX, baseConfiguration, "index.subsystem.name");
 
         setGlobalProperties(baseConfiguration);
 

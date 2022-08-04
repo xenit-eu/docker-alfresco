@@ -5,13 +5,13 @@ DIR=/docker-entrypoint.d
 if [[ -d "$DIR" ]]
 then
   for SCRIPT in ${DIR}/*; do
-    echo "> $(tput -Txterm bold)Executing ${SCRIPT}$(tput -Txterm sgr0)"
+    echo "> Executing ${SCRIPT}"
     . "$SCRIPT"
   done
 fi
 
-echo "$(tput -Txterm bold)> Starting CMD:$(tput -Txterm sgr0) $@"
-echo "$(tput -Txterm dim)> exec $(eval eval echo $@)$(tput -Txterm sgr0)"
+echo "> Starting CMD: $@"
+echo "> exec $(eval eval echo $@)"
 
 # first 'eval' expands variables (like $JAVA_OPTS) in $@
 # second 'eval' flattens arguments, so that $JAVA_OPTS expanded into is not seen as a single argument (DOCKER-136)

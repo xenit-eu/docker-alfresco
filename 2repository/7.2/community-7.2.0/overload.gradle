@@ -1,4 +1,4 @@
-ext {
+ ext {
     alfresco = [
             version: [
                     major: 7,
