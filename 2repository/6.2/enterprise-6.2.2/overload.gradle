@@ -19,6 +19,4 @@ dependencies {
 
     baseAlfrescoWar platform('org.alfresco:acs-packaging:6.2.2.19')
     baseAlfrescoWar 'org.alfresco:content-services@war'
-
-    sharedLib(group: 'org.postgresql', name: 'postgresql', version: '42.2.14')
 }

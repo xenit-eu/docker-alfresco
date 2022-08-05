@@ -24,8 +24,6 @@ subprojects {
         sharedLibs(group: 'biz.paluch.logging', name: 'logstash-gelf', version: '1.15.0') {
             transitive = false
         }
-
-        runtimeOnly(group: 'org.postgresql', name: 'postgresql', version: '42.2.19')
     }
 
     sourceSets {
