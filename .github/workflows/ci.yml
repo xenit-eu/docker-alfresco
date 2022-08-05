@@ -36,13 +36,9 @@ jobs:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
-    - name: Run integration tests
-      env:
-       VERSIONS_TO_BUILD: ${{ matrix.version }}    
-      run: ./gradlew -PrepoName=docker.io/xenit integrationTests --info
     - name: Publish docker images
       env:
        VERSIONS_TO_BUILD: ${{ matrix.version }}
        DOCKER_USER: ${{ secrets.DOCKER_USER }}
        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: ./gradlew pushDockerImage
+      run: ./gradlew :2repository:community-7.2.0:pushDockerImage
