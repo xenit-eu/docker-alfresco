@@ -1,0 +1,68 @@
+subprojects {
+    apply plugin: 'eu.xenit.docker'
+    apply plugin: 'java'
+
+    if (new File("${project.projectDir}/overload.gradle").exists()) {
+        apply from: "${project.projectDir}/overload.gradle"
+    }
+
+    def tomcatVersion = project.tomcat.version
+
+    configurations {
+        sharedLibs
+    }
+
+    dependencies {
+        implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
+        implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+        implementation "org.apache.tomcat:tomcat-jasper:${tomcatVersion}"
+        implementation "org.apache.tomcat:tomcat-jasper-el:${tomcatVersion}"
+        implementation "org.apache.tomcat:tomcat-jsp-api:${tomcatVersion}"
+        implementation group: 'biz.paluch.logging', name: 'logstash-gelf', version: '1.15.0'
+        implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+
+        sharedLibs(group: 'biz.paluch.logging', name: 'logstash-gelf', version: '1.15.0') {
+            transitive = false
+        }
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir file("$project.parent.projectDir/src/shared/java")
+            }
+        }
+    }
+
+    archivesBaseName = 'xenit-tomcat-embedded'
+
+    dockerBuild {
+        repositories = ['docker.io/xenit/tomcat']
+        tags = [tomcatVersion]
+    }
+
+    task copySharedLib(type: Sync) {
+        from(configurations.sharedLibs)
+        into("$buildDir/sharedLibs")
+    }
+
+    createDockerFile.dependsOn(copySharedLib)
+
+    createDockerFile {
+        from 'docker.io/eclipse-temurin:11'
+        smartCopy copySharedLib.outputs.getFiles().singleFile, '/loglibrarydir'
+        smartCopy "${project.parent.projectDir}/src/shared/resources/keystore", '/keystore'
+        smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
+        smartCopy configurations.archives.artifacts.files, '/app/tomcat-embedded'
+        smartCopy "${project.parent.projectDir}/src/shared/bash/entrypoint/", '/'
+
+        def buildDate = project.properties.getOrDefault("buildDate", (new Date().getTime() / 1000).toString());
+        environmentVariable('BUILD_DATE', buildDate)
+
+        runCommand 'useradd -u 990 tomcat'
+        runCommand 'mkdir /tmp/tomcat && chown tomcat:tomcat /tmp/tomcat'
+        workingDir '/tmp/tomcat'
+        entryPoint('/docker-entrypoint.sh')
+        defaultCommand('java', '$JAVA_OPTS', '-cp', '/app/tomcat-embedded/xenit-tomcat-embedded.jar:/app/tomcat-embedded/lib/*', 'eu.xenit.alfresco.tomcat.embedded.Main')
+    }
+}

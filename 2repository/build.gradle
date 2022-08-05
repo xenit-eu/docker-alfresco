@@ -5,7 +5,6 @@ subprojects {
     apply plugin: 'eu.xenit.docker-compose'
 
     configurations {
-        sharedLib
         sharedBin
         integrationTestCompile.extendsFrom testCompile
         integrationTestRuntime.extendsFrom testRuntime
@@ -29,6 +28,7 @@ subprojects {
         integrationTestImplementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
         integrationTestImplementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 
+        alfrescoSM(group: 'org.postgresql', name: 'postgresql', version: '42.4.1')
     }
 
 
@@ -47,14 +47,13 @@ subprojects {
     }
 
     createDockerFile {
-        smartCopy(configurations.sharedLib, '${CATALINA_HOME}/shared/lib/')
         if (!configurations.sharedBin.isEmpty())
             smartCopy(tarTree(resources.gzip(configurations.sharedBin.singleFile)), '/opt/alfresco')
 
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
 
-        def buildDate = project.properties.getOrDefault("buildDate", (new Date().getTime() / 1000).toString());
+        def buildDate = project.properties.getOrDefault("buildDate", ((int) (new Date().getTime() / 1000)).toString());
         environmentVariable('BUILD_DATE', buildDate)
     }
 

@@ -1,62 +1,45 @@
+evaluationDependsOn(':tomcat-base')
+
+String getTomcatProject(Project p) {
+    println "p.alfresco.version.major: ${p.alfresco.version.major}"
+    if (p.alfresco.version.major == 6) {
+        println 'tomcat-8.5'
+        return ":tomcat-base:tomcat-8.5"
+    }
+
+    if (p.alfresco.version.major == 7) {
+        println 'tomcat-9'
+        return ":tomcat-base:tomcat-9"
+    }
+
+    return null
+}
+
 subprojects {
     apply plugin: 'eu.xenit.docker'
+    apply plugin: 'eu.xenit.docker-alfresco'
+    apply plugin: 'eu.xenit.docker-compose'
 
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
-    def workingDir = "$project.buildDir/dockerbuild"
-
-    configurations {
-        initScript
-    }
-
-    dependencies {
-        initScript project(':docker-init-script')
-    }
-
-    task copyDockerResources(type: Sync) {
-        from "$rootProject.projectDir/src/main/resources/global"
-        from("$rootProject.projectDir/src/main/resources/dockerfiles/") {
-            if(project.alfresco.version.major.toInteger() > 6) {
-                include "Dockerfile-skeleton-7"
-                rename "Dockerfile-skeleton-7", 'Dockerfile'
-            }
-            else if (project.alfresco.version.major.toInteger() == 6) {
-                include "Dockerfile-skeleton-pre6"
-                rename "Dockerfile-skeleton-pre6", 'Dockerfile'
-            } else {
-                include "Dockerfile-skeleton-6"
-                rename "Dockerfile-skeleton-6", 'Dockerfile'
-            }
-        }
-        from "$project.projectDir/local"
-        from(configurations.initScript) {
-            rename { "90-init-alfresco.jar" }
-        }
-        into workingDir
-    }
+    def tomcatProject = project(getTomcatProject(project))
+    def tomcatImage = tomcatProject.getTasks().getByName('buildDockerImage')
+    println "tomcatImage: ${tomcatImage.getImageId()}"
 
     dockerBuild {
-        dockerFile = file("$workingDir/Dockerfile")
         repositories = [calcRepository(project.alfresco.flavor)]
         tags = calcTags(project.alfresco.version)
     }
 
-    buildDockerImage {
-        buildArgs.putAll([
-                'ALFRESCO_VERSION_MAJOR': "${project.alfresco.version.major}",
-                'ALFRESCO_VERSION_MINOR': "${project.alfresco.version.minor}",
-                'ALFRESCO_VERSION_REV'  : "${project.alfresco.version.rev}",
-                'ALFRESCO_FLAVOR'       : "${project.alfresco.flavor}",
-                'BASE_IMAGE'            : "docker.io/xenit/tomcat:alfresco-${project.alfresco.version.major}.${project.alfresco.version.minor}-ubuntu",
-                'XENIT_VERSION'         :  xenitVersion
-
-        ])
-        if(project.hasProperty('extraBuildArgs')) {
-            buildArgs.putAll(project.extraBuildArgs)
-        }
-
-        dependsOn(copyDockerResources)
+    createDockerFile {
+        dependsOn(tomcatImage)
+        baseImage = tomcatImage.getImageId()
+        volume('/opt/alfresco/alf_data')
+        environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
+        environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.version.flavor}")
     }
 
+    // Disable pull because base image is built locally and not pushed to a repo
+    buildDockerImage.pull = false
 }

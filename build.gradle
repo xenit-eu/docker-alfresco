@@ -1,9 +1,18 @@
 plugins {
-    id "eu.xenit.docker-alfresco" version "5.1.1" apply false
+    id "eu.xenit.docker-alfresco" version "5.3.1" apply false
     id "be.vbgn.ci-detect" version "0.5.0"
 }
 
 import java.util.stream.Collectors
+
+def copyPropertyValueIfExists(sourcePropertyName, targetPropertyName) {
+    if (project.hasProperty(sourcePropertyName)) {
+        project.ext[targetPropertyName] = project.property(sourcePropertyName)
+    }
+}
+
+copyPropertyValueIfExists('alfresco_nexus_username', 'org.alfresco.maven.nexus.username')
+copyPropertyValueIfExists('alfresco_nexus_password', 'org.alfresco.maven.nexus.password')
 
 
 def calcTags(version) {
@@ -25,14 +34,7 @@ def calcTags(version) {
 }
 
 def calcRepository(flavor) {
-    def repoName = project.properties.getOrDefault("repoName", "hub.xenit.eu");
-    if(repoName == "hub.xenit.eu") {
-        def namespace = (flavor == "enterprise" || flavor == "legacy") ? "alfresco-enterprise" : "public";
-        repoName += "/" + namespace;
-    }
-    if(flavor == "legacy") {
-        return "${repoName}/alfresco-enterprise";
-    }
+    def repoName = flavor == "enterprise" ? "docker.xenit.eu/private/alfresco-enterprise" : "docker.io/xenit"
     return "${repoName}/alfresco-repository-${flavor}";
 }
 
@@ -46,14 +48,11 @@ subprojects {
         }
         // This private repository provides Xenit with Alfresco enterprise artefacts.
         // External developers should replace it with their own library repository.
-        if(project.hasProperty('eu.xenit.artifactory.username') && project.hasProperty('eu.xenit.artifactory.password')) {
-            maven {
-                name 'Xenit artifactory release local'
-                url 'https://artifactory.xenit.eu/artifactory/libs-release'
-                credentials {
-                    username property("eu.xenit.artifactory.username")
-                    password property("eu.xenit.artifactory.password")
-                }
+        maven {
+            url 'https://artifacts.alfresco.com/nexus/content/groups/private'
+            credentials {
+                username project.property('org.alfresco.maven.nexus.username')
+                password project.property('org.alfresco.maven.nexus.password')
             }
         }
     }

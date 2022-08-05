@@ -8,29 +8,33 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-       version: [4,5,6]
+       version: [6, 7]
        branch: [master, release]       
     steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: ${{ matrix.branch }}        
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Write build date
-      run: "mkdir -p ~/.gradle && echo 'buildDate='$(date +%s) >> ~/.gradle/gradle.properties"
-    - name: Run integration tests
-      env:
-       VERSIONS_TO_BUILD: ${{ matrix.version }}    
-      run: ./gradlew -PrepoName=docker.io/xenit check --info
-    - name: Publish docker images
-      if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
-      env:
-       VERSIONS_TO_BUILD: ${{ matrix.version }}            
-       DOCKER_USER: ${{ secrets.DOCKER_USER }}
-       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: ./gradlew -PrepoName=docker.io/xenit pushDockerImage
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Write build date
+        run: "mkdir -p ~/.gradle && echo 'buildDate='$(date +%s) >> ~/.gradle/gradle.properties"
+      - name: Login to Xenit docker registry
+        env:
+          DOCKER_USER: ${{ secrets.XENIT_DOCKER_REGISTRY_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.XENIT_DOCKER_REGISTRY_PASSWORD }}
+        run: echo "$DOCKER_PASSWORD" | docker login hub.xenit.eu --username "$DOCKER_USER" --password-stdin
+      - name: Login to Docker hub registry
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
+      - name: Run integration tests
+        env:
+          VERSIONS_TO_BUILD: ${{ matrix.version }}
+        run: ./gradlew -PrepoName=docker.io/xenit integrationTests --info
+      - name: Publish docker images
+        if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
+        env:
+          VERSIONS_TO_BUILD: ${{ matrix.version }}
+        run: ./gradlew pushDockerImage
 
