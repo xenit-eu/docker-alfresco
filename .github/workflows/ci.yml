@@ -38,5 +38,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Publish docker images
       env:
+       DOCKER_USER: ${{ secrets.DOCKER_USER }}
+       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
        VERSIONS_TO_BUILD: ${{ matrix.version }}
-      run: ./gradlew pushDockerImage
+      run: ./gradlew :1skeleton:6.1:pushDockerImage
