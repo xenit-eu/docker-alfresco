@@ -3,13 +3,18 @@ on:
   schedule:
     - cron: '7 0 * * SUN'
 
+env:
+  ORG_GRADLE_PROJECT_alfresco_nexus_username: ${{ secrets.ALFRESCO_NEXUS_USERNAME }}
+  ORG_GRADLE_PROJECT_alfresco_nexus_password: ${{ secrets.ALFRESCO_NEXUS_PASSWORD }}
+
 jobs:
-  scheduledBuild:
+  continuousIntegration:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-       version: [6, 7]
-       branch: [master, release]       
+        version:
+          - 6
+          - 7
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -23,18 +28,27 @@ jobs:
           DOCKER_USER: ${{ secrets.XENIT_DOCKER_REGISTRY_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.XENIT_DOCKER_REGISTRY_PASSWORD }}
         run: echo "$DOCKER_PASSWORD" | docker login hub.xenit.eu --username "$DOCKER_USER" --password-stdin
-      - name: Login to Docker hub registry
+      - name: Login to CloudSmith docker registry
         env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
+          DOCKER_USER: ${{ secrets.CLOUDSMITH_USER }}
+          DOCKER_PASSWORD: ${{ secrets.CLOUDSMITH_APIKEY }}
+        run: echo "$DOCKER_PASSWORD" | docker login docker.xenit.eu --username "$DOCKER_USER" --password-stdin
       - name: Run integration tests
         env:
           VERSIONS_TO_BUILD: ${{ matrix.version }}
-        run: ./gradlew -PrepoName=docker.io/xenit integrationTests --info
-      - name: Publish docker images
+        run: ./gradlew integrationTests --info
+        # We have to split out publishing to public and private repo's because pushing to docker.io does not seem to work
+        # without supplying DOCKER_USER and DOCKER_PASSWORD. However, supplying those environment variables breaks
+        # publishing to other repositories
+      - name: Publish public docker images
+        if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          VERSIONS_TO_BUILD: ${{ matrix.version }}
+        run: ./gradlew pushDockerImage -PincludeEnterpise=false
+      - name: Publish private docker images
         if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
         env:
           VERSIONS_TO_BUILD: ${{ matrix.version }}
-        run: ./gradlew pushDockerImage
-
+        run: ./gradlew :2repository:pushDockerImage -PincludeCommunity=false

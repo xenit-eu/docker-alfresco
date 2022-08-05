@@ -1,58 +1,35 @@
-def includeSubprojectPerVersion(major,flavor,includeLegacy) {
-    
-    new File("$rootProject.projectDir/2repository")
-    
-        .listFiles({ File version -> version.name.startsWith(major)
-		   } as FileFilter)
-    
-        .collectMany ({ File versionflavor -> 
-			versionflavor.listFiles({ File file -> file.name.contains(flavor)
-						} as FileFilter).toList()
-		      })
-    
-        .each { File repositoryFile ->
-                def version = repositoryFile.parentFile.name
-                def revision = repositoryFile.name
-                def projectSkeleton = "1skeleton:${version}"
-                def projectRepository = "2repository:${revision}"
-                def projectLegacy = "3legacy:${revision}"
-		
-                // exclude directories left behind when a subproject was renamed
-		if(new File("$repositoryFile/overload.gradle").exists()) {
-		    
-                    if(flavor.equals("community")) {
-			println "Including $projectSkeleton"
-			include projectSkeleton
-			project(":${projectSkeleton}").projectDir = file("1skeleton/${version}")
-                    }
-                    
-                    println "Including $projectRepository"
-                    include projectRepository
-                    project(":${projectRepository}").projectDir = file("2repository/${version}/${revision}")
-		    
-                    if (includeLegacy && new File("3legacy/${version}/${revision}").exists()) {
-			println "Including $projectLegacy"
-			include projectLegacy
-			project(":${projectLegacy}").projectDir = file("3legacy/${version}/${revision}")
-                    }
-		}
-              }
-}
-
-def includeSubProjectsPerVersionIfEnabled(major) {
-    if(System.getenv("VERSIONS_TO_BUILD")==null || System.getenv("VERSIONS_TO_BUILD") == "${major}") {
-        includeSubprojectPerVersion("${major}.","community",hasProperty("legacy"))
-        if(hasProperty("enterprise")) {
-            includeSubprojectPerVersion("${major}.","enterprise",hasProperty("legacy"))
-        }
-    }
-}
-
 rootProject.name = 'docker-alfresco'
 
-include 'tomcat-base'
-include 'tomcat-base:tomcat-8.5'
-include 'tomcat-base:tomcat-9'
+include ':tomcat-base'
+include ':tomcat-base:tomcat-8.5'
+include ':tomcat-base:tomcat-9'
+include ':1skeleton'
+include ':1skeleton:6.1'
+include ':1skeleton:6.2'
+include ':1skeleton:7.0'
+include ':1skeleton:7.1'
+include ':1skeleton:7.2'
 
-includeSubProjectsPerVersionIfEnabled("6")
-includeSubProjectsPerVersionIfEnabled("7")
+include ':2repository'
+
+def includeRepoProject(String flavor, String version) {
+    def projectName = ":2repository:${flavor}-$version"
+    include projectName
+    project(projectName).projectDir = file("2repository/${version.substring(0,3)}/${flavor}-$version")
+}
+
+if (includeCommunity == 'true') {
+    includeRepoProject('community', '6.1.2-ga')
+    includeRepoProject('community', '6.2.0-ga')
+    includeRepoProject('community', '7.0.0')
+    includeRepoProject('community', '7.1.1')
+    includeRepoProject('community', '7.2.0')
+}
+
+if (includeEnterprise == 'true') {
+    includeRepoProject('enterprise', '6.1.1')
+    includeRepoProject('enterprise', '6.2.2')
+    includeRepoProject('enterprise', '7.0.1')
+    includeRepoProject('enterprise', '7.1.0')
+    includeRepoProject('enterprise', '7.2.0')
+}
