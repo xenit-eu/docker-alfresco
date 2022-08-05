@@ -44,6 +44,4 @@ jobs:
       if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
       env:
        VERSIONS_TO_BUILD: ${{ matrix.version }}
-       DOCKER_USER: ${{ secrets.DOCKER_USER }}
-       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: ./gradlew pushDockerImage
