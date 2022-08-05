@@ -12,7 +12,6 @@ jobs:
       matrix:
        version:
         - 6
-        - 7
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -36,12 +35,7 @@ jobs:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: echo "$DOCKER_PASSWORD" | docker login docker.io --username "$DOCKER_USER" --password-stdin
-    - name: Run integration tests
-      env:
-       VERSIONS_TO_BUILD: ${{ matrix.version }}    
-      run: ./gradlew -PrepoName=docker.io/xenit integrationTests --info
     - name: Publish docker images
-      if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
       env:
        VERSIONS_TO_BUILD: ${{ matrix.version }}
       run: ./gradlew pushDockerImage
