@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+* [PR #82](https://github.com/xenit-eu/docker-alfresco/pull/82) DOCKER-409: Fix publishing problems, simplify the project structure.
 * [PR #79](https://github.com/xenit-eu/docker-alfresco/pull/79) DOCKER-405: Switch to embedded tomcat.
   * Remove dependencies on custom base images
   * Remove Alfresco versions < 6.1

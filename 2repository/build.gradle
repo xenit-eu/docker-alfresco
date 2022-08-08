@@ -1,5 +1,11 @@
 import com.avast.gradle.dockercompose.tasks.ComposeDown
 
+tasks.register('pushDockerImage') {
+    doLast {
+        println 'dummy pushDockerImage task'
+    }
+}
+
 subprojects {
     apply plugin: 'eu.xenit.docker-alfresco'
     apply plugin: 'eu.xenit.docker-compose'
@@ -148,4 +154,5 @@ subprojects {
     else
         changedPortsComposeUp.enabled = false
 
+    project.parent.'pushDockerImage'.dependsOn(pushDockerImage)
 }
