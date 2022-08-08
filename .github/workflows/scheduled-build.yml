@@ -10,11 +10,6 @@ env:
 jobs:
   continuousIntegration:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version:
-          - 6
-          - 7
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -46,7 +41,7 @@ jobs:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           VERSIONS_TO_BUILD: ${{ matrix.version }}
-        run: ./gradlew pushDockerImage -PincludeEnterpise=false
+        run: ./gradlew pushDockerImage -PincludeEnterprise=false
       - name: Publish private docker images
         if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
         env:

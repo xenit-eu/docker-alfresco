@@ -8,11 +8,6 @@ env:
 jobs:
   continuousIntegration:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version:
-          - 6
-          - 7
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
