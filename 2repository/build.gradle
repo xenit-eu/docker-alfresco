@@ -154,4 +154,5 @@ subprojects {
     else
         changedPortsComposeUp.enabled = false
 
+    project.parent.'pushDockerImage'.dependsOn(pushDockerImage)
 }
