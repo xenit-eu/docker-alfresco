@@ -13,92 +13,19 @@ pipeline {
             }
         }
         stage("Build and integrationtest") {
-            parallel {
-                stage("Version 4") {
-                    environment {
-                        VERSIONS_TO_BUILD = "4"
-                    }
-                    stages {
-                        stage("Build Docker Image") {
-                            steps {
-                                sh "./gradlew -Penterprise -Plegacy buildDockerImage"
-                            }
-                        }
-                        stage("Integration test") {
-                            steps {
-                                sh "./gradlew -Penterprise integrationTests --info"
-                            }
-                            post {
-                                always {
-                                    sh "./gradlew -Penterprise composeDownAll"
-                                }
-                            }
-                        }
+            stages {
+                stage("Build Docker Image") {
+                    steps {
+                        sh "./gradlew -Penterprise -Plegacy 3legacy:enterprise-6.2.2:buildDockerImage"
                     }
                 }
-                stage("Version 5") {
-                    environment {
-                        VERSIONS_TO_BUILD = "5"
+                stage("Integration test") {
+                    steps {
+                        sh "./gradlew -Penterprise integrationTests --info"
                     }
-                    stages {
-                        stage("Build Docker Image") {
-                            steps {
-                                sh "./gradlew -Penterprise -Plegacy buildDockerImage"
-                            }
-                        }
-                        stage("Integration test") {
-                            steps {
-                                sh "./gradlew -Penterprise integrationTests --info"
-                            }
-                            post {
-                                always {
-                                    sh "./gradlew -Penterprise composeDownAll"
-                                }
-                            }
-                        }
-                    }
-                }
-                stage("Version 6") {
-                    environment {
-                        VERSIONS_TO_BUILD = "6"
-                    }
-                    stages {
-                        stage("Build Docker Image") {
-                            steps {
-                                sh "./gradlew -Penterprise -Plegacy buildDockerImage"
-                            }
-                        }
-                        stage("Integration test") {
-                            steps {
-                                sh "./gradlew -Penterprise integrationTests --info"
-                            }
-                            post {
-                                always {
-                                    sh "./gradlew -Penterprise composeDownAll"
-                                }
-                            }
-                        }
-                    }
-                }
-                stage("Version 7") {
-                    environment {
-                        VERSIONS_TO_BUILD = "7"
-                    }
-                    stages {
-                        stage("Build Docker Image") {
-                            steps {
-                                sh "./gradlew -Penterprise -Plegacy buildDockerImage"
-                            }
-                        }
-                        stage("Integration test") {
-                            steps {
-                                sh "./gradlew -Penterprise integrationTests --info"
-                            }
-                            post {
-                                always {
-                                    sh "./gradlew -Penterprise composeDownAll"
-                                }
-                            }
+                    post {
+                        always {
+                            sh "./gradlew -Penterprise composeDownAll"
                         }
                     }
                 }
@@ -108,12 +35,11 @@ pipeline {
         stage("Publish Docker Image") {
             when {
                 anyOf {
-                    branch 'master'
-                    branch 'release*'
+                    branch 'ethias'
                 }
             }
             steps {
-                sh "./gradlew -Penterprise -Plegacy pushDockerImage"
+                sh "./gradlew -Penterprise -Plegacy 3legacy:enterprise-6.2.2:pushDockerImage"
             }
         }
     }

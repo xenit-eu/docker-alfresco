@@ -52,7 +52,19 @@ rootProject.name = 'docker-alfresco'
 
 include 'docker-init-script'
 
-includeSubProjectsPerVersionIfEnabled("4")
+/*includeSubProjectsPerVersionIfEnabled("4")
 includeSubProjectsPerVersionIfEnabled("5")
 includeSubProjectsPerVersionIfEnabled("6")
-includeSubProjectsPerVersionIfEnabled("7")
+includeSubProjectsPerVersionIfEnabled("7")*/
+
+def version = "6.2"
+def revision = "enterprise-6.2.2"
+def projectSkeleton = "1skeleton:${version}"
+def projectRepository = "2repository:${revision}"
+def projectLegacy = "3legacy:${revision}"
+include projectSkeleton
+project(":${projectSkeleton}").projectDir = file("1skeleton/${version}")
+include projectRepository
+project(":${projectRepository}").projectDir = file("2repository/${version}/${revision}")
+include projectLegacy
+project(":${projectLegacy}").projectDir = file("3legacy/${version}/${revision}")
