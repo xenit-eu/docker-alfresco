@@ -39,7 +39,7 @@ pipeline {
                 }
             }
             steps {
-                sh "./gradlew -Penterprise -Plegacy 3legacy:enterprise-6.2.2:pushDockerImage"
+                sh "./gradlew -Penterprise -Plegacy pushDockerImage"
             }
         }
     }
