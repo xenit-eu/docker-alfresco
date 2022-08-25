@@ -21,7 +21,7 @@ public class Main {
             Configuration configuration = new DefaultConfigurationProvider().getConfiguration();
             configuration = new EnvironmentVariableConfigurationProvider().getConfiguration(configuration);
 
-            setGlobalProperties(configuration);
+            setSystemProperties(configuration);
 
             TomcatFactory tomcatFactory = new TomcatFactory(configuration);
             Tomcat tomcat = tomcatFactory.getTomcat();
@@ -35,8 +35,12 @@ public class Main {
         }
     }
 
-    private static void setGlobalProperties(Configuration configuration) {
-        configuration.getGlobalProperties().forEach(System::setProperty);
+    private static void setSystemProperties(Configuration configuration) {
+        configuration.getSystemProperties().forEach((key, value) -> {
+            if (System.getProperty(key) == null) {
+                System.setProperty(key, value);
+            }
+        });
     }
 
     private static void configureLogging(boolean json) {

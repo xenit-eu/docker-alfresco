@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class Configuration {
 
+    private boolean exitOnFailure;
+
     private String webappsPath;
     private int port;
 
@@ -30,6 +32,7 @@ public class Configuration {
 
     private boolean accessLogging;
     private Map<String, String> globalProperties = new HashMap<>();
+    private Map<String, String> systemProperties = new HashMap<>();
     private String alfrescoVersion;
     private String alfrescoFlavour;
     private String logsLocation;
@@ -147,6 +150,10 @@ public class Configuration {
         return globalProperties;
     }
 
+    public Map<String, String> getSystemProperties() {
+        return systemProperties;
+    }
+
     public String getWebappsPath() {
         return webappsPath;
     }
@@ -165,6 +172,10 @@ public class Configuration {
 
     public void setGlobalProperty(String key, String value) {
         globalProperties.put(key, value);
+    }
+
+    public void setSystemProperty(String key, String value) {
+        systemProperties.put(key, value);
     }
 
     public String getAlfrescoVersion() {
@@ -197,5 +208,13 @@ public class Configuration {
 
     public void setAlfrescoLocation(String alfrescoLocation) {
         this.alfrescoLocation = alfrescoLocation;
+    }
+
+    public boolean isExitOnFailure() {
+        return exitOnFailure;
+    }
+
+    public void setExitOnFailure(boolean exitOnFailure) {
+        this.exitOnFailure = exitOnFailure;
     }
 }
