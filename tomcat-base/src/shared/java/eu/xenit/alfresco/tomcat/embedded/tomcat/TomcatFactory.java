@@ -6,12 +6,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import org.apache.catalina.LifecycleException;
@@ -83,15 +81,19 @@ public class TomcatFactory {
             ctx.setParentClassLoader(Thread.currentThread().getContextClassLoader());
 
             LifecycleListener lifecycleListener = event -> {
-                if (event.getType().equals("before_start") && configuration.isJsonLogging()) {
-                    redirectLog4j(path);
+                if (event.getType().equals("before_start")) {
                     WebResourceRoot resources = new StandardRoot(ctx);
-                    //Load extra jars in classpath for json application logging
-                    resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib",
-                            configuration.getLogLibraryDir(), "/"));
+                    Path globalPropertiesFile = getGlobalPropertiesFile();
+                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", globalPropertiesFile.toAbsolutePath().getParent().toString(), "/"));
+                    if (configuration.isJsonLogging()) {
+                        redirectLog4j(path);
+                        //Load extra jars in classpath for json application logging
+                        resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib",
+                                configuration.getLogLibraryDir(), "/"));
+                    }
                     ctx.setResources(resources);
                 }
-                if (event.getType().equals("after_stop")) {
+                if (configuration.isExitOnFailure() && event.getType().equals("after_stop")) {
                     stopTomcat(tomcat);
                 }
             };
@@ -102,6 +104,26 @@ public class TomcatFactory {
                 ctx.addValve(valve);
                 ctx.getAccessLog();
             }
+        }
+    }
+
+    private Path getGlobalPropertiesFile() {
+        Properties globalProperties = new Properties();
+        configuration.getGlobalProperties().forEach( (key, value) -> globalProperties.put(key, value));
+        Path classesDir = Paths.get("/dev", "shm", "alfrescoClasses");
+        try {
+            Files.createDirectories(classesDir);
+            Path tempProps = Paths.get("/dev", "shm", "alfrescoClasses", "alfresco-global.properties");
+            if (Files.exists(tempProps)) {
+                Files.delete(tempProps);
+            }
+            tempProps = Files.createFile(tempProps);
+            try (OutputStream os = Files.newOutputStream(tempProps)) {
+                globalProperties.store(os, null);
+            }
+            return tempProps;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

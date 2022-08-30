@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+* [PR #84](https://github.com/xenit-eu/docker-alfresco/pull/82) XM2C-36: Save alfresco-global.properties to file and add to context.
 * [PR #82](https://github.com/xenit-eu/docker-alfresco/pull/82) DOCKER-409: Fix publishing problems, simplify the project structure.
 * [PR #79](https://github.com/xenit-eu/docker-alfresco/pull/79) DOCKER-405: Switch to embedded tomcat.
   * Remove dependencies on custom base images

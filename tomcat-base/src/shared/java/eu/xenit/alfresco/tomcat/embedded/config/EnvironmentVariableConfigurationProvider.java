@@ -1,5 +1,6 @@
 package eu.xenit.alfresco.tomcat.embedded.config;
 
+import java.util.Properties;
 import java.util.function.Consumer;
 
 public class EnvironmentVariableConfigurationProvider implements ConfigurationProvider {
@@ -57,6 +58,8 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
 
     private static final String ENABLE_CLUSTERING = "ENABLE_CLUSTERING";
 
+    private static final String EXIT_ON_FAILURE = "EXIT_ON_FAILURE";
+
     @Override
     public Configuration getConfiguration(Configuration baseConfiguration) {
         setPropertyFromEnv(TOMCAT_WEBAPPS, baseConfiguration::setWebappsPath);
@@ -98,6 +101,8 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(TOMCAT_RELAXED_QUERY_CHARS, baseConfiguration::setTomcatRelaxedQueryChars);
         setPropertyFromEnv(TOMCAT_RELAXED_PATH_CHARS, baseConfiguration::setTomcatRelaxedPathChars);
         setGlobalPropertyFromEnv(INDEX, baseConfiguration, "index.subsystem.name");
+
+        setPropertyFromEnv(EXIT_ON_FAILURE, value -> baseConfiguration.setExitOnFailure(Boolean.parseBoolean(value)));
 
         setGlobalProperties(baseConfiguration);
 
