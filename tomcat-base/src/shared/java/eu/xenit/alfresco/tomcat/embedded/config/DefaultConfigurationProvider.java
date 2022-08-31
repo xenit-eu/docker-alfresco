@@ -31,17 +31,18 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setSystemProperty("encryption.cipherAlgorithm", "DESede/CBC/PKCS5Padding");
         baseConfiguration.setSystemProperty("encryption.keyAlgorithm", "DESede");
         baseConfiguration.setSystemProperty("encryption.keystore.location", "/keystore/keystore");
+        baseConfiguration.setSystemProperty("encryption.keystore.keyMetaData.location", "/keystore/keystore-passwords.properties");
         baseConfiguration.setSystemProperty("metadata-keystore.password", "mp6yc0UD9e");
         baseConfiguration.setSystemProperty("metadata-keystore.aliases", "metadata");
         baseConfiguration.setSystemProperty("metadata-keystore.metadata.password", "oKIWzVdEdA");
         baseConfiguration.setSystemProperty("metadata-keystore.metadata.algorithm", "DESede");
 
-        baseConfiguration.setSystemProperty("encryption.ssl.keystore.location", "/keystore/ssl.keystore");
-        baseConfiguration.setSystemProperty("encryption.ssl.keystore.type", "JCEKS");
-        baseConfiguration.setSystemProperty("encryption.ssl.keystore.keyMetaData.location", "");
-        baseConfiguration.setSystemProperty("encryption.ssl.truststore.location", "/keystore/ssl.truststore");
-        baseConfiguration.setSystemProperty("encryption.ssl.truststore.type", "JCEKS");
-        baseConfiguration.setSystemProperty("encryption.ssl.truststore.keyMetaData.location", "");
+        baseConfiguration.setGlobalProperty("encryption.ssl.keystore.location", "/keystore/ssl.keystore");
+        baseConfiguration.setGlobalProperty("encryption.ssl.keystore.keyMetaData.location","/keystore/ssl-keystore-passwords.properties");
+        baseConfiguration.setGlobalProperty("encryption.ssl.keystore.type", "JCEKS");
+        baseConfiguration.setGlobalProperty("encryption.ssl.truststore.location", "/keystore/ssl.truststore");
+        baseConfiguration.setGlobalProperty("encryption.ssl.truststore.keyMetaData.location", "/keystore/ssl-truststore-passwords.properties");
+        baseConfiguration.setGlobalProperty("encryption.ssl.truststore.type", "JCEKS");
 
         baseConfiguration.setSystemProperty("ssl-truststore.password", "kT9X6oe68t");
         baseConfiguration.setSystemProperty("ssl-keystore.password", "kT9X6oe68t");
