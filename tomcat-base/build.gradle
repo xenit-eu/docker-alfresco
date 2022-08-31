@@ -64,5 +64,6 @@ subprojects {
         workingDir '/tmp/tomcat'
         entryPoint('/docker-entrypoint.sh')
         defaultCommand('java', '$JAVA_OPTS', '-cp', '/app/tomcat-embedded/xenit-tomcat-embedded.jar:/app/tomcat-embedded/lib/*', 'eu.xenit.alfresco.tomcat.embedded.Main')
+        instruction('HEALTHCHECK CMD java -cp /app/tomcat-embedded/xenit-tomcat-embedded.jar:/app/tomcat-embedded/lib/* eu.xenit.alfresco.tomcat.embedded.HealthCheck')
     }
 }
