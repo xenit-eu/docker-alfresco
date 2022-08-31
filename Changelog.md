@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+* [PR #86](https://github.com/xenit-eu/docker-alfresco/pull/86) DOCKER-414 Fix alf_data content store permissions
 * [PR #85](https://github.com/xenit-eu/docker-alfresco/pull/85) DOCKER-412 Add default legacy configuration for solr ssl
 * [PR #84](https://github.com/xenit-eu/docker-alfresco/pull/82) XM2C-36: Save alfresco-global.properties to file and add to context.
 * [PR #82](https://github.com/xenit-eu/docker-alfresco/pull/82) DOCKER-409: Fix publishing problems, simplify the project structure.

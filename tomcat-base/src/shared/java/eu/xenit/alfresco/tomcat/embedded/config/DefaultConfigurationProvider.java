@@ -55,6 +55,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setGlobalProperty("solr.host", "solr");
         baseConfiguration.setGlobalProperty("solr.port", "8080");
         baseConfiguration.setGlobalProperty("solr.port.ssl", "8443");
+        baseConfiguration.setGlobalProperty("dir.root", "/opt/alfresco/alf_data");
 
         baseConfiguration.setExitOnFailure(true);
 
