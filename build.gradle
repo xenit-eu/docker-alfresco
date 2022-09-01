@@ -74,6 +74,12 @@ subprojects {
         }
     }
 
+    if (!project.parent.name.equals('tomcat-base')) {
+        sonarqube {
+            skipProject = true
+        }
+    }
+
 
     pluginManager.withPlugin('eu.xenit.docker-config') {
         docker {
