@@ -9,6 +9,7 @@ sonarqube {
         properties["sonar.projectKey"] = "xenit-eu_docker-alfresco"
         properties["sonar.organization"] = "xenit-eu"
         properties["sonar.host.url"] = "https://sonarcloud.io"
+        properties["sonar.language"] = "java"
         if (ci.isPullRequest()) {
             properties["sonar.pullrequest.key"] = ci.pullRequest
             properties["sonar.pullrequest.branch"] = ci.branch
@@ -73,7 +74,6 @@ subprojects {
             }
         }
     }
-
 
     pluginManager.withPlugin('eu.xenit.docker-config') {
         docker {
