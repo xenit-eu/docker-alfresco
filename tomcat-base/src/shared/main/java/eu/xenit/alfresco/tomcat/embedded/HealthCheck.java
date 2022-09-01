@@ -5,6 +5,7 @@ import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Version;
+import java.net.http.HttpConnectTimeoutException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
@@ -48,7 +49,9 @@ public class HealthCheck {
             }
             return 1;
         } catch (ConnectException e) {
-            return 1;
+            return 2;
+        } catch (HttpConnectTimeoutException e) {
+            return 3;
         }
 
     }
