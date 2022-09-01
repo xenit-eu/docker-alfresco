@@ -1,6 +1,23 @@
 plugins {
-    id "eu.xenit.docker-alfresco" version "5.3.1" apply false
+    id "eu.xenit.docker-alfresco" version "5.3.2" apply false
     id "be.vbgn.ci-detect" version "0.5.0"
+    id "org.sonarqube" version "3.4.0.2513"
+}
+
+sonarqube {
+    properties {
+        properties["sonar.projectKey"] = "xenit-eu_docker-alfresco"
+        properties["sonar.organization"] = "xenit-eu"
+        properties["sonar.host.url"] = "https://sonarcloud.io"
+        if (ci.isPullRequest()) {
+            properties["sonar.pullrequest.key"] = ci.pullRequest
+            properties["sonar.pullrequest.branch"] = ci.branch
+            properties["sonar.pullrequest.base"] = ci.pullRequestTargetBranch
+        } else {
+            // GIT_BRANCH allows to push from local development directly to SonarCloud
+            properties["sonar.branch.name"] = ci.reference != null ? ci.reference : "$System.env.GIT_BRANCH"
+        }
+    }
 }
 
 import java.util.stream.Collectors
