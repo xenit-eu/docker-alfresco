@@ -35,6 +35,11 @@ subprojects {
         }
     }
 
+    boolean isRelease = ci.branch?.startsWith("release")
+    if (!isRelease) {
+        version += "-SNAPSHOT"
+    }
+
     test {
         useJUnitPlatform()
     }
