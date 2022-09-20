@@ -95,9 +95,11 @@ subprojects {
         repositories {
             maven {
                 url "https://maven.cloudsmith.io/xenit/open-source/"
-                credentials {
-                    username property("cloudsmith.user")
-                    password property("cloudsmith.apikey")
+                if (project.hasProperty("cloudsmith.user")) {
+                    credentials {
+                        username property("cloudsmith.user")
+                        password property("cloudsmith.apikey")
+                    }
                 }
             }
         }
