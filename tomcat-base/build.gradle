@@ -1,6 +1,10 @@
 subprojects {
+    group = 'eu.xenit'
+    version '1.0'
+
     apply plugin: 'eu.xenit.docker'
     apply plugin: 'java'
+    apply plugin: "maven-publish"
 
     apply from: "${rootProject.projectDir}/jacoco.gradle"
 
@@ -79,5 +83,23 @@ subprojects {
         entryPoint('/docker-entrypoint.sh')
         defaultCommand('java', '$JAVA_OPTS', '-cp', '/app/tomcat-embedded/xenit-tomcat-embedded.jar:/app/tomcat-embedded/lib/*', 'eu.xenit.alfresco.tomcat.embedded.Main')
         instruction('HEALTHCHECK CMD java -cp /app/tomcat-embedded/xenit-tomcat-embedded.jar:/app/tomcat-embedded/lib/* eu.xenit.alfresco.tomcat.embedded.HealthCheck')
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = 'eu.xenit'
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                url "https://maven.cloudsmith.io/xenit/open-source/"
+                credentials {
+                    username property("cloudsmith.user")
+                    password property("cloudsmith.apikey")
+                }
+            }
+        }
     }
 }
