@@ -64,19 +64,14 @@ subprojects {
         tags = [tomcatVersion]
     }
 
-    task copySharedLib(type: Sync) {
-        from(configurations.sharedLibs)
-        into("$buildDir/sharedLibs")
-    }
-
-    createDockerFile.dependsOn(copySharedLib)
-
     createDockerFile {
         from 'docker.io/eclipse-temurin:11'
-        smartCopy copySharedLib.outputs.getFiles().singleFile, '/loglibrarydir'
+        smartCopy configurations.sharedLibs, '/loglibrarydir/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
-        smartCopy configurations.archives.artifacts.files, '/app/tomcat-embedded'
+        def jarName = archivesBaseName + '.jar'
+        dependsOn jar
+        smartCopy jar.outputs.files.singleFile, "/app/tomcat-embedded/$jarName"
         smartCopy "${project.parent.projectDir}/src/shared/main/bash/entrypoint/", '/'
 
         def buildDate = project.properties.getOrDefault("buildDate", (new Date().getTime() / 1000).toString());
@@ -86,8 +81,9 @@ subprojects {
         runCommand 'mkdir /tmp/tomcat && chown tomcat:tomcat /tmp/tomcat'
         workingDir '/tmp/tomcat'
         entryPoint('/docker-entrypoint.sh')
-        defaultCommand('java', '$JAVA_OPTS', '-cp', '/app/tomcat-embedded/xenit-tomcat-embedded.jar:/app/tomcat-embedded/lib/*', 'eu.xenit.alfresco.tomcat.embedded.Main')
-        instruction('HEALTHCHECK CMD java -cp /app/tomcat-embedded/xenit-tomcat-embedded.jar:/app/tomcat-embedded/lib/* eu.xenit.alfresco.tomcat.embedded.HealthCheck')
+        def classPath = "/app/tomcat-embedded/$jarName:/app/tomcat-embedded/lib/*"
+        defaultCommand('java', '$JAVA_OPTS', '-cp', classPath, 'eu.xenit.alfresco.tomcat.embedded.Main')
+        instruction("HEALTHCHECK CMD java -cp $classPath eu.xenit.alfresco.tomcat.embedded.HealthCheck")
     }
 
     publishing {
