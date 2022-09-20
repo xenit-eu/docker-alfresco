@@ -74,7 +74,7 @@ public class TomcatFactory {
             return;
         }
         if (Files.isDirectory(path)) {
-            String contextPath = File.separator + path.getFileName().toString();
+            String contextPath = "/" + path.getFileName().toString();
             String absolutePath = path.toAbsolutePath().toString();
             StandardContext ctx = (StandardContext) tomcat.addWebapp(contextPath,
                     absolutePath);

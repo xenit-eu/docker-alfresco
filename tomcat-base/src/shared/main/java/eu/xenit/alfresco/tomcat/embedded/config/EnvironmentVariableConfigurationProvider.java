@@ -38,8 +38,10 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
     private static final String SOLR_PORT_SSL = "SOLR_PORT_SSL";
 
     private static final String TOMCAT_SSL_KEYSTORE = "TOMCAT_SSL_KEYSTORE";
+    private static final String TOMCAT_SSL_KEYSTORE_KEY_META_DATA_LOCATION = "TOMCAT_SSL_KEYSTORE_KEY_META_DATA_LOCATION";
     private static final String TOMCAT_SSL_KEYSTORE_PASSWORD = "TOMCAT_SSL_KEYSTORE_PASSWORD";
     private static final String TOMCAT_SSL_TRUSTSTORE = "TOMCAT_SSL_TRUSTSTORE";
+    private static final String TOMCAT_SSL_TRUSTSTORE_KEY_META_DATA_LOCATION = "TOMCAT_SSL_TRUSTSTORE_KEY_META_DATA_LOCATION";
     private static final String TOMCAT_SSL_TRUSTSTORE_PASSWORD = "TOMCAT_SSL_TRUSTSTORE_PASSWORD";
 
     private static final String TOMCAT_PORT = "TOMCAT_PORT";
@@ -59,6 +61,8 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
     private static final String ENABLE_CLUSTERING = "ENABLE_CLUSTERING";
 
     private static final String EXIT_ON_FAILURE = "EXIT_ON_FAILURE";
+
+    private static final String DIR_ROOT = "DIR_ROOT";
 
     @Override
     public Configuration getConfiguration(Configuration baseConfiguration) {
@@ -85,10 +89,12 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setGlobalPropertyFromEnv(SOLR_SSL, baseConfiguration, "solr.secureComms");
         setPropertyFromEnv(TOMCAT_SSL_KEYSTORE, baseConfiguration::setTomcatSSLKeystore);
         setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE, baseConfiguration, "encryption.ssl.keystore.location");
+        setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE_KEY_META_DATA_LOCATION, baseConfiguration, "encryption.ssl.keystore.keyMetaData.location");
         setPropertyFromEnv(TOMCAT_SSL_KEYSTORE_PASSWORD, baseConfiguration::setTomcatSSLKeystorePassword);
         setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE_PASSWORD, baseConfiguration, "ssl-keystore.password");
         setPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE, baseConfiguration::setTomcatSSLTruststore);
         setGlobalPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE, baseConfiguration, "encryption.ssl.truststore.location");
+        setGlobalPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE_KEY_META_DATA_LOCATION, baseConfiguration, "encryption.ssl.truststore.keyMetaData.location");
         setPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE_PASSWORD, baseConfiguration::setTomcatSSLTruststorePassword);
         setGlobalPropertyFromEnv(TOMCAT_SSL_TRUSTSTORE_PASSWORD, baseConfiguration, "ssl-truststore.password");
 
@@ -101,6 +107,8 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(TOMCAT_RELAXED_QUERY_CHARS, baseConfiguration::setTomcatRelaxedQueryChars);
         setPropertyFromEnv(TOMCAT_RELAXED_PATH_CHARS, baseConfiguration::setTomcatRelaxedPathChars);
         setGlobalPropertyFromEnv(INDEX, baseConfiguration, "index.subsystem.name");
+
+        setGlobalPropertyFromEnv(DIR_ROOT, baseConfiguration, "dir.root");
 
         setPropertyFromEnv(EXIT_ON_FAILURE, value -> baseConfiguration.setExitOnFailure(Boolean.parseBoolean(value)));
 

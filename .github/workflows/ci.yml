@@ -1,5 +1,10 @@
 name: 'Continuous Integration'
-on: [ push, pull_request, workflow_dispatch ]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '7 0 * * SUN'
 
 env:
   ORG_GRADLE_PROJECT_alfresco_nexus_username: ${{ secrets.ALFRESCO_NEXUS_USERNAME }}
@@ -52,3 +57,9 @@ jobs:
         env:
           VERSIONS_TO_BUILD: ${{ matrix.version }}
         run: ./gradlew :2repository:pushDockerImage -PincludeCommunity=false
+      - name: Publish tomcat base jars
+        if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
+        run: >
+          ./gradlew :tomcat-base:publish
+          -Pcloudsmith.user=${{ secrets.CLOUDSMITH_USER }}
+          -Pcloudsmith.apikey=${{ secrets.CLOUDSMITH_APIKEY }}
