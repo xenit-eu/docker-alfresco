@@ -95,11 +95,13 @@ subprojects {
         }
         repositories {
             maven {
-                url "https://maven.cloudsmith.io/xenit/open-source/"
-                if (project.hasProperty("cloudsmith.user")) {
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.toString().endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                if (project.hasProperty("sonatype_username")) {
                     credentials {
-                        username property("cloudsmith.user")
-                        password property("cloudsmith.apikey")
+                        username property("sonatype_username")
+                        password property("sonatype_password")
                     }
                 }
             }
