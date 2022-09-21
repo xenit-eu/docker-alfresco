@@ -60,6 +60,6 @@ jobs:
       - name: Publish tomcat base jars
         if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
         run: >
-          ./gradlew :tomcat-base:publish
+          ./gradlew :tomcat-base:tomcat-8.5:publish :tomcat-base:tomcat-9:publish
           -Psonatype_username=${{ secrets.MAVEN_CENTRAL_USERNAME }}
           -Psonatype_password=${{ secrets.MAVEN_CENTRAL_PASSWORD }}
