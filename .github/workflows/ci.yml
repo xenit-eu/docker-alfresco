@@ -59,7 +59,13 @@ jobs:
         run: ./gradlew :2repository:pushDockerImage -PincludeCommunity=false
       - name: Publish tomcat base jars
         if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.MAVEN_CENTRAL_GPG_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
+          ORG_GRADLE_PROJECT_sonatype_username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_sonatype_password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
         run: >
           ./gradlew :tomcat-base:tomcat-8.5:publish :tomcat-base:tomcat-9:publish --info
           -Psonatype_username=${{ secrets.MAVEN_CENTRAL_USERNAME }}
           -Psonatype_password=${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          -PsigningKeyId=CDE3528F
