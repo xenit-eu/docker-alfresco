@@ -1,7 +1,19 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
-import eu.xenit.alfresco.tomcat.embedded.valve.JsonAccessLogValve;
+import eu.xenit.json.valve.JsonAccessLogValve;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.Service;
+import org.apache.catalina.WebResourceRoot;
+import org.apache.catalina.connector.Connector;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.webresources.DirResourceSet;
+import org.apache.catalina.webresources.StandardRoot;
+import org.apache.tomcat.util.net.SSLHostConfig;
+import org.apache.tomcat.util.net.SSLHostConfig.CertificateVerification;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,18 +24,6 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.LifecycleListener;
-import org.apache.catalina.Service;
-import org.apache.catalina.Valve;
-import org.apache.catalina.WebResourceRoot;
-import org.apache.catalina.connector.Connector;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.webresources.DirResourceSet;
-import org.apache.catalina.webresources.StandardRoot;
-import org.apache.tomcat.util.net.SSLHostConfig;
-import org.apache.tomcat.util.net.SSLHostConfig.CertificateVerification;
 
 public class TomcatFactory {
 
@@ -52,14 +52,14 @@ public class TomcatFactory {
                 directoryStream.forEach(path -> addWebapp(tomcat, path));
             }
         }
-        
+
         return tomcat;
     }
 
     private boolean isEmtpyDir(Path path) {
         if (Files.isDirectory(path)) {
             try (Stream<Path> entries = Files.list(path)) {
-                return !entries.findFirst().isPresent();
+                return entries.findFirst().isEmpty();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -69,7 +69,7 @@ public class TomcatFactory {
     }
 
     private void addWebapp(Tomcat tomcat, Path path) {
-        if(isEmtpyDir(path)) {
+        if (isEmtpyDir(path)) {
             // Our gradle plugin adds a share directory, even when baseShareWar is not configured
             return;
         }
@@ -100,7 +100,7 @@ public class TomcatFactory {
             ctx.addLifecycleListener(lifecycleListener);
 
             if (configuration.isAccessLogging()) {
-                Valve valve = new JsonAccessLogValve();
+                JsonAccessLogValve valve = new JsonAccessLogValve(System.out);
                 ctx.addValve(valve);
                 ctx.getAccessLog();
             }
@@ -109,7 +109,7 @@ public class TomcatFactory {
 
     private Path getGlobalPropertiesFile() {
         Properties globalProperties = new Properties();
-        configuration.getGlobalProperties().forEach( (key, value) -> globalProperties.put(key, value));
+        configuration.getGlobalProperties().forEach((key, value) -> globalProperties.put(key, value));
         Path classesDir = Paths.get("/dev", "shm", "alfrescoClasses");
         try {
             Files.createDirectories(classesDir);
@@ -135,12 +135,12 @@ public class TomcatFactory {
 
     private void createSSLConnector(Tomcat tomcat) {
         if (!new File(configuration.getTomcatSSLKeystore()).exists()) {
-            LOG.severe("Keystore file missing: "+configuration.getTomcatSSLKeystore());
+            LOG.severe("Keystore file missing: " + configuration.getTomcatSSLKeystore());
             System.exit(1);
         }
 
         if (!new File(configuration.getTomcatSSLTruststore()).exists()) {
-            LOG.severe("Truststore file missing: "+configuration.getTomcatSSLTruststore());
+            LOG.severe("Truststore file missing: " + configuration.getTomcatSSLTruststore());
             System.exit(1);
         }
 
@@ -190,9 +190,9 @@ public class TomcatFactory {
             try (var reader = Files.newBufferedReader(log4JPropertiesPath)) {
                 properties.load(reader);
                 properties.setProperty("log4j.rootLogger", "error, Console, jmxlogger1");
-                properties.setProperty("log4j.appender.Console.layout", "biz.paluch.logging.gelf.log4j.GelfLayout");
-                properties.setProperty("log4j.appender.Console.layout.AdditionalFields",
-                        "type=application/" + path.getFileName());
+                properties.setProperty("log4j.appender.Console.layout", "eu.xenit.json.log4j.JsonFormatter");
+                properties.setProperty("log4j.appender.Console.layout.Type", "application");
+                properties.setProperty("log4j.appender.Console.layout.Component", path.getFileName().toString());
                 properties.setProperty("log4j.appender.Console.layout.TimestampPattern", "yyyy-MM-dd HH:mm:ss,SSS");
                 properties.setProperty("log4j.appender.Console.layout.ExtractStackTrace", "true");
                 properties.setProperty("log4j.appender.Console.layout.FilterStackTrace", "true");

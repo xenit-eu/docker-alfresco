@@ -1,10 +1,10 @@
 package eu.xenit.alfresco.tomcat.embedded;
 
-import biz.paluch.logging.gelf.jul.GelfFormatter;
 import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariableConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory;
+import eu.xenit.json.jul.JsonFormatter;
 import org.apache.catalina.startup.Tomcat;
 
 import java.util.logging.ConsoleHandler;
@@ -51,7 +51,7 @@ public class Main {
         }
     }
 
-    private static void configureLoggerToJSONStdOut(Logger logger, String type, boolean json) {
+    private static void configureLoggerToJSONStdOut(Logger logger, String component, boolean json) {
         for (Handler handler : logger.getHandlers()) {
             logger.removeHandler(handler);
         }
@@ -64,10 +64,9 @@ public class Main {
         };
 
         if (json) {
-            GelfFormatter formatter = new GelfFormatter();
-            formatter.setTimestampPattern("yyyy-MM-dd HH:mm:ss,SSS");
-            formatter.setFields("Severity, Time, LoggerName");
-            formatter.setAdditionalFields("type=" + type);
+            JsonFormatter formatter = new JsonFormatter();
+            formatter.setType("application");
+            formatter.setComponent(component);
             formatter.setExtractStackTrace("true");
             formatter.setFilterStackTrace(true);
             customHandler.setFormatter(formatter);
