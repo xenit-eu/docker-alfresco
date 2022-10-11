@@ -56,7 +56,7 @@ public class TomcatFactory {
         return tomcat;
     }
 
-    private boolean isEmtpyDir(Path path) {
+    private boolean isEmptyDir(Path path) {
         if (Files.isDirectory(path)) {
             try (Stream<Path> entries = Files.list(path)) {
                 return entries.findFirst().isEmpty();
@@ -69,15 +69,14 @@ public class TomcatFactory {
     }
 
     private void addWebapp(Tomcat tomcat, Path path) {
-        if (isEmtpyDir(path)) {
+        if (isEmptyDir(path)) {
             // Our gradle plugin adds a share directory, even when baseShareWar is not configured
             return;
         }
         if (Files.isDirectory(path)) {
             String contextPath = "/" + path.getFileName().toString();
             String absolutePath = path.toAbsolutePath().toString();
-            StandardContext ctx = (StandardContext) tomcat.addWebapp(contextPath,
-                    absolutePath);
+            StandardContext ctx = (StandardContext) tomcat.addWebapp(contextPath, absolutePath);
             ctx.setParentClassLoader(Thread.currentThread().getContextClassLoader());
 
             LifecycleListener lifecycleListener = event -> {
@@ -85,11 +84,9 @@ public class TomcatFactory {
                     WebResourceRoot resources = new StandardRoot(ctx);
                     Path globalPropertiesFile = getGlobalPropertiesFile();
                     resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", globalPropertiesFile.toAbsolutePath().getParent().toString(), "/"));
-                    if (configuration.isJsonLogging()) {
-                        redirectLog4j(path);
+                    if (configuration.isJsonLogging() && redirectLog4j(path)) {
                         //Load extra jars in classpath for json application logging
-                        resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib",
-                                configuration.getLogLibraryDir(), "/"));
+                        resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", configuration.getLogLibraryDir(), "/"));
                     }
                     ctx.setResources(resources);
                 }
@@ -109,7 +106,7 @@ public class TomcatFactory {
 
     private Path getGlobalPropertiesFile() {
         Properties globalProperties = new Properties();
-        configuration.getGlobalProperties().forEach((key, value) -> globalProperties.put(key, value));
+        globalProperties.putAll(configuration.getGlobalProperties());
         Path classesDir = Paths.get("/dev", "shm", "alfrescoClasses");
         try {
             Files.createDirectories(classesDir);
@@ -183,8 +180,12 @@ public class TomcatFactory {
         tomcat.addRole(username, role);
     }
 
-    private void redirectLog4j(Path path) {
+    private boolean redirectLog4j(Path path) {
         Path log4JPropertiesPath = path.resolve("WEB-INF/classes/log4j.properties");
+        if (!Files.exists(log4JPropertiesPath)) {
+            LOG.warning("Log4j file doesn't exist under path " + log4JPropertiesPath);
+            return false;
+        }
         Properties properties = new Properties();
         try {
             try (var reader = Files.newBufferedReader(log4JPropertiesPath)) {
@@ -205,6 +206,7 @@ public class TomcatFactory {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return true;
     }
 
     private void stopTomcat(Tomcat tomcat) {
