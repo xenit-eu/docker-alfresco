@@ -49,7 +49,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
 
         baseConfiguration.setGlobalProperty("messaging.subsystem.autoStart", "false");
         baseConfiguration.setGlobalProperty("events.subsystem.autoStart", "false");
-        baseConfiguration.setGlobalProperty("local.transform.service.enabled", "false");
+        baseConfiguration.setGlobalProperty("local.transform.service.enabled", "true");
 
         baseConfiguration.setGlobalProperty("index.subsystem.name", "solr6");
         baseConfiguration.setGlobalProperty("solr.host", "solr");
