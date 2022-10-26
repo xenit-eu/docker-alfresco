@@ -97,7 +97,7 @@ public class TomcatFactory {
             ctx.addLifecycleListener(lifecycleListener);
 
             if (configuration.isAccessLogging()) {
-                JsonAccessLogValve valve = new JsonAccessLogValve(System.out);
+                JsonAccessLogValve valve = new JsonAccessLogValve();
                 ctx.addValve(valve);
                 ctx.getAccessLog();
             }
@@ -191,10 +191,9 @@ public class TomcatFactory {
             try (var reader = Files.newBufferedReader(log4JPropertiesPath)) {
                 properties.load(reader);
                 properties.setProperty("log4j.rootLogger", "error, Console, jmxlogger1");
-                properties.setProperty("log4j.appender.Console.layout", "eu.xenit.json.log4j.JsonFormatter");
+                properties.setProperty("log4j.appender.Console.layout", "eu.xenit.json.log4j.JsonLayout");
                 properties.setProperty("log4j.appender.Console.layout.Type", "application");
                 properties.setProperty("log4j.appender.Console.layout.Component", path.getFileName().toString());
-                properties.setProperty("log4j.appender.Console.layout.TimestampPattern", "yyyy-MM-dd HH:mm:ss,SSS");
                 properties.setProperty("log4j.appender.Console.layout.ExtractStackTrace", "true");
                 properties.setProperty("log4j.appender.Console.layout.FilterStackTrace", "true");
                 Path tempProps = Files.createTempFile("log4j-", ".properties");
