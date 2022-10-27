@@ -1,0 +1,35 @@
+subprojects {
+    apply plugin: 'eu.xenit.docker-alfresco'
+
+    if (new File("${project.projectDir}/overload.gradle").exists())
+        apply from: "${project.projectDir}/overload.gradle"
+
+    def parentProject = project(":1share-skeleton:${project.share.version.major}" + "." + "${project.share.version.minor}")
+    def parentImage = parentProject.getTasks().getByName('buildDockerImage')
+
+    afterEvaluate {
+        createDockerFile.dependsOn(parentImage)
+    }
+
+    dockerBuild {
+        repositories = [calcRepository(project.share.flavor)]
+        tags = calcTags(project.share.version)
+        alfresco {
+            baseImage = parentImage.getImageId()
+        }
+    }
+
+    createDockerFile {
+        environmentVariable('SHARE_FLAVOR', "${project.share.flavor}")
+        environmentVariable('SHARE_VERSION', "${project.share.version.major}.${project.share.version.minor}.${project.share.version.rev}")
+        def buildDate = project.properties.getOrDefault("buildDate", ((int) (new Date().getTime() / 1000)).toString());
+        environmentVariable('BUILD_DATE', buildDate)
+    }
+
+    createDockerFile.dependsOn(parentImage)
+
+    buildDockerImage {
+        pull = false
+    }    
+}
+

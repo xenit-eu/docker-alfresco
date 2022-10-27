@@ -1,5 +1,9 @@
 package eu.xenit.alfresco.tomcat.embedded;
 
+import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
+import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
+import eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariableConfigurationProvider;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URI;
@@ -11,13 +15,29 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 
 public class HealthCheck {
-
     public static final String ALFRESCO_DEFAULT_LIVE_PROBE = "http://localhost:8080/alfresco/api/-default-/public/alfresco/versions/1/probes/-live-";
+    public static final String SHARE_DEFAULT_LIVE_PROBE = "http://localhost:8080/share";
+
     public static final int DEFAULT_TIMEOUT = 2000;
     public static final int DEFAULT_STATUS_CODE = 200;
 
+    private HealthCheck() {
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException {
-        String healthEndpoint = ALFRESCO_DEFAULT_LIVE_PROBE;
+        Configuration configuration = new EnvironmentVariableConfigurationProvider()
+                .getConfiguration(new DefaultConfigurationProvider()
+                        .getConfiguration());
+        if (configuration.isAlfrescoEnabled()) {
+            HealthCheck.setupHealthCheck(ALFRESCO_DEFAULT_LIVE_PROBE, args);
+        }
+        if (configuration.isShareEnabled()) {
+            HealthCheck.setupHealthCheck(SHARE_DEFAULT_LIVE_PROBE, args);
+        }
+    }
+
+    public static void setupHealthCheck(String defaultLiveProbe, String[] args) throws IOException, InterruptedException {
+        String healthEndpoint = defaultLiveProbe;
         if (args.length > 0) {
             healthEndpoint = args[0];
         }

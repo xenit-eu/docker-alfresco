@@ -1,0 +1,15 @@
+ext {
+    share = [
+            version: [
+                    major: 6,
+                    minor: 2,
+                    rev: '2'
+            ],
+            flavor: 'community'
+    ]
+}
+
+dependencies {
+    baseShareWar 'org.alfresco:share:6.2.2@war'
+}
+

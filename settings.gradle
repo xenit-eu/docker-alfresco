@@ -3,19 +3,30 @@ rootProject.name = 'docker-alfresco'
 include ':tomcat-base'
 include ':tomcat-base:tomcat-8.5'
 include ':tomcat-base:tomcat-9'
-include ':1skeleton'
-include ':1skeleton:6.1'
-include ':1skeleton:6.2'
-include ':1skeleton:7.0'
-include ':1skeleton:7.1'
-include ':1skeleton:7.2'
-
+include ':1alfresco-skeleton'
+include ':1alfresco-skeleton:6.1'
+include ':1alfresco-skeleton:6.2'
+include ':1alfresco-skeleton:7.0'
+include ':1alfresco-skeleton:7.1'
+include ':1alfresco-skeleton:7.2'
 include ':2repository'
+include ':1share-skeleton'
+include ':1share-skeleton:6.1'
+include ':1share-skeleton:6.2'
+include ':1share-skeleton:7.0'
+include ':1share-skeleton:7.1'
+include ':1share-skeleton:7.2'
+include ':2share'
 
 def includeRepoProject(String flavor, String version) {
     def projectName = ":2repository:${flavor}-$version"
     include projectName
     project(projectName).projectDir = file("2repository/${version.substring(0,3)}/${flavor}-$version")
+}
+def includeShareProject(String flavor, String version) {
+    def projectName = ":2share:${flavor}-$version"
+    include projectName
+    project(projectName).projectDir = file("2share/${version.substring(0,3)}/${flavor}-$version")
 }
 
 if (includeCommunity == 'true') {
@@ -24,6 +35,13 @@ if (includeCommunity == 'true') {
     includeRepoProject('community', '7.0.0')
     includeRepoProject('community', '7.1.1')
     includeRepoProject('community', '7.2.0')
+
+    includeShareProject('community', '6.1.0')
+    includeShareProject('community', '6.2.0')
+    includeShareProject('community', '6.2.2')
+    includeShareProject('community', '7.0.1')
+    includeShareProject('community', '7.1.0')
+    includeShareProject('community', '7.2.1')
 }
 
 if (includeEnterprise == 'true') {

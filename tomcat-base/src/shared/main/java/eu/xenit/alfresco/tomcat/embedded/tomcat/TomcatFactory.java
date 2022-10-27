@@ -11,17 +11,17 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
-import org.apache.tomcat.util.net.SSLHostConfig;
-import org.apache.tomcat.util.net.SSLHostConfig.CertificateVerification;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -29,24 +29,35 @@ public class TomcatFactory {
 
     private static final Logger LOG = Logger.getLogger(TomcatFactory.class.getName());
 
-    private Configuration configuration;
 
     public TomcatFactory(Configuration configuration) {
-        this.configuration = configuration;
+        this.configuration =
+                configuration;
+    }
+
+    public List<Consumer<WebResourceRoot>> getWebResources() {
+        return webResources;
+    }
+
+    public void setWebResources(Consumer<WebResourceRoot> webResource) {
+        this.webResources.add(webResource);
+    }
+
+    private List<Consumer<WebResourceRoot>> webResources = new ArrayList<>();
+    private final Configuration configuration;
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
     public Tomcat getTomcat() throws IOException {
         Tomcat tomcat = new Tomcat();
-        tomcat.setPort(configuration.getPort());
-        tomcat.getServer().setPort(configuration.getTomcatServerPort());
+        tomcat.setPort(getConfiguration().getPort());
+        tomcat.getServer().setPort(getConfiguration().getTomcatServerPort());
         createDefaultConnector(tomcat);
-        if (configuration.isSolrSSLEnabled()) {
-            createSSLConnector(tomcat);
-        }
         addUserWithRole(tomcat, "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repoclient");
         addUserWithRole(tomcat, "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repository");
-
-        Path webapps = Paths.get(configuration.getWebappsPath());
+        Path webapps = Paths.get(getConfiguration().getWebappsPath());
         if (Files.exists(webapps)) {
             try (var directoryStream = Files.newDirectoryStream(webapps)) {
                 directoryStream.forEach(path -> addWebapp(tomcat, path));
@@ -56,7 +67,7 @@ public class TomcatFactory {
         return tomcat;
     }
 
-    private boolean isEmptyDir(Path path) {
+    protected boolean isEmptyDir(Path path) {
         if (Files.isDirectory(path)) {
             try (Stream<Path> entries = Files.list(path)) {
                 return entries.findFirst().isEmpty();
@@ -82,21 +93,20 @@ public class TomcatFactory {
             LifecycleListener lifecycleListener = event -> {
                 if (event.getType().equals("before_start")) {
                     WebResourceRoot resources = new StandardRoot(ctx);
-                    Path globalPropertiesFile = getGlobalPropertiesFile();
-                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", globalPropertiesFile.toAbsolutePath().getParent().toString(), "/"));
-                    if (configuration.isJsonLogging() && redirectLog4j(path)) {
+                    getWebResources().forEach(webResourceRootConsumer -> webResourceRootConsumer.accept(resources));
+                    if (getConfiguration().isJsonLogging() && redirectLog4j(path)) {
                         //Load extra jars in classpath for json application logging
-                        resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", configuration.getLogLibraryDir(), "/"));
+                        resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getLogLibraryDir(), "/"));
                     }
                     ctx.setResources(resources);
                 }
-                if (configuration.isExitOnFailure() && event.getType().equals("after_stop")) {
+                if (getConfiguration().isExitOnFailure() && event.getType().equals("after_stop")) {
                     stopTomcat(tomcat);
                 }
             };
             ctx.addLifecycleListener(lifecycleListener);
 
-            if (configuration.isAccessLogging()) {
+            if (getConfiguration().isAccessLogging()) {
                 JsonAccessLogValve valve = new JsonAccessLogValve();
                 ctx.addValve(valve);
                 ctx.getAccessLog();
@@ -104,63 +114,15 @@ public class TomcatFactory {
         }
     }
 
-    private Path getGlobalPropertiesFile() {
-        Properties globalProperties = new Properties();
-        globalProperties.putAll(configuration.getGlobalProperties());
-        Path classesDir = Paths.get("/dev", "shm", "alfrescoClasses");
-        try {
-            Files.createDirectories(classesDir);
-            Path tempProps = Paths.get("/dev", "shm", "alfrescoClasses", "alfresco-global.properties");
-            if (Files.exists(tempProps)) {
-                Files.delete(tempProps);
-            }
-            tempProps = Files.createFile(tempProps);
-            try (OutputStream os = Files.newOutputStream(tempProps)) {
-                globalProperties.store(os, null);
-            }
-            return tempProps;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void createDefaultConnector(Tomcat tomcat) {
-        Connector connector = getConnector(tomcat, "HTTP/1.1", configuration.getPort(), false, "http");
-        connector.setRedirectPort(configuration.getTomcatSslPort());
+        Connector connector = getConnector(tomcat, "HTTP/1.1", getConfiguration().getPort(), false, "http", configuration);
+        connector.setRedirectPort(getConfiguration().getTomcatSslPort());
         tomcat.setConnector(connector);
     }
 
-    private void createSSLConnector(Tomcat tomcat) {
-        if (!new File(configuration.getTomcatSSLKeystore()).exists()) {
-            LOG.severe("Keystore file missing: " + configuration.getTomcatSSLKeystore());
-            System.exit(1);
-        }
 
-        if (!new File(configuration.getTomcatSSLTruststore()).exists()) {
-            LOG.severe("Truststore file missing: " + configuration.getTomcatSSLTruststore());
-            System.exit(1);
-        }
-
-        Connector connector = getConnector(tomcat, "org.apache.coyote.http11.Http11NioProtocol", configuration.getTomcatSslPort(), true, "https");
-
-        SSLHostConfig sslHostConfig = new SSLHostConfig();
-        sslHostConfig.setCertificateKeystoreFile(configuration.getTomcatSSLKeystore());
-        sslHostConfig.setCertificateKeystorePassword(configuration.getTomcatSSLKeystorePassword());
-        sslHostConfig.setCertificateKeystoreType("JCEKS");
-        sslHostConfig.setTruststoreFile(configuration.getTomcatSSLTruststore());
-        sslHostConfig.setTruststorePassword(configuration.getTomcatSSLTruststorePassword());
-        sslHostConfig.setTruststoreType("JCEKS");
-        sslHostConfig.setSslProtocol("TLS");
-        sslHostConfig.setCertificateVerification(CertificateVerification.REQUIRED.name());
-        connector.addSslHostConfig(sslHostConfig);
-        connector.setSecure(true);
-        connector.setProperty("clientAuth", "want");
-        connector.setProperty("allowUnsafeLegacyRenegotiation", "true");
-        connector.setMaxSavePostSize(-1);
-        tomcat.setConnector(connector);
-    }
-
-    private Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme) {
+    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, Configuration configuration) {
         Connector connector = new Connector(protocol);
         connector.setPort(port);
         connector.setProperty("connectionTimeout", "240000");
@@ -218,6 +180,8 @@ public class TomcatFactory {
             }
         });
         thread.start();
+
     }
+
 
 }

@@ -38,7 +38,7 @@ subprojects {
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
-    def parentProject = project(":1skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}")
+    def parentProject = project(":1alfresco-skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}")
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
     dockerBuild {

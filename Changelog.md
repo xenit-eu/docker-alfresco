@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 * [PR #88](https://github.com/xenit-eu/docker-alfresco/pull/88) DOCKER-415 Add a healthcheck for Alfresco
 * [PR #86](https://github.com/xenit-eu/docker-alfresco/pull/86) DOCKER-414 Fix alf_data content store permissions
-* [PR #85](https://github.com/xenit-eu/docker-alfresco/pull/85) DOCKER-412 Add default legacy configuration for solr ssl
+* [PR #85](https://github.com/xenit-eu/docker-alfresco/pull/85) DOCKER-412 Add default legacy alfrescoConfiguration for solr ssl
 * [PR #84](https://github.com/xenit-eu/docker-alfresco/pull/82) XM2C-36: Save alfresco-global.properties to file and add to context.
 * [PR #82](https://github.com/xenit-eu/docker-alfresco/pull/82) DOCKER-409: Fix publishing problems, simplify the project structure.
 * [PR #79](https://github.com/xenit-eu/docker-alfresco/pull/79) DOCKER-405: Switch to embedded tomcat.
@@ -94,7 +94,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 ### Added
 
 * [PR #44](https://github.com/xenit-eu/docker-alfresco/pull/44) [Issue43](https://github.com/xenit-eu/docker-alfresco/issues/43)
-  DOCKER-341 Added configuration for custom ssl key- & truststores
+  DOCKER-341 Added alfrescoConfiguration for custom ssl key- & truststores
 
 ## 2020-07.0 (2020-07-03)
 
@@ -259,7 +259,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 * [DOCKER-142] JAVA_OPTS are duplicated when starting tomcat
 * [DOCKER-175] Backup location for solr6
 * [DOCKER-145] Image of Alfresco 4.2 has MaxPermSize set, otherwise Alfresco does not start properly
-* [DOCKER-147] Remove client-specific share configuration
+* [DOCKER-147] Remove client-specific share alfrescoConfiguration
 * [DOCKER-178] Always do compose down to avoid dangling containers
 
 ### Changed

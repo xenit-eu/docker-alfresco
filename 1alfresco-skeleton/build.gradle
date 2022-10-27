@@ -33,11 +33,14 @@ subprojects {
     }
 
     createDockerFile {
+        smartCopy "${project.parent.projectDir}/src/shared/main/bash/entrypoint/docker-entrypoint.d/", '/docker-entrypoint.d/'
         dependsOn(tomcatImage)
         baseImage = tomcatImage.getImageId()
         volume('/opt/alfresco/alf_data')
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.version.flavor}")
+        environmentVariable('ALFRESCO_ENABLED', "true")
+
     }
 
     // Disable pull because base image is built locally and not pushed to a repo
