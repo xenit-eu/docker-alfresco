@@ -36,7 +36,7 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(TOMCAT_WEBAPPS, baseConfiguration::setWebappsPath);
         setPropertyFromEnv(JSON_LOGGING, value -> baseConfiguration.setJsonLogging(Boolean.parseBoolean(value)));
         setPropertyFromEnv(ACCESS_LOGGING, value -> baseConfiguration.setAccessLogging(Boolean.parseBoolean(value)));
-        setPropertyFromEnv(LOGLIBRARY_DIR, baseConfiguration::setLogLibraryDir);
+        setPropertyFromEnv(LOGLIBRARY_DIR, baseConfiguration::setSharedClassesPath);
         setPropertyFromEnv(TOMCAT_PORT, value -> baseConfiguration.setPort(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_PORT_SSL, value -> baseConfiguration.setTomcatSslPort(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_SERVER_PORT, value -> baseConfiguration.setTomcatServerPort(Integer.parseInt(value)));

@@ -5,7 +5,7 @@ public class Configuration {
     protected String webappsPath;
     protected int port;
     protected int tomcatSslPort;
-    protected String logLibraryDir;
+    protected String sharedClassesPath;
     protected boolean jsonLogging;
     protected boolean accessLogging;
     protected String logsLocation;
@@ -65,12 +65,12 @@ public class Configuration {
         this.tomcatSslPort = tomcatSslPort;
     }
 
-    public String getLogLibraryDir() {
-        return logLibraryDir;
+    public String getSharedClassesPath() {
+        return sharedClassesPath;
     }
 
-    public void setLogLibraryDir(String logLibraryDir) {
-        this.logLibraryDir = logLibraryDir;
+    public void setSharedClassesPath(String sharedClassesPath) {
+        this.sharedClassesPath = sharedClassesPath;
     }
 
     public boolean isJsonLogging() {

@@ -25,7 +25,7 @@ public class AlfrescoTomcatFactoryHelper {
     private static Path getGlobalPropertiesFile(AlfrescoConfiguration alfrescoConfiguration) {
         Properties globalProperties = new Properties();
         globalProperties.putAll(alfrescoConfiguration.getGlobalProperties());
-        Path classesDir = Paths.get("/dev", "shm", "alfrescoClasses");
+        Path classesDir = Paths.get("/dev", "shm", "classpath");
         try {
             Files.createDirectories(classesDir);
             Path tempProps = Paths.get("/dev", "shm", "alfrescoClasses", "alfresco-global.properties");
@@ -74,9 +74,8 @@ public class AlfrescoTomcatFactoryHelper {
     }
 
 
-    public static void addPostResources(WebResourceRoot resources, AlfrescoConfiguration alfrescoConfiguration) {
-        Path globalPropertiesFile = getGlobalPropertiesFile(alfrescoConfiguration);
-        resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", globalPropertiesFile.toAbsolutePath().getParent().toString(), "/"));
+    public static void addPostResources(AlfrescoConfiguration alfrescoConfiguration) {
+        getGlobalPropertiesFile(alfrescoConfiguration);
     }
 
 

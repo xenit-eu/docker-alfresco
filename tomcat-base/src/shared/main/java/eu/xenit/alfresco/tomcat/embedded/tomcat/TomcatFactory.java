@@ -93,11 +93,14 @@ public class TomcatFactory {
             LifecycleListener lifecycleListener = event -> {
                 if (event.getType().equals("before_start")) {
                     WebResourceRoot resources = new StandardRoot(ctx);
-                    getWebResources().forEach(webResourceRootConsumer -> webResourceRootConsumer.accept(resources));
-                    if (getConfiguration().isJsonLogging() && redirectLog4j(path)) {
+                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", "/dev/shm/classpath/", "/"));
+                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", "/usr/local/tomcat/shared/classes/", "/"));
+
+//                    getWebResources().forEach(webResourceRootConsumer -> webResourceRootConsumer.accept(resources));
+//                    if (getConfiguration().isJsonLogging() && redirectLog4j(path)) {
                         //Load extra jars in classpath for json application logging
-                        resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getLogLibraryDir(), "/"));
-                    }
+                    resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedClassesPath(), "/"));
+//                    }
                     ctx.setResources(resources);
                 }
                 if (getConfiguration().isExitOnFailure() && event.getType().equals("after_stop")) {

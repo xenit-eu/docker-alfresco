@@ -38,7 +38,7 @@ public class Main {
                 if (alfrescoConfiguration.isSolrSSLEnabled()) {
                     AlfrescoTomcatFactoryHelper.createSSLConnector(tomcat, alfrescoConfiguration);
                 }
-                tomcatFactory.setWebResources(resourceRoot -> AlfrescoTomcatFactoryHelper.addPostResources(resourceRoot, alfrescoConfiguration));
+                tomcatFactory.setWebResources(resourceRoot -> AlfrescoTomcatFactoryHelper.addPostResources(alfrescoConfiguration));
             }
             if (configuration.isShareEnabled()) {
                 new EnvironmentVariableShareConfigurationProvider()
