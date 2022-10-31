@@ -1,14 +1,11 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
-import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
+
 
 public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurationProvider {
 
 
-    public AlfrescoConfiguration getConfiguration(Configuration baseConfiguration) {
-
-        AlfrescoConfiguration baseAlfrescoConfiguration = (AlfrescoConfiguration) baseConfiguration;
-
+    public AlfrescoConfiguration getConfiguration(AlfrescoConfiguration baseAlfrescoConfiguration) {
         baseAlfrescoConfiguration.setTomcatSSLKeystore("/keystore/ssl.keystore");
         baseAlfrescoConfiguration.setTomcatSSLTruststore("/keystore/ssl.truststore");
         baseAlfrescoConfiguration.setTomcatSSLKeystorePassword("kT9X6oe68t");

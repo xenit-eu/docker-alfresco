@@ -18,33 +18,34 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class TomcatFactory {
 
     private static final Logger LOG = Logger.getLogger(TomcatFactory.class.getName());
-
+    private final Configuration configuration;
 
     public TomcatFactory(Configuration configuration) {
         this.configuration =
                 configuration;
     }
 
-    public List<Consumer<WebResourceRoot>> getWebResources() {
-        return webResources;
+    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, Configuration configuration) {
+        Connector connector = new Connector(protocol);
+        connector.setPort(port);
+        connector.setProperty("connectionTimeout", "240000");
+        connector.setURIEncoding(StandardCharsets.UTF_8.name());
+        connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
+        connector.setProperty("maxThreads", String.valueOf(configuration.getTomcatMaxThreads()));
+        connector.setProperty("maxHttpHeaderSize", String.valueOf(configuration.getTomcatMaxHttpHeaderSize()));
+        connector.setScheme(scheme);
+        Service service = tomcat.getService();
+        service.setContainer(tomcat.getEngine());
+        connector.setService(service);
+        return connector;
     }
-
-    public void setWebResources(Consumer<WebResourceRoot> webResource) {
-        this.webResources.add(webResource);
-    }
-
-    private List<Consumer<WebResourceRoot>> webResources = new ArrayList<>();
-    private final Configuration configuration;
 
     private Configuration getConfiguration() {
         return configuration;
@@ -52,7 +53,8 @@ public class TomcatFactory {
 
     public Tomcat getTomcat() throws IOException {
         Tomcat tomcat = new Tomcat();
-        tomcat.setPort(getConfiguration().getPort());
+//        tomcat.setBaseDir(getConfiguration().getTomcatBaseDir());
+        tomcat.setPort(getConfiguration().getTomcatPort());
         tomcat.getServer().setPort(getConfiguration().getTomcatServerPort());
         createDefaultConnector(tomcat);
         addUserWithRole(tomcat, "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repoclient");
@@ -63,7 +65,6 @@ public class TomcatFactory {
                 directoryStream.forEach(path -> addWebapp(tomcat, path));
             }
         }
-
         return tomcat;
     }
 
@@ -93,14 +94,12 @@ public class TomcatFactory {
             LifecycleListener lifecycleListener = event -> {
                 if (event.getType().equals("before_start")) {
                     WebResourceRoot resources = new StandardRoot(ctx);
-                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", "/dev/shm/classpath/", "/"));
-                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", "/usr/local/tomcat/shared/classes/", "/"));
+                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getClassPathDir(), "/"));
 
-//                    getWebResources().forEach(webResourceRootConsumer -> webResourceRootConsumer.accept(resources));
-//                    if (getConfiguration().isJsonLogging() && redirectLog4j(path)) {
+                    if (getConfiguration().isJsonLogging() && redirectLog4j(path)) {
                         //Load extra jars in classpath for json application logging
-                    resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedClassesPath(), "/"));
-//                    }
+                        resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getLogLibraryDir(), "/"));
+                    }
                     ctx.setResources(resources);
                 }
                 if (getConfiguration().isExitOnFailure() && event.getType().equals("after_stop")) {
@@ -117,27 +116,10 @@ public class TomcatFactory {
         }
     }
 
-
     private void createDefaultConnector(Tomcat tomcat) {
-        Connector connector = getConnector(tomcat, "HTTP/1.1", getConfiguration().getPort(), false, "http", configuration);
+        Connector connector = getConnector(tomcat, "HTTP/1.1", getConfiguration().getTomcatPort(), false, "http", configuration);
         connector.setRedirectPort(getConfiguration().getTomcatSslPort());
         tomcat.setConnector(connector);
-    }
-
-
-    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, Configuration configuration) {
-        Connector connector = new Connector(protocol);
-        connector.setPort(port);
-        connector.setProperty("connectionTimeout", "240000");
-        connector.setURIEncoding(StandardCharsets.UTF_8.name());
-        connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
-        connector.setProperty("maxThreads", String.valueOf(configuration.getTomcatMaxThreads()));
-        connector.setProperty("maxHttpHeaderSize", String.valueOf(configuration.getTomcatMaxHttpHeaderSize()));
-        connector.setScheme(scheme);
-        Service service = tomcat.getService();
-        service.setContainer(tomcat.getEngine());
-        connector.setService(service);
-        return connector;
     }
 
     private void addUserWithRole(Tomcat tomcat, String username, String password, String role) {

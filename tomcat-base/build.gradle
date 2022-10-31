@@ -76,12 +76,15 @@ subprojects {
 
         def buildDate = project.properties.getOrDefault("buildDate", (new Date().getTime() / 1000).toString());
         environmentVariable('BUILD_DATE', buildDate)
+//        environmentVariable('JSON_LOGGING', "true")
+//        environmentVariable('ACCESS_LOGGING', "true")
 
         runCommand 'useradd -u 990 tomcat'
         runCommand 'mkdir /tmp/tomcat && chown tomcat:tomcat /tmp/tomcat'
         workingDir '/tmp/tomcat'
         entryPoint('/docker-entrypoint.sh')
         def classPath = "/app/tomcat-embedded/$jarName:/app/tomcat-embedded/lib/*"
+//        volume "/usr/local/tomcat/temp"
         defaultCommand('java', '$JAVA_OPTS', '-cp', classPath, 'eu.xenit.alfresco.tomcat.embedded.Main')
         instruction("HEALTHCHECK CMD java -cp $classPath eu.xenit.alfresco.tomcat.embedded.HealthCheck")
     }

@@ -1,12 +1,9 @@
 package eu.xenit.alfresco.tomcat.embedded.share.config;
 
-import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
-
 public class DefaultShareConfigurationProvider implements ShareConfigurationProvider {
 
     @Override
-    public ShareConfiguration getConfiguration(Configuration baseConfiguration) {
-        ShareConfiguration baseShareConfiguration = (ShareConfiguration) baseConfiguration;
+    public ShareConfiguration getConfiguration(ShareConfiguration baseShareConfiguration) {
         baseShareConfiguration.setAlfrescoHost("alfresco");
         baseShareConfiguration.setAlfrescoPort(8080);
         baseShareConfiguration.setAlfrescoProtocol("http");
@@ -15,6 +12,9 @@ public class DefaultShareConfigurationProvider implements ShareConfigurationProv
         baseShareConfiguration.setAlfrescoInternalPort(8080);
         baseShareConfiguration.setAlfrescoInternalProtocol("http");
         baseShareConfiguration.setAlfrescoInternalContext("alfresco");
+        baseShareConfiguration.setShareConfigPath("/docker-config/");
+        baseShareConfiguration.setShareConfigTemplateFile("/docker-config/share");
+        baseShareConfiguration.setShareConfigPath("shared/classes/alfresco/web-extension");
         return baseShareConfiguration;
     }
 }

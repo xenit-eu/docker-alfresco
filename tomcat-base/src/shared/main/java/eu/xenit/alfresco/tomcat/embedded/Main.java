@@ -9,14 +9,21 @@ import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariableConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.share.config.DefaultShareConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.share.config.EnvironmentVariableShareConfigurationProvider;
+import eu.xenit.alfresco.tomcat.embedded.share.config.ShareConfiguration;
+import eu.xenit.alfresco.tomcat.embedded.share.tomcat.ShareTomcatFactoryHelper;
 import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory;
 import eu.xenit.json.jul.JsonFormatter;
 import org.apache.catalina.startup.Tomcat;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat.AlfrescoTomcatFactoryHelper.createGlobalPropertiesFile;
 
 
 public class Main {
@@ -28,22 +35,28 @@ public class Main {
             Configuration configuration = new EnvironmentVariableConfigurationProvider()
                     .getConfiguration(new DefaultConfigurationProvider()
                             .getConfiguration());
+            try {
+                Files.createDirectories(Paths.get(configuration.getClassPathDir()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             TomcatFactory tomcatFactory = new TomcatFactory(configuration);
-            Tomcat tomcat = tomcatFactory.getTomcat();//todo
+            Tomcat tomcat = tomcatFactory.getTomcat();
             if (configuration.isAlfrescoEnabled()) {
                 AlfrescoConfiguration
                         alfrescoConfiguration = new EnvironmentVariableAlfrescoConfigurationProvider()
                         .getConfiguration(new DefaultAlfrescoConfigurationProvider()
-                                .getConfiguration(configuration));
+                                .getConfiguration(new AlfrescoConfiguration(configuration)));
+                createGlobalPropertiesFile(alfrescoConfiguration);
                 if (alfrescoConfiguration.isSolrSSLEnabled()) {
                     AlfrescoTomcatFactoryHelper.createSSLConnector(tomcat, alfrescoConfiguration);
                 }
-                tomcatFactory.setWebResources(resourceRoot -> AlfrescoTomcatFactoryHelper.addPostResources(alfrescoConfiguration));
             }
             if (configuration.isShareEnabled()) {
-                new EnvironmentVariableShareConfigurationProvider()
+                ShareConfiguration shareConfiguration = new EnvironmentVariableShareConfigurationProvider()
                         .getConfiguration(new DefaultShareConfigurationProvider()
-                                .getConfiguration(configuration));
+                                .getConfiguration(new ShareConfiguration(configuration)));
+                ShareTomcatFactoryHelper.createShareConfigCustomFile(shareConfiguration);
             }
             //Needs to be done after
             configureLogging(configuration.isJsonLogging());

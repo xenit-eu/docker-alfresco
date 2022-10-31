@@ -1,10 +1,8 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoConfiguration;
-import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.tomcat.util.net.SSLHostConfig;
 
 import java.io.File;
@@ -22,13 +20,11 @@ public class AlfrescoTomcatFactoryHelper {
     private static final Logger LOG = Logger.getLogger(AlfrescoTomcatFactoryHelper.class.getName());
 
 
-    private static Path getGlobalPropertiesFile(AlfrescoConfiguration alfrescoConfiguration) {
+    public static Path createGlobalPropertiesFile(AlfrescoConfiguration alfrescoConfiguration) {
         Properties globalProperties = new Properties();
         globalProperties.putAll(alfrescoConfiguration.getGlobalProperties());
-        Path classesDir = Paths.get("/dev", "shm", "classpath");
         try {
-            Files.createDirectories(classesDir);
-            Path tempProps = Paths.get("/dev", "shm", "alfrescoClasses", "alfresco-global.properties");
+            Path tempProps = Paths.get(alfrescoConfiguration.getClassPathDir(), "alfresco-global.properties");
             if (Files.exists(tempProps)) {
                 Files.delete(tempProps);
             }
@@ -72,11 +68,4 @@ public class AlfrescoTomcatFactoryHelper {
         connector.setMaxSavePostSize(-1);
         tomcat.setConnector(connector);
     }
-
-
-    public static void addPostResources(AlfrescoConfiguration alfrescoConfiguration) {
-        getGlobalPropertiesFile(alfrescoConfiguration);
-    }
-
-
 }

@@ -3,24 +3,23 @@ package eu.xenit.alfresco.tomcat.embedded.share.config;
 
 import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
 
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_CONTEXT;
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_HOST;
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_INTERNAL_CONTEXT;
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_INTERNAL_HOST;
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_INTERNAL_PORT;
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_INTERNAL_PROTOCOL;
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_PORT;
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_PROTOCOL;
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.SHARE_CONFIG_PATH;
+import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.SHARE_CONFIG_TEMPLATE_FILE;
 import static eu.xenit.alfresco.tomcat.embedded.utils.ConfigurationHelper.setPropertyFromEnv;
 
 public class EnvironmentVariableShareConfigurationProvider implements ShareConfigurationProvider {
 
-    private static final String ALFRESCO_HOST = "ALFRESCO_HOST";
-    private static final String ALFRESCO_PORT = "ALFRESCO_PORT";
-    private static final String ALFRESCO_PROTOCOL = "ALFRESCO_PROTOCOL";
-    private static final String ALFRESCO_CONTEXT = "ALFRESCO_CONTEXT";
-
-    private static final String ALFRESCO_INTERNAL_HOST = "ALFRESCO_INTERNAL_HOST";
-    private static final String ALFRESCO_INTERNAL_PORT = "ALFRESCO_INTERNAL_PORT";
-    private static final String ALFRESCO_INTERNAL_PROTOCOL = "ALFRESCO_INTERNAL_PROTOCOL";
-    private static final String ALFRESCO_INTERNAL_CONTEXT = "ALFRESCO_INTERNAL_CONTEXT";
-
 
     @Override
-    public ShareConfiguration getConfiguration(Configuration baseConfiguration) {
-        ShareConfiguration baseShareConfiguration = (ShareConfiguration) baseConfiguration;
+    public ShareConfiguration getConfiguration(ShareConfiguration baseShareConfiguration) {
         setPropertyFromEnv(ALFRESCO_HOST, baseShareConfiguration::setAlfrescoHost);
         setPropertyFromEnv(ALFRESCO_PORT, value -> baseShareConfiguration.setAlfrescoPort(Integer.parseInt(value)));
         setPropertyFromEnv(ALFRESCO_PROTOCOL, baseShareConfiguration::setAlfrescoProtocol);
@@ -29,6 +28,8 @@ public class EnvironmentVariableShareConfigurationProvider implements ShareConfi
         setPropertyFromEnv(ALFRESCO_INTERNAL_PORT, value -> baseShareConfiguration.setAlfrescoInternalPort(Integer.parseInt(value)));
         setPropertyFromEnv(ALFRESCO_INTERNAL_PROTOCOL, baseShareConfiguration::setAlfrescoInternalProtocol);
         setPropertyFromEnv(ALFRESCO_INTERNAL_CONTEXT, baseShareConfiguration::setAlfrescoInternalContext);
+        setPropertyFromEnv(SHARE_CONFIG_PATH, baseShareConfiguration::setShareConfigPath);
+        setPropertyFromEnv(SHARE_CONFIG_TEMPLATE_FILE, baseShareConfiguration::setShareConfigTemplateFile);
         return baseShareConfiguration;
     }
 

@@ -1,57 +1,3 @@
-subprojects {
-    apply plugin: 'eu.xenit.docker'
-
-    if (new File("${project.projectDir}/overload.gradle").exists())
-        apply from: "${project.projectDir}/overload.gradle"
-
-    def workingDir = "$project.buildDir/dockerbuild"
-
-    task copyDockerfile(type: Copy) {
-        from("$rootProject.projectDir/src/main/resources/dockerfiles/") {
-            include "Dockerfile-skeleton"
-            rename "Dockerfile-skeleton", 'Dockerfile'
-        }
-        into workingDir
-    }
-    task copyGlobalResources(type: Copy) {
-        from "$rootProject.projectDir/src/main/resources/global"
-        into workingDir
-    }
-    task copyLocalResources(type: Copy) {
-        from "$project.projectDir/local"
-        into workingDir
-    }
-
-    dockerBuild {
-        dockerFile = file("$workingDir/Dockerfile")
-        repositories = [calcRepository(project.share.flavor)]
-        tags = calcTags(project.share.version)
-    }
-
-    buildDockerImage {
-        buildArgs = [
-                'SHARE_VERSION_MAJOR': "${project.share.version.major}",
-                'SHARE_VERSION_MINOR': "${project.share.version.minor}",
-                'SHARE_VERSION_REV'  : "${project.share.version.rev}",
-                'SHARE_FLAVOR'       : "${project.share.flavor}",
-                'BASE_IMAGE'            : "docker.io/xenit/tomcat:alfresco-${project.share.version.major}.${project.share.version.minor}-ubuntu"
-        ]
-
-        if (project.hasProperty('extraBuildArgs'))
-            buildArgs.putAll(project.extraBuildArgs)
-
-        doFirst {
-            println buildArgs
-        }
-	dependsOn(copyDockerfile)
-	dependsOn(copyGlobalResources)
-	dependsOn(copyLocalResources)
-    }
-}
-
-
-
-//-------------------
 evaluationDependsOn(':tomcat-base')
 
 String getTomcatProject(Project p) {
@@ -74,6 +20,7 @@ subprojects {
     apply plugin: 'eu.xenit.docker-alfresco'
     apply plugin: 'eu.xenit.docker-compose'
 
+
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
@@ -86,6 +33,7 @@ subprojects {
         tags = calcTags(project.share.version)
     }
     createDockerFile {
+        smartCopy "$project.projectDir/local", "/docker-config/"
         dependsOn(tomcatImage)
         baseImage = tomcatImage.getImageId()
         environmentVariable('SHARE_VERSION', "${project.share.version.major}.${project.share.version.minor}.${project.share.version.rev}")

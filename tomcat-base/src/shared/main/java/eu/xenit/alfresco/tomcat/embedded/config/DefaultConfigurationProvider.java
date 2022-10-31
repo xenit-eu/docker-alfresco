@@ -4,8 +4,8 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
 
     public Configuration getConfiguration(Configuration baseConfiguration) {
         baseConfiguration.setWebappsPath("/usr/local/tomcat/webapps");
-        baseConfiguration.setLogsLocation("/usr/local/tomcat/logs");
-        baseConfiguration.setPort(8080);
+        baseConfiguration.setTomcatBaseDir("/usr/local/tomcat/temp");
+        baseConfiguration.setTomcatPort(8080);
         baseConfiguration.setJsonLogging(false);
         baseConfiguration.setAccessLogging(false);
         baseConfiguration.setSharedClassesPath("/loglibrarydir");
@@ -16,6 +16,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setExitOnFailure(true);
         baseConfiguration.setAlfrescoEnabled(false);
         baseConfiguration.setShareEnabled(false);
+        baseConfiguration.setClassPathDir("/dev/shm/classpath");
         return baseConfiguration;
     }
 }
