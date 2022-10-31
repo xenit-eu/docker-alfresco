@@ -66,6 +66,7 @@ subprojects {
 
     createDockerFile {
         from 'docker.io/eclipse-temurin:11'
+        runCommand 'mkdir -p /usr/local/tomcat/shared/classes'
         smartCopy configurations.sharedLibs, '/loglibrarydir/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
