@@ -5,12 +5,10 @@ services:
    image: ${DOCKER_IMAGE}
    ports:
      - 8080
-     - 8000:8000
 #     - 8443
    depends_on:
      - postgresql
    environment:
-   - DEBUG=true
    - SOLR_HOST=solr
    - GLOBAL_legacy.transform.service.enabled=false
    - GLOBAL_local.transform.service.enabled=false

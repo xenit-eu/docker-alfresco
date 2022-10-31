@@ -1,32 +1,13 @@
 package eu.xenit.alfresco.tomcat.embedded.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.ACCESS_LOGGING;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.ALFRESCO_ENABLED;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.CLASSPATH_DIR;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.EXIT_ON_FAILURE;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.JSON_LOGGING;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.LOGLIBRARY_DIR;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARE_ENABLED;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_BASE_DIR;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_HTTP_HEADER_SIZE;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_THREADS;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT_SSL;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_RELAXED_PATH_CHARS;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_RELAXED_QUERY_CHARS;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_SERVER_PORT;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_WEBAPPS;
-
 public class Configuration {
     protected boolean exitOnFailure;
     protected String webappsPath;
     protected String tomcatBaseDir;
     protected int tomcatPort;
     protected int tomcatSslPort;
-    protected String logLibraryDir;
+    protected String sharedClasspathDir;
+    protected String sharedLibsDir;
     protected boolean jsonLogging;
     protected boolean accessLogging;
     protected int tomcatMaxThreads;
@@ -36,17 +17,18 @@ public class Configuration {
     protected String tomcatRelaxedPathChars;
     protected boolean alfrescoEnabled;
     protected boolean shareEnabled;
-    protected String classPathDir;
-    protected Map<String, String> env = new HashMap<>();
+    protected String generatedClasspathDir;
+
     public Configuration() {
     }
+
     protected Configuration(Configuration configuration) {
         setExitOnFailure(configuration.isExitOnFailure());
         setWebappsPath(configuration.getWebappsPath());
         setTomcatBaseDir(configuration.getTomcatBaseDir());
         setTomcatPort(configuration.getTomcatPort());
         setTomcatSslPort(configuration.getTomcatSslPort());
-        setLogLibraryDir(configuration.getLogLibraryDir());
+        setSharedClasspathDir(configuration.getSharedClasspathDir());
         setJsonLogging(configuration.isJsonLogging());
         setAccessLogging(configuration.isAccessLogging());
         setTomcatMaxThreads(configuration.getTomcatMaxThreads());
@@ -56,7 +38,15 @@ public class Configuration {
         setTomcatRelaxedPathChars(configuration.getTomcatRelaxedPathChars());
         setAlfrescoEnabled(configuration.isAlfrescoEnabled());
         setShareEnabled(configuration.isShareEnabled());
-        setClassPathDir(configuration.getClassPathDir());
+        setGeneratedClasspathDir(configuration.getGeneratedClasspathDir());
+    }
+
+    public String getSharedLibsDir() {
+        return sharedLibsDir;
+    }
+
+    public void setSharedLibsDir(String sharedLibsDir) {
+        this.sharedLibsDir = sharedLibsDir;
     }
 
     public boolean isAlfrescoEnabled() {
@@ -65,8 +55,6 @@ public class Configuration {
 
     public void setAlfrescoEnabled(boolean alfrescoEnabled) {
         this.alfrescoEnabled = alfrescoEnabled;
-        setEnv(ALFRESCO_ENABLED, String.valueOf(alfrescoEnabled));
-
     }
 
     public boolean isShareEnabled() {
@@ -75,8 +63,6 @@ public class Configuration {
 
     public void setShareEnabled(boolean shareEnabled) {
         this.shareEnabled = shareEnabled;
-        setEnv(SHARE_ENABLED, String.valueOf(shareEnabled));
-
     }
 
     public boolean isExitOnFailure() {
@@ -85,8 +71,6 @@ public class Configuration {
 
     public void setExitOnFailure(boolean exitOnFailure) {
         this.exitOnFailure = exitOnFailure;
-        setEnv(EXIT_ON_FAILURE, String.valueOf(exitOnFailure));
-
     }
 
     public String getWebappsPath() {
@@ -95,7 +79,6 @@ public class Configuration {
 
     public void setWebappsPath(String webappsPath) {
         this.webappsPath = webappsPath;
-        setEnv(TOMCAT_WEBAPPS, webappsPath);
     }
 
     public String getTomcatBaseDir() {
@@ -105,8 +88,6 @@ public class Configuration {
 
     public void setTomcatBaseDir(String tomcatBaseDir) {
         this.tomcatBaseDir = tomcatBaseDir;
-        setEnv(TOMCAT_BASE_DIR, tomcatBaseDir);
-
     }
 
     public int getTomcatPort() {
@@ -115,8 +96,6 @@ public class Configuration {
 
     public void setTomcatPort(int tomcatPort) {
         this.tomcatPort = tomcatPort;
-        setEnv(TOMCAT_PORT, String.valueOf(tomcatPort));
-
     }
 
     public int getTomcatSslPort() {
@@ -125,20 +104,17 @@ public class Configuration {
 
     public void setTomcatSslPort(int tomcatSslPort) {
         this.tomcatSslPort = tomcatSslPort;
-        setEnv(TOMCAT_PORT_SSL, String.valueOf(tomcatSslPort));
-
 
     }
 
-    public String getLogLibraryDir() {
-        return logLibraryDir;
+    public String getSharedClasspathDir() {
+        return sharedClasspathDir;
     }
 
-    public void setLogLibraryDir(String logLibraryDir) {
-        this.logLibraryDir = logLibraryDir;
-        setEnv(LOGLIBRARY_DIR, logLibraryDir);
-
+    public void setSharedClasspathDir(String sharedClasspathDir) {
+        this.sharedClasspathDir = sharedClasspathDir;
     }
+
 
     public boolean isJsonLogging() {
         return jsonLogging;
@@ -146,8 +122,6 @@ public class Configuration {
 
     public void setJsonLogging(boolean jsonLogging) {
         this.jsonLogging = jsonLogging;
-        setEnv(JSON_LOGGING, String.valueOf(jsonLogging));
-
     }
 
     public boolean isAccessLogging() {
@@ -156,7 +130,6 @@ public class Configuration {
 
     public void setAccessLogging(boolean accessLogging) {
         this.accessLogging = accessLogging;
-        setEnv(ACCESS_LOGGING, String.valueOf(accessLogging));
     }
 
 
@@ -166,8 +139,6 @@ public class Configuration {
 
     public void setTomcatMaxThreads(int tomcatMaxThreads) {
         this.tomcatMaxThreads = tomcatMaxThreads;
-        setEnv(TOMCAT_MAX_THREADS, String.valueOf(tomcatMaxThreads));
-
     }
 
     public int getTomcatMaxHttpHeaderSize() {
@@ -176,8 +147,6 @@ public class Configuration {
 
     public void setTomcatMaxHttpHeaderSize(int tomcatMaxHttpHeaderSize) {
         this.tomcatMaxHttpHeaderSize = tomcatMaxHttpHeaderSize;
-        setEnv(TOMCAT_MAX_HTTP_HEADER_SIZE, String.valueOf(tomcatMaxHttpHeaderSize));
-
     }
 
     public int getTomcatServerPort() {
@@ -186,8 +155,6 @@ public class Configuration {
 
     public void setTomcatServerPort(int tomcatServerPort) {
         this.tomcatServerPort = tomcatServerPort;
-        setEnv(TOMCAT_SERVER_PORT, String.valueOf(tomcatServerPort));
-
     }
 
     public String getTomcatRelaxedQueryChars() {
@@ -196,8 +163,6 @@ public class Configuration {
 
     public void setTomcatRelaxedQueryChars(String tomcatRelaxedQueryChars) {
         this.tomcatRelaxedQueryChars = tomcatRelaxedQueryChars;
-        setEnv(TOMCAT_RELAXED_QUERY_CHARS, tomcatRelaxedQueryChars);
-
     }
 
     public String getTomcatRelaxedPathChars() {
@@ -206,27 +171,13 @@ public class Configuration {
 
     public void setTomcatRelaxedPathChars(String tomcatRelaxedPathChars) {
         this.tomcatRelaxedPathChars = tomcatRelaxedPathChars;
-        setEnv(TOMCAT_RELAXED_PATH_CHARS, tomcatRelaxedPathChars);
     }
 
-    public String getClassPathDir() {
-        return classPathDir;
+    public String getGeneratedClasspathDir() {
+        return generatedClasspathDir;
     }
 
-    public void setClassPathDir(String classPathDir) {
-        this.classPathDir = classPathDir;
-        setEnv(CLASSPATH_DIR, classPathDir);
-    }
-
-    public void setEnv(String key, String value) {
-        env.put(key, value);
-    }
-
-    public String getEnv(String key) {
-        return env.get(key);
-    }
-
-    public Map<String, String> getEnv() {
-        return new HashMap<>(env);
+    public void setGeneratedClasspathDir(String generatedClasspathDir) {
+        this.generatedClasspathDir = generatedClasspathDir;
     }
 }

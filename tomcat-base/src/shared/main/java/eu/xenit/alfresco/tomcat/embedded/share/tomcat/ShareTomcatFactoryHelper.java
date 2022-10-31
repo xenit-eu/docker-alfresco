@@ -19,13 +19,13 @@ public class ShareTomcatFactoryHelper {
         try {
             Path inputPath = Paths.get(shareConfiguration.getShareConfigTemplateFile());
             if (Files.exists(inputPath)) {
-                Path classesDir = Paths.get(shareConfiguration.getClassPathDir(), shareConfiguration.getShareConfigPath());
+                Path classesDir = Paths.get(shareConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath());
                 try {
                     Files.createDirectories(classesDir);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                Path tempProps = Paths.get(shareConfiguration.getClassPathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
+                Path tempProps = Paths.get(shareConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
                 if (Files.exists(tempProps)) {
                     Files.delete(tempProps);
                 }
@@ -50,7 +50,6 @@ public class ShareTomcatFactoryHelper {
     }
 
     private static String replaceWithEnvironmentVariables(String input, ShareConfiguration shareConfiguration) {
-
         String patternString = "\\$\\{[A-Z_]*}";
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(input);
@@ -58,7 +57,7 @@ public class ShareTomcatFactoryHelper {
             String match = matchResult.group();
             String envProp = match.substring(2, match.length() - 1);
             if (!envProp.isEmpty()) {
-                String env = shareConfiguration.getEnv(envProp);
+                String env = shareConfiguration.getValueOf(envProp);
                 if (env != null && !env.isEmpty())
                     return env;
             }

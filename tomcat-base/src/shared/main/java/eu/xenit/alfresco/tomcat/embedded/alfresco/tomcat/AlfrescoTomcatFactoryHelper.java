@@ -24,7 +24,7 @@ public class AlfrescoTomcatFactoryHelper {
         Properties globalProperties = new Properties();
         globalProperties.putAll(alfrescoConfiguration.getGlobalProperties());
         try {
-            Path tempProps = Paths.get(alfrescoConfiguration.getClassPathDir(), "alfresco-global.properties");
+            Path tempProps = Paths.get(alfrescoConfiguration.getGeneratedClasspathDir(), "alfresco-global.properties");
             if (Files.exists(tempProps)) {
                 Files.delete(tempProps);
             }

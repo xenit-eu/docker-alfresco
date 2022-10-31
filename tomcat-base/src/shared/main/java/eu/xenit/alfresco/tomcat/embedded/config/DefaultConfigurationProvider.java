@@ -8,7 +8,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setTomcatPort(8080);
         baseConfiguration.setJsonLogging(false);
         baseConfiguration.setAccessLogging(false);
-        baseConfiguration.setSharedClassesPath("/loglibrarydir");
+        baseConfiguration.setSharedLibsDir("/loglibrarydir");
         baseConfiguration.setTomcatMaxThreads(200);
         baseConfiguration.setTomcatMaxHttpHeaderSize(32768);
         baseConfiguration.setTomcatSslPort(8443);
@@ -16,7 +16,8 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setExitOnFailure(true);
         baseConfiguration.setAlfrescoEnabled(false);
         baseConfiguration.setShareEnabled(false);
-        baseConfiguration.setClassPathDir("/dev/shm/classpath");
+        baseConfiguration.setGeneratedClasspathDir("/dev/shm/classpath");
+        baseConfiguration.setSharedClasspathDir("/usr/local/tomcat/shared/classes");
         return baseConfiguration;
     }
 }

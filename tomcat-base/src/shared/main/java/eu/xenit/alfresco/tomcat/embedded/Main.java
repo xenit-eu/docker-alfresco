@@ -15,7 +15,6 @@ import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory;
 import eu.xenit.json.jul.JsonFormatter;
 import org.apache.catalina.startup.Tomcat;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.ConsoleHandler;
@@ -35,11 +34,7 @@ public class Main {
             Configuration configuration = new EnvironmentVariableConfigurationProvider()
                     .getConfiguration(new DefaultConfigurationProvider()
                             .getConfiguration());
-            try {
-                Files.createDirectories(Paths.get(configuration.getClassPathDir()));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            Files.createDirectories(Paths.get(configuration.getGeneratedClasspathDir()));
             TomcatFactory tomcatFactory = new TomcatFactory(configuration);
             Tomcat tomcat = tomcatFactory.getTomcat();
             if (configuration.isAlfrescoEnabled()) {
