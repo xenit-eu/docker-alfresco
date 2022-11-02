@@ -1,0 +1,53 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom {
+                url = 'https://github.com/xenit-eu/docker-alfresco'
+                groupId = 'eu.xenit'
+                name = "docker-alfresco"
+                description = "A project to run a tomcat embedded in Java optimized for Alfresco"
+
+                scm {
+                    connection = 'scm:git:git@github.com:xenit-eu/docker-alfresco.git'
+                    developerConnection = 'scm:git:git@github.com:xenit-eu/docker-alfresco.git'
+                    url = 'https://github.com/xenit-eu/docker-alfresco.git'
+                }
+                developers {
+                    developer {
+                        id = "xenit"
+                        name = "Xenit Solutions NV"
+                    }
+                }
+
+                licenses {
+                    license {
+                        name = 'GNU Lesser General Public License v3.0'
+                        url = 'https://www.gnu.org/licenses/lgpl-3.0.txt'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = version.toString().endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            if (project.hasProperty("sonatype_username")) {
+                credentials {
+                    username property("sonatype_username")
+                    password property("sonatype_password")
+                }
+            }
+        }
+    }
+}
+
+signing {
+    required { !version.toString().endsWith("SNAPSHOT") }
+    useInMemoryPgpKeys(findProperty("signingKeyId"), findProperty("signingKey"), findProperty("signingPassword"))
+    sign publishing.publications
+}

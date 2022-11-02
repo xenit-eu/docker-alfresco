@@ -18,6 +18,11 @@ subprojects {
         sharedLibs
     }
 
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+
     dependencies {
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
@@ -89,22 +94,10 @@ subprojects {
     publishing {
         publications {
             maven(MavenPublication) {
-                groupId = 'eu.xenit'
                 from components.java
             }
         }
-        repositories {
-            maven {
-                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-                url = version.toString().endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-                if (project.hasProperty("sonatype_username")) {
-                    credentials {
-                        username property("sonatype_username")
-                        password property("sonatype_password")
-                    }
-                }
-            }
-        }
     }
+
+    apply from: "${rootProject.projectDir}/tomcat-base/publish.gradle"
 }
