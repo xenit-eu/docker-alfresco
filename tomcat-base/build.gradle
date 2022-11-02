@@ -112,4 +112,6 @@ subprojects {
             }
         }
     }
+
+    apply from: "${rootProject.projectDir}/tomcat-base/publish.gradle"
 }
