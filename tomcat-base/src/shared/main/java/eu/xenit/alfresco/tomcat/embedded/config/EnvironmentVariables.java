@@ -1,6 +1,9 @@
 package eu.xenit.alfresco.tomcat.embedded.config;
 
 public class EnvironmentVariables {
+    private EnvironmentVariables() {
+    }
+
     public static final String TOMCAT_WEBAPPS = "TOMCAT_WEBAPPS";
     public static final String JSON_LOGGING = "JSON_LOGGING";
     public static final String ACCESS_LOGGING = "ACCESS_LOGGING";

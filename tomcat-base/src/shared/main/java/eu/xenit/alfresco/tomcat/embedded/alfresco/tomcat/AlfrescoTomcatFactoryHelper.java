@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import static eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory.getConnector;
 
 public class AlfrescoTomcatFactoryHelper {
+    private AlfrescoTomcatFactoryHelper(){}
     private static final Logger LOG = Logger.getLogger(AlfrescoTomcatFactoryHelper.class.getName());
 
 

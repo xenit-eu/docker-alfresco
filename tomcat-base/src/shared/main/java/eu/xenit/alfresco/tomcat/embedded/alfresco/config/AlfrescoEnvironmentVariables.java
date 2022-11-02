@@ -1,6 +1,8 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
 public class AlfrescoEnvironmentVariables {
+    private AlfrescoEnvironmentVariables(){}
+
     public static final String ALFRESCO_VERSION = "ALFRESCO_VERSION";
     public static final String ALFRESCO_FLAVOUR = "ALFRESCO_FLAVOUR";
     public static final String DB_HOST = "DB_HOST";

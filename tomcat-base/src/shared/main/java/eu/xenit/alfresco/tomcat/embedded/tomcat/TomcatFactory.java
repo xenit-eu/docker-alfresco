@@ -53,7 +53,7 @@ public class TomcatFactory {
 
     public Tomcat getTomcat() throws IOException {
         Tomcat tomcat = new Tomcat();
-//        tomcat.setBaseDir(getConfiguration().getTomcatBaseDir());
+        tomcat.setBaseDir(getConfiguration().getTomcatBaseDir());
         tomcat.setPort(getConfiguration().getTomcatPort());
         tomcat.getServer().setPort(getConfiguration().getTomcatServerPort());
         createDefaultConnector(tomcat);
@@ -97,6 +97,9 @@ public class TomcatFactory {
                     resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getSharedClasspathDir(), "/"));
                     resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getGeneratedClasspathDir(), "/"));
                     resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedLibsDir(), "/"));
+                    if (configuration.isJsonLogging()) {
+                        redirectLog4j(path);
+                    }
                     ctx.setResources(resources);
                 }
                 if (getConfiguration().isExitOnFailure() && event.getType().equals("after_stop")) {

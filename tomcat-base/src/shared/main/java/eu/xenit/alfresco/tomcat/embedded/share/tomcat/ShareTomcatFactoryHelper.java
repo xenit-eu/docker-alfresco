@@ -15,16 +15,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ShareTomcatFactoryHelper {
-    public static void createShareConfigCustomFile(ShareConfiguration shareConfiguration) {
+    private ShareTomcatFactoryHelper() {
+    }
+
+    public static boolean createShareConfigCustomFile(ShareConfiguration shareConfiguration) {
         try {
             Path inputPath = Paths.get(shareConfiguration.getShareConfigTemplateFile());
             if (Files.exists(inputPath)) {
                 Path classesDir = Paths.get(shareConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath());
-                try {
-                    Files.createDirectories(classesDir);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                Files.createDirectories(classesDir);
                 Path tempProps = Paths.get(shareConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
                 if (Files.exists(tempProps)) {
                     Files.delete(tempProps);
@@ -43,7 +42,9 @@ public class ShareTomcatFactoryHelper {
                     }
 
                 }
+                return true;
             }
+            return false;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +62,7 @@ public class ShareTomcatFactoryHelper {
                 if (env != null && !env.isEmpty())
                     return env;
             }
-            return match;
+            return "\\$\\{" + match.substring(2);
         });
     }
 }

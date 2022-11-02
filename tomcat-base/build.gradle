@@ -19,6 +19,10 @@ subprojects {
     }
 
     dependencies {
+
+        compileOnly "org.projectlombok:lombok:1.18.24"
+        annotationProcessor "org.projectlombok:lombok:1.18.24"
+
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
         implementation "org.apache.tomcat:tomcat-jasper:${tomcatVersion}"
@@ -27,9 +31,8 @@ subprojects {
         implementation "eu.xenit.logging:json-logging:0.0.3"
         implementation "com.fasterxml.jackson.core:jackson-databind:2.13.1"
 
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
-
+        testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.0"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.9.0"
         sharedLibs("eu.xenit.logging:json-logging:0.0.3") {
             transitive = false
         }
@@ -53,6 +56,11 @@ subprojects {
         test {
             java {
                 srcDir file("$project.parent.projectDir/src/shared/test/java")
+
+            }
+            resources {
+                srcDir file("$project.parent.projectDir/src/shared/test/resources")
+
             }
         }
     }
@@ -67,6 +75,7 @@ subprojects {
     createDockerFile {
         from 'docker.io/eclipse-temurin:11'
         runCommand 'mkdir -p /usr/local/tomcat/shared/classes'
+        runCommand 'mkdir -p /usr/local/tomcat/temp'
         smartCopy configurations.sharedLibs, '/loglibrarydir/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'

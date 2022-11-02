@@ -12,8 +12,7 @@ public class DefaultShareConfigurationProvider implements ShareConfigurationProv
         baseShareConfiguration.setAlfrescoInternalPort(8080);
         baseShareConfiguration.setAlfrescoInternalProtocol("http");
         baseShareConfiguration.setAlfrescoInternalContext("alfresco");
-        baseShareConfiguration.setShareConfigPath("/docker-config/");
-        baseShareConfiguration.setShareConfigTemplateFile("/docker-config/share");
+        baseShareConfiguration.setShareConfigTemplateFile("/docker-config/share-config-custom.xml");
         baseShareConfiguration.setShareConfigPath("shared/classes/alfresco/web-extension");
         return baseShareConfiguration;
     }
