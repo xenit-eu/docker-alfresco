@@ -3,9 +3,10 @@ apply plugin: 'signing'
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
             pom {
                 url = 'https://github.com/xenit-eu/docker-alfresco'
+                groupId = 'eu.xenit'
                 name = "docker-alfresco"
                 description = "A project to run a tomcat embedded in Java optimized for Alfresco"
 
@@ -28,9 +29,6 @@ publishing {
                     }
                 }
             }
-
-            groupId = 'eu.xenit'
-            from components.java
         }
     }
     repositories {
