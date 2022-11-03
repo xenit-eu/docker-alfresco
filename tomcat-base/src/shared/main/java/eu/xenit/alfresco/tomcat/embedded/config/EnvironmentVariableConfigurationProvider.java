@@ -7,7 +7,7 @@ import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.GENE
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.EXIT_ON_FAILURE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.JSON_LOGGING;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARED_CLASSPATH_DIR;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARED_LIBS_DIR;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARED_LIB_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARE_ENABLED;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_BASE_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_HTTP_HEADER_SIZE;
@@ -28,7 +28,7 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(TOMCAT_WEBAPPS, baseConfiguration::setWebappsPath);
         setPropertyFromEnv(JSON_LOGGING, value -> baseConfiguration.setJsonLogging(Boolean.parseBoolean(value)));
         setPropertyFromEnv(ACCESS_LOGGING, value -> baseConfiguration.setAccessLogging(Boolean.parseBoolean(value)));
-        setPropertyFromEnv(SHARED_LIBS_DIR, baseConfiguration::setSharedLibsDir);
+        setPropertyFromEnv(SHARED_LIB_DIR, baseConfiguration::setSharedLibDir);
         setPropertyFromEnv(SHARED_CLASSPATH_DIR, baseConfiguration::setSharedClasspathDir);
         setPropertyFromEnv(TOMCAT_BASE_DIR, baseConfiguration::setTomcatBaseDir);
         setPropertyFromEnv(GENERATED_CLASSPATH_DIR, baseConfiguration::setGeneratedClasspathDir);

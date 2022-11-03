@@ -14,7 +14,7 @@ class DefaultConfigurationProviderTest {
         expected.setTomcatPort(8080);
         expected.setJsonLogging(false);
         expected.setAccessLogging(false);
-        expected.setSharedLibsDir("/loglibrarydir");
+        expected.setSharedLibDir("/usr/local/tomcat/shared/lib");
         expected.setTomcatMaxThreads(200);
         expected.setTomcatMaxHttpHeaderSize(32768);
         expected.setTomcatSslPort(8443);

@@ -8,7 +8,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setTomcatPort(8080);
         baseConfiguration.setJsonLogging(false);
         baseConfiguration.setAccessLogging(false);
-        baseConfiguration.setSharedLibsDir("/loglibrarydir");
+        baseConfiguration.setSharedLibDir("/usr/local/tomcat/shared/lib");
         baseConfiguration.setTomcatMaxThreads(200);
         baseConfiguration.setTomcatMaxHttpHeaderSize(32768);
         baseConfiguration.setTomcatSslPort(8443);

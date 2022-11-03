@@ -74,9 +74,7 @@ subprojects {
 
     createDockerFile {
         from 'docker.io/eclipse-temurin:11'
-        runCommand 'mkdir -p /usr/local/tomcat/shared/classes'
-        runCommand 'mkdir -p /usr/local/tomcat/temp'
-        smartCopy configurations.sharedLibs, '/loglibrarydir/'
+        smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
         def jarName = archivesBaseName + '.jar'
@@ -88,11 +86,12 @@ subprojects {
         environmentVariable('BUILD_DATE', buildDate)
 
         runCommand 'useradd -u 990 tomcat'
-        runCommand 'mkdir /tmp/tomcat && chown tomcat:tomcat /tmp/tomcat'
-        workingDir '/tmp/tomcat'
+        runCommand 'mkdir -p /usr/local/tomcat/shared/classes'
+        runCommand 'mkdir -p /usr/local/tomcat/temp && chown tomcat:tomcat /usr/local/tomcat/temp'
+        workingDir '/usr/local/tomcat/temp'
         entryPoint('/docker-entrypoint.sh')
         def classPath = "/app/tomcat-embedded/$jarName:/app/tomcat-embedded/lib/*"
-//        volume "/usr/local/tomcat/temp"
+        volume "/usr/local/tomcat/temp"
         defaultCommand('java', '$JAVA_OPTS', '-cp', classPath, 'eu.xenit.alfresco.tomcat.embedded.Main')
         instruction("HEALTHCHECK CMD java -cp $classPath eu.xenit.alfresco.tomcat.embedded.HealthCheck")
     }

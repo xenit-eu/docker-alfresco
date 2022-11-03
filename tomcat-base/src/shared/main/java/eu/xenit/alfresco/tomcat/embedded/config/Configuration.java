@@ -16,7 +16,7 @@ public class Configuration {
     protected int tomcatPort;
     protected int tomcatSslPort;
     protected String sharedClasspathDir;
-    protected String sharedLibsDir;
+    protected String sharedLibDir;
     protected boolean jsonLogging;
     protected boolean accessLogging;
     protected int tomcatMaxThreads;
@@ -46,6 +46,6 @@ public class Configuration {
         setAlfrescoEnabled(configuration.isAlfrescoEnabled());
         setShareEnabled(configuration.isShareEnabled());
         setGeneratedClasspathDir(configuration.getGeneratedClasspathDir());
-        setSharedLibsDir(configuration.getSharedLibsDir());
+        setSharedLibDir(configuration.getSharedLibDir());
     }
 }

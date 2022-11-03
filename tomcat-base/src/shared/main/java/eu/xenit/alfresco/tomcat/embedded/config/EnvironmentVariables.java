@@ -20,6 +20,6 @@ public class EnvironmentVariables {
     public static final String ALFRESCO_ENABLED = "ALFRESCO_ENABLED";
     public static final String SHARE_ENABLED = "SHARE_ENABLED";
     public static final String GENERATED_CLASSPATH_DIR = "GENERATED_CLASSPATH_DIR";
-    public static final String SHARED_LIBS_DIR = "SHARED_LIBS_DIR";
+    public static final String SHARED_LIB_DIR = "SHARED_LIB_DIR";
 
 }
