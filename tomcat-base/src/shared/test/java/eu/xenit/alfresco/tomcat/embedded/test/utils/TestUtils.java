@@ -1,4 +1,3 @@
-
 package eu.xenit.alfresco.tomcat.embedded.test.utils;
 
 import java.lang.reflect.Field;

@@ -13,6 +13,7 @@ import java.net.http.HttpConnectTimeoutException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
+import java.util.Objects;
 
 public class HealthCheck {
     public static final String ALFRESCO_DEFAULT_LIVE_PROBE = "http://localhost:8080/alfresco/api/-default-/public/alfresco/versions/1/probes/-live-";
@@ -29,28 +30,28 @@ public class HealthCheck {
                 .getConfiguration(new DefaultConfigurationProvider()
                         .getConfiguration());
         if (configuration.isAlfrescoEnabled()) {
-            HealthCheck.setupHealthCheck(ALFRESCO_DEFAULT_LIVE_PROBE, args);
+            HealthCheck.setupHealthCheck(ALFRESCO_DEFAULT_LIVE_PROBE, null, null, args);
         }
         if (configuration.isShareEnabled()) {
-            HealthCheck.setupHealthCheck(SHARE_DEFAULT_LIVE_PROBE, args);
+            HealthCheck.setupHealthCheck(SHARE_DEFAULT_LIVE_PROBE, null, 302, args);
         }
     }
 
-    public static void setupHealthCheck(String defaultLiveProbe, String[] args) throws IOException, InterruptedException {
+    public static void setupHealthCheck(String defaultLiveProbe, Integer timeout, Integer statusCode, String[] args) throws IOException, InterruptedException {
         String healthEndpoint = defaultLiveProbe;
         if (args.length > 0) {
             healthEndpoint = args[0];
         }
-        int timeout = DEFAULT_TIMEOUT;
+        int timeoutArg = Objects.isNull(timeout) ? DEFAULT_TIMEOUT : timeout;
         if (args.length > 1) {
-            timeout = Integer.parseInt(args[1]);
+            timeoutArg = Integer.parseInt(args[1]);
         }
-        int statusCode = DEFAULT_STATUS_CODE;
+        int statusCodeArg = Objects.isNull(statusCode) ? DEFAULT_STATUS_CODE : statusCode;
         if (args.length > 2) {
-            statusCode = Integer.parseInt(args[2]);
+            statusCodeArg = Integer.parseInt(args[2]);
         }
 
-        System.exit(doHealthCheck(healthEndpoint, timeout, statusCode));
+        System.exit(doHealthCheck(healthEndpoint, timeoutArg, statusCodeArg));
     }
 
     public static int doHealthCheck(String healthEndpoint, int timeout, int statusCode)

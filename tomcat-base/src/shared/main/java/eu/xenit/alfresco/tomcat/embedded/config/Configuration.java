@@ -27,6 +27,7 @@ public class Configuration {
     protected boolean alfrescoEnabled;
     protected boolean shareEnabled;
     protected String generatedClasspathDir;
+    protected long tomcatCacheMaxSize;
 
 
     protected Configuration(Configuration configuration) {
@@ -47,5 +48,6 @@ public class Configuration {
         setShareEnabled(configuration.isShareEnabled());
         setGeneratedClasspathDir(configuration.getGeneratedClasspathDir());
         setSharedLibDir(configuration.getSharedLibDir());
+        setTomcatCacheMaxSize(configuration.getTomcatCacheMaxSize());
     }
 }

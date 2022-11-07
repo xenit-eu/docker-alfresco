@@ -19,7 +19,7 @@ class DefaultShareConfigurationProviderTest {
         expected.setAlfrescoInternalProtocol("http");
         expected.setAlfrescoInternalContext("alfresco");
         expected.setShareConfigTemplateFile("/docker-config/share-config-custom.xml");
-        expected.setShareConfigPath("shared/classes/alfresco/web-extension");
+        expected.setShareConfigPath("alfresco/web-extension");
         assertEquals(configuration, expected);
     }
 
@@ -36,7 +36,7 @@ class DefaultShareConfigurationProviderTest {
         expected.setAlfrescoInternalProtocol("http");
         expected.setAlfrescoInternalContext("alfresco");
         expected.setShareConfigTemplateFile("/docker-config/share-config-custom.xml");
-        expected.setShareConfigPath("shared/classes/alfresco/web-extension");
+        expected.setShareConfigPath("alfresco/web-extension");
         expected.setWebappsPath("/usr/local/tomcat/webapps");
         expected.setTomcatBaseDir("/usr/local/tomcat/temp");
         expected.setTomcatPort(8080);
@@ -52,6 +52,7 @@ class DefaultShareConfigurationProviderTest {
         expected.setShareEnabled(false);
         expected.setGeneratedClasspathDir("/dev/shm/classpath");
         expected.setSharedClasspathDir("/usr/local/tomcat/shared/classes");
+        expected.setTomcatCacheMaxSize(100000);
         assertEquals(configuration, expected);
     }
 }

@@ -39,6 +39,7 @@ class ShareTomcatFactoryHelperTest {
         String expected = Files.readString(expectedPath);
         assertEquals(actual, expected);
     }
+
     @Test
     void testCreateShareConfigCustomFileWithFileExist() throws URISyntaxException, IOException {
         ShareConfiguration shareConfiguration = new DefaultShareConfigurationProvider().getConfiguration(
@@ -59,8 +60,9 @@ class ShareTomcatFactoryHelperTest {
         String expected = Files.readString(expectedPath);
         assertEquals(actual, expected);
     }
+
     @Test
-    void testCreateShareConfigCustomFileNoInputFile()  {
+    void testCreateShareConfigCustomFileNoInputFile() {
         ShareConfiguration shareConfiguration = new DefaultShareConfigurationProvider().getConfiguration(
                 new ShareConfiguration(
                         new DefaultConfigurationProvider().getConfiguration()));

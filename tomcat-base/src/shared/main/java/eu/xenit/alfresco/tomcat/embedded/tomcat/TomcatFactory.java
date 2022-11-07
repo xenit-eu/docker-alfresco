@@ -90,10 +90,10 @@ public class TomcatFactory {
             String absolutePath = path.toAbsolutePath().toString();
             StandardContext ctx = (StandardContext) tomcat.addWebapp(contextPath, absolutePath);
             ctx.setParentClassLoader(Thread.currentThread().getContextClassLoader());
-
             LifecycleListener lifecycleListener = event -> {
                 if (event.getType().equals("before_start")) {
                     WebResourceRoot resources = new StandardRoot(ctx);
+                    resources.setCacheMaxSize(getConfiguration().getTomcatCacheMaxSize());
                     resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getSharedClasspathDir(), "/"));
                     resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getGeneratedClasspathDir(), "/"));
                     resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedLibDir(), "/"));

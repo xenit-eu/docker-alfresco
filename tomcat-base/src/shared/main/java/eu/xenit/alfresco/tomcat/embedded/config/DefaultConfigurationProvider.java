@@ -18,6 +18,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setShareEnabled(false);
         baseConfiguration.setGeneratedClasspathDir("/dev/shm/classpath");
         baseConfiguration.setSharedClasspathDir("/usr/local/tomcat/shared/classes");
+        baseConfiguration.setTomcatCacheMaxSize(100000);
         return baseConfiguration;
     }
 }

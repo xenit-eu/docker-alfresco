@@ -3,13 +3,14 @@ package eu.xenit.alfresco.tomcat.embedded.config;
 
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.ACCESS_LOGGING;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.ALFRESCO_ENABLED;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.GENERATED_CLASSPATH_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.EXIT_ON_FAILURE;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.GENERATED_CLASSPATH_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.JSON_LOGGING;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARED_CLASSPATH_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARED_LIB_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARE_ENABLED;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_BASE_DIR;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_CACHE_MAX_SIZE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_HTTP_HEADER_SIZE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_THREADS;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT;
@@ -42,6 +43,7 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(EXIT_ON_FAILURE, value -> baseConfiguration.setExitOnFailure(Boolean.parseBoolean(value)));
         setPropertyFromEnv(ALFRESCO_ENABLED, value -> baseConfiguration.setAlfrescoEnabled(Boolean.parseBoolean(value)));
         setPropertyFromEnv(SHARE_ENABLED, value -> baseConfiguration.setShareEnabled(Boolean.parseBoolean(value)));
+        setPropertyFromEnv(TOMCAT_CACHE_MAX_SIZE, value -> baseConfiguration.setTomcatCacheMaxSize(Long.parseLong(value)));
         return baseConfiguration;
     }
 }

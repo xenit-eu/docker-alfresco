@@ -106,6 +106,7 @@ class DefaultAlfrescoConfigurationProviderTest {
         expected.setShareEnabled(false);
         expected.setGeneratedClasspathDir("/dev/shm/classpath");
         expected.setSharedClasspathDir("/usr/local/tomcat/shared/classes");
+        expected.setTomcatCacheMaxSize(100000);
         assertEquals(configuration, expected);
     }
 }

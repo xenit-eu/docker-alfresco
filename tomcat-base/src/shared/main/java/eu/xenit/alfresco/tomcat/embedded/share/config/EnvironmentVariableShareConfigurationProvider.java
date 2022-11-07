@@ -1,8 +1,6 @@
 package eu.xenit.alfresco.tomcat.embedded.share.config;
 
 
-import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
-
 import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_CONTEXT;
 import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_HOST;
 import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_INTERNAL_CONTEXT;

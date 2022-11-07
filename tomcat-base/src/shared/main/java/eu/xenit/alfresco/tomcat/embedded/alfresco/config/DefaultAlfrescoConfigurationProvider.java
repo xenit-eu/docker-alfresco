@@ -1,7 +1,6 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
 
-
 public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurationProvider {
 
 
