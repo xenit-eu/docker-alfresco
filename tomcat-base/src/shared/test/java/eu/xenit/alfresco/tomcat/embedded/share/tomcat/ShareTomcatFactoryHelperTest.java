@@ -1,10 +1,12 @@
 package eu.xenit.alfresco.tomcat.embedded.share.tomcat;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.share.config.DefaultShareConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.share.config.ShareConfiguration;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -12,10 +14,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 
 class ShareTomcatFactoryHelperTest {

@@ -1,9 +1,8 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
-import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 class DefaultAlfrescoConfigurationProviderTest {
     @Test

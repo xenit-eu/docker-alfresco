@@ -1,10 +1,10 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.DefaultAlfrescoConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -12,8 +12,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 
 class AlfrescoTomcatFactoryHelperTest {

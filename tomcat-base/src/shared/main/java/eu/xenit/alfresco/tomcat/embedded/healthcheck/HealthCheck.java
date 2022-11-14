@@ -1,4 +1,4 @@
-package eu.xenit.alfresco.tomcat.embedded;
+package eu.xenit.alfresco.tomcat.embedded.healthcheck;
 
 import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
@@ -29,43 +29,54 @@ public class HealthCheck {
         TomcatConfiguration configuration = new EnvironmentVariableConfigurationProvider()
                 .getConfiguration(new DefaultConfigurationProvider()
                         .getConfiguration());
+        var exitCode = 0;
         if (configuration.isAlfrescoEnabled()) {
-            HealthCheck.setupHealthCheck(ALFRESCO_DEFAULT_LIVE_PROBE, null, null, args);
+            exitCode = healthCheck(ALFRESCO_DEFAULT_LIVE_PROBE, 0, args);
         }
         if (configuration.isShareEnabled()) {
-            HealthCheck.setupHealthCheck(SHARE_DEFAULT_LIVE_PROBE, null, 302, args);
+            exitCode = healthCheck(SHARE_DEFAULT_LIVE_PROBE, 302, args);
         }
+        System.exit(exitCode);
     }
 
-    public static void setupHealthCheck(String defaultLiveProbe, Integer timeout, Integer statusCode, String[] args) throws IOException, InterruptedException {
+    private static int healthCheck(String endpoint, int statusCode, String[] args) throws IOException, InterruptedException {
+        var spec = HealthCheck.setupHealthCheck(endpoint, statusCode, args);
+        var exitCode = doHealthCheck(spec);
+        if(exitCode != 0) {
+            System.exit(exitCode);
+        }
+        return exitCode;
+    }
+
+    public static HealthCheckSpec setupHealthCheck(String defaultLiveProbe, int statusCode, String... args) {
         String healthEndpoint = defaultLiveProbe;
         if (args.length > 0) {
             healthEndpoint = args[0];
         }
-        int timeoutArg = Objects.isNull(timeout) ? DEFAULT_TIMEOUT : timeout;
+        int timeoutArg = DEFAULT_TIMEOUT;
         if (args.length > 1) {
             timeoutArg = Integer.parseInt(args[1]);
         }
-        int statusCodeArg = Objects.isNull(statusCode) ? DEFAULT_STATUS_CODE : statusCode;
+        int statusCodeArg = statusCode == 0 ? DEFAULT_STATUS_CODE : statusCode;
         if (args.length > 2) {
             statusCodeArg = Integer.parseInt(args[2]);
         }
 
-        System.exit(doHealthCheck(healthEndpoint, timeoutArg, statusCodeArg));
+        return new HealthCheckSpec(healthEndpoint, timeoutArg, statusCodeArg);
     }
 
-    public static int doHealthCheck(String healthEndpoint, int timeout, int statusCode)
+    public static int doHealthCheck(HealthCheckSpec spec)
             throws IOException, InterruptedException {
         var client = HttpClient.newBuilder()
                 .version(Version.HTTP_1_1)
-                .connectTimeout(Duration.ofMillis(timeout))
+                .connectTimeout(Duration.ofMillis(spec.getTimeOut()))
                 .build();
         var httpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(healthEndpoint))
+                .uri(URI.create(spec.getEndPoint()))
                 .build();
         try {
             var response = client.send(httpRequest, BodyHandlers.ofString());
-            if (response.statusCode() == statusCode) {
+            if (response.statusCode() == spec.getStatusCode()) {
                 return 0;
             }
             return 1;
@@ -74,7 +85,6 @@ public class HealthCheck {
         } catch (HttpConnectTimeoutException e) {
             return 3;
         }
-
     }
 
 }

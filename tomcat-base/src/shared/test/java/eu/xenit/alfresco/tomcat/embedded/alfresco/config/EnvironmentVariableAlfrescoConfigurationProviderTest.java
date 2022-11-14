@@ -1,16 +1,15 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
 
-import org.junit.jupiter.api.Test;
-
-import java.util.Map;
-import java.util.Set;
-
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_URL;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SOLR_SSL;
 import static eu.xenit.alfresco.tomcat.embedded.test.utils.TestUtils.setEnv;
 import static eu.xenit.alfresco.tomcat.embedded.test.utils.TestUtils.unsetEnv;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Map;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 class EnvironmentVariableAlfrescoConfigurationProviderTest {
     @Test

@@ -93,7 +93,7 @@ subprojects {
         def classPath = "/app/tomcat-embedded/$jarName:/app/tomcat-embedded/lib/*"
         volume "/usr/local/tomcat/temp"
         defaultCommand('java', '$JAVA_OPTS', '-cp', classPath, 'eu.xenit.alfresco.tomcat.embedded.Main')
-        instruction("HEALTHCHECK CMD java -cp $classPath eu.xenit.alfresco.tomcat.embedded.HealthCheck")
+        instruction("HEALTHCHECK CMD java -cp $classPath eu.xenit.alfresco.tomcat.embedded.healthcheck.HealthCheck")
     }
 
     publishing {
