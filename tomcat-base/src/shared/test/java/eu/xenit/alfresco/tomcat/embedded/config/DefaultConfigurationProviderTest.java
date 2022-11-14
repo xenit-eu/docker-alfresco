@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class DefaultConfigurationProviderTest {
     @Test
     void testGetConfiguration() {
-        Configuration configuration = new DefaultConfigurationProvider().getConfiguration();
-        Configuration expected = new Configuration();
+        TomcatConfiguration configuration = new DefaultConfigurationProvider().getConfiguration();
+        TomcatConfiguration expected = new TomcatConfiguration();
         expected.setWebappsPath("/usr/local/tomcat/webapps");
         expected.setTomcatBaseDir("/usr/local/tomcat/temp");
         expected.setTomcatPort(8080);

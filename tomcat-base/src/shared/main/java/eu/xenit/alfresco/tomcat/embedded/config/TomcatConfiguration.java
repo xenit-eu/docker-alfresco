@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
-public class Configuration {
+public class TomcatConfiguration {
     protected boolean exitOnFailure;
     protected String webappsPath;
     protected String tomcatBaseDir;
@@ -30,7 +30,7 @@ public class Configuration {
     protected long tomcatCacheMaxSize;
 
 
-    protected Configuration(Configuration configuration) {
+    protected TomcatConfiguration(TomcatConfiguration configuration) {
         setExitOnFailure(configuration.isExitOnFailure());
         setWebappsPath(configuration.getWebappsPath());
         setTomcatBaseDir(configuration.getTomcatBaseDir());

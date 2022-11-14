@@ -1,6 +1,7 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoConfiguration;
+import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.net.SSLHostConfig;
@@ -14,9 +15,8 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import static eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory.getConnector;
-
 public class AlfrescoTomcatFactoryHelper {
+
     private static final Logger LOG = Logger.getLogger(AlfrescoTomcatFactoryHelper.class.getName());
 
     private AlfrescoTomcatFactoryHelper() {
@@ -26,7 +26,8 @@ public class AlfrescoTomcatFactoryHelper {
         Properties globalProperties = new Properties();
         globalProperties.putAll(alfrescoConfiguration.getGlobalProperties());
         try {
-            Path tempProps = Paths.get(alfrescoConfiguration.getGeneratedClasspathDir(), "alfresco-global.properties");
+            Path tempProps = Paths.get(alfrescoConfiguration.getTomcatConfiguration().getGeneratedClasspathDir(),
+                    "alfresco-global.properties");
             if (Files.exists(tempProps)) {
                 Files.delete(tempProps);
             }
@@ -52,7 +53,11 @@ public class AlfrescoTomcatFactoryHelper {
             System.exit(1);
         }
 
-        Connector connector = getConnector(tomcat, "org.apache.coyote.http11.Http11NioProtocol", alfrescoConfiguration.getTomcatSslPort(), true, "https", alfrescoConfiguration);
+        var tomcatConfiguration = alfrescoConfiguration.getTomcatConfiguration();
+        Connector connector = TomcatFactory.getConnector(tomcat, "org.apache.coyote.http11.Http11NioProtocol",
+                tomcatConfiguration.getTomcatSslPort(), true, "https",
+                tomcatConfiguration.getTomcatMaxThreads(),
+                tomcatConfiguration.getTomcatMaxHttpHeaderSize());
 
         SSLHostConfig sslHostConfig = new SSLHostConfig();
         sslHostConfig.setCertificateKeystoreFile(alfrescoConfiguration.getTomcatSSLKeystore());

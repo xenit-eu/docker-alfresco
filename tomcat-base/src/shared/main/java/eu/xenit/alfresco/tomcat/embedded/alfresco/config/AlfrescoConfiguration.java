@@ -1,6 +1,6 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
-import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +11,9 @@ import java.util.Map;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @NoArgsConstructor
-public class AlfrescoConfiguration extends Configuration {
+public class AlfrescoConfiguration {
 
     private Map<String, String> globalProperties = new HashMap<>();
     private String alfrescoVersion;
@@ -24,8 +24,10 @@ public class AlfrescoConfiguration extends Configuration {
     private String tomcatSSLTruststore;
     private String tomcatSSLTruststorePassword;
 
-    public AlfrescoConfiguration(Configuration configuration) {
-        super(configuration);
+    private TomcatConfiguration tomcatConfiguration;
+
+    public AlfrescoConfiguration(TomcatConfiguration configuration) {
+        this.tomcatConfiguration = configuration;
     }
 
     public void setGlobalProperty(String key, String value) {

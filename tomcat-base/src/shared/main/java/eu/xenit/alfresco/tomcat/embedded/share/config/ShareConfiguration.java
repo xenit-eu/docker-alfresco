@@ -1,6 +1,6 @@
 package eu.xenit.alfresco.tomcat.embedded.share.config;
 
-import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVar
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class ShareConfiguration extends Configuration {
+public class ShareConfiguration extends TomcatConfiguration {
 
     private String alfrescoHost;
     private String alfrescoInternalHost;
@@ -32,7 +32,7 @@ public class ShareConfiguration extends Configuration {
     private String shareConfigPath;
     private String shareConfigTemplateFile;
 
-    public ShareConfiguration(Configuration configuration) {
+    public ShareConfiguration(TomcatConfiguration configuration) {
         super(configuration);
     }
 

@@ -1,6 +1,6 @@
 package eu.xenit.alfresco.tomcat.embedded;
 
-import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariableConfigurationProvider;
 
@@ -26,7 +26,7 @@ public class HealthCheck {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Configuration configuration = new EnvironmentVariableConfigurationProvider()
+        TomcatConfiguration configuration = new EnvironmentVariableConfigurationProvider()
                 .getConfiguration(new DefaultConfigurationProvider()
                         .getConfiguration());
         if (configuration.isAlfrescoEnabled()) {

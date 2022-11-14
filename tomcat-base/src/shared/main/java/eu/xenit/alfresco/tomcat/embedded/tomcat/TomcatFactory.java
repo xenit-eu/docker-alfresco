@@ -1,6 +1,6 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
-import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.json.valve.JsonAccessLogValve;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
@@ -25,21 +25,21 @@ import java.util.stream.Stream;
 public class TomcatFactory {
 
     private static final Logger LOG = Logger.getLogger(TomcatFactory.class.getName());
-    private final Configuration configuration;
+    private final TomcatConfiguration configuration;
 
-    public TomcatFactory(Configuration configuration) {
+    public TomcatFactory(TomcatConfiguration configuration) {
         this.configuration =
                 configuration;
     }
 
-    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, Configuration configuration) {
+    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize) {
         Connector connector = new Connector(protocol);
         connector.setPort(port);
         connector.setProperty("connectionTimeout", "240000");
         connector.setURIEncoding(StandardCharsets.UTF_8.name());
         connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
-        connector.setProperty("maxThreads", String.valueOf(configuration.getTomcatMaxThreads()));
-        connector.setProperty("maxHttpHeaderSize", String.valueOf(configuration.getTomcatMaxHttpHeaderSize()));
+        connector.setProperty("maxThreads", String.valueOf(maxThreads));
+        connector.setProperty("maxHttpHeaderSize", String.valueOf(maxHttpHeaderSize));
         connector.setScheme(scheme);
         Service service = tomcat.getService();
         service.setContainer(tomcat.getEngine());
@@ -47,7 +47,7 @@ public class TomcatFactory {
         return connector;
     }
 
-    private Configuration getConfiguration() {
+    private TomcatConfiguration getConfiguration() {
         return configuration;
     }
 
@@ -117,7 +117,7 @@ public class TomcatFactory {
     }
 
     private void createDefaultConnector(Tomcat tomcat) {
-        Connector connector = getConnector(tomcat, "HTTP/1.1", getConfiguration().getTomcatPort(), false, "http", configuration);
+        Connector connector = getConnector(tomcat, "HTTP/1.1", getConfiguration().getTomcatPort(), false, "http", configuration.getTomcatMaxThreads(), configuration.getTomcatMaxHttpHeaderSize());
         connector.setRedirectPort(getConfiguration().getTomcatSslPort());
         tomcat.setConnector(connector);
     }

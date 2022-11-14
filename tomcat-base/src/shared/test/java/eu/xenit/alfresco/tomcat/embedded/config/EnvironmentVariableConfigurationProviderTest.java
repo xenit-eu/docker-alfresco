@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class EnvironmentVariableConfigurationProviderTest {
     @Test
     void testGetConfiguration() {
-        Configuration configuration = new EnvironmentVariableConfigurationProvider().getConfiguration();
-        Configuration expected = new Configuration();
+        TomcatConfiguration configuration = new EnvironmentVariableConfigurationProvider().getConfiguration();
+        TomcatConfiguration expected = new TomcatConfiguration();
         assertEquals(configuration, expected);
     }
 }

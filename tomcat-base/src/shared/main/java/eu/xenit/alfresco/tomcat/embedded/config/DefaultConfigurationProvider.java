@@ -2,7 +2,7 @@ package eu.xenit.alfresco.tomcat.embedded.config;
 
 public class DefaultConfigurationProvider implements ConfigurationProvider {
 
-    public Configuration getConfiguration(Configuration baseConfiguration) {
+    public TomcatConfiguration getConfiguration(TomcatConfiguration baseConfiguration) {
         baseConfiguration.setWebappsPath("/usr/local/tomcat/webapps");
         baseConfiguration.setTomcatBaseDir("/usr/local/tomcat/temp");
         baseConfiguration.setTomcatPort(8080);

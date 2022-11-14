@@ -25,7 +25,7 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
 
 
     @Override
-    public Configuration getConfiguration(Configuration baseConfiguration) {
+    public TomcatConfiguration getConfiguration(TomcatConfiguration baseConfiguration) {
         setPropertyFromEnv(TOMCAT_WEBAPPS, baseConfiguration::setWebappsPath);
         setPropertyFromEnv(JSON_LOGGING, value -> baseConfiguration.setJsonLogging(Boolean.parseBoolean(value)));
         setPropertyFromEnv(ACCESS_LOGGING, value -> baseConfiguration.setAccessLogging(Boolean.parseBoolean(value)));
