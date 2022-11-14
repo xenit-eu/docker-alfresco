@@ -28,26 +28,4 @@ public class TomcatConfiguration {
     protected boolean shareEnabled;
     protected String generatedClasspathDir;
     protected long tomcatCacheMaxSize;
-
-
-    protected TomcatConfiguration(TomcatConfiguration configuration) {
-        setExitOnFailure(configuration.isExitOnFailure());
-        setWebappsPath(configuration.getWebappsPath());
-        setTomcatBaseDir(configuration.getTomcatBaseDir());
-        setTomcatPort(configuration.getTomcatPort());
-        setTomcatSslPort(configuration.getTomcatSslPort());
-        setSharedClasspathDir(configuration.getSharedClasspathDir());
-        setJsonLogging(configuration.isJsonLogging());
-        setAccessLogging(configuration.isAccessLogging());
-        setTomcatMaxThreads(configuration.getTomcatMaxThreads());
-        setTomcatMaxHttpHeaderSize(configuration.getTomcatMaxHttpHeaderSize());
-        setTomcatServerPort(configuration.getTomcatServerPort());
-        setTomcatRelaxedQueryChars(configuration.getTomcatRelaxedQueryChars());
-        setTomcatRelaxedPathChars(configuration.getTomcatRelaxedPathChars());
-        setAlfrescoEnabled(configuration.isAlfrescoEnabled());
-        setShareEnabled(configuration.isShareEnabled());
-        setGeneratedClasspathDir(configuration.getGeneratedClasspathDir());
-        setSharedLibDir(configuration.getSharedLibDir());
-        setTomcatCacheMaxSize(configuration.getTomcatCacheMaxSize());
-    }
 }
