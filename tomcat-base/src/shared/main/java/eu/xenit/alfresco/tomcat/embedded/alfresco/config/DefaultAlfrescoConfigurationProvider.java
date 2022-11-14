@@ -4,11 +4,13 @@ package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurationProvider {
 
 
+    public static final String DEFAULT_SSL_PASSWORD = "kT9X6oe68t";
+
     public AlfrescoConfiguration getConfiguration(AlfrescoConfiguration baseAlfrescoConfiguration) {
         baseAlfrescoConfiguration.setTomcatSSLKeystore("/keystore/ssl.keystore");
         baseAlfrescoConfiguration.setTomcatSSLTruststore("/keystore/ssl.truststore");
-        baseAlfrescoConfiguration.setTomcatSSLKeystorePassword("kT9X6oe68t");
-        baseAlfrescoConfiguration.setTomcatSSLTruststorePassword("kT9X6oe68t");
+        baseAlfrescoConfiguration.setTomcatSSLKeystorePassword(DEFAULT_SSL_PASSWORD);
+        baseAlfrescoConfiguration.setTomcatSSLTruststorePassword(DEFAULT_SSL_PASSWORD);
         baseAlfrescoConfiguration.setSolrSSLEnabled(true);
         baseAlfrescoConfiguration.setGlobalProperty("db.host", "postgresql");
         baseAlfrescoConfiguration.setGlobalProperty("db.port", "5432");
@@ -34,8 +36,8 @@ public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurati
         baseAlfrescoConfiguration.setGlobalProperty("encryption.ssl.truststore.keyMetaData.location", "/keystore/ssl-truststore-passwords.properties");
         baseAlfrescoConfiguration.setGlobalProperty("encryption.ssl.truststore.type", "JCEKS");
 
-        baseAlfrescoConfiguration.setSystemProperty("ssl-truststore.password", "kT9X6oe68t");
-        baseAlfrescoConfiguration.setSystemProperty("ssl-keystore.password", "kT9X6oe68t");
+        baseAlfrescoConfiguration.setSystemProperty("ssl-truststore.password", DEFAULT_SSL_PASSWORD);
+        baseAlfrescoConfiguration.setSystemProperty("ssl-keystore.password", DEFAULT_SSL_PASSWORD);
 
         baseAlfrescoConfiguration.setGlobalProperty("messaging.subsystem.autoStart", "false");
         baseAlfrescoConfiguration.setGlobalProperty("events.subsystem.autoStart", "false");
