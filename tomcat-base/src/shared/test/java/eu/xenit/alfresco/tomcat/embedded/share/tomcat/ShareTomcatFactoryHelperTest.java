@@ -21,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ShareTomcatFactoryHelperTest {
     @Test
     void testCreateShareConfigCustomFile() throws URISyntaxException, IOException {
+        var tomcatConfiguration = new DefaultConfigurationProvider().getConfiguration();
         ShareConfiguration shareConfiguration = new DefaultShareConfigurationProvider().getConfiguration(
-                new ShareConfiguration(
-                        new DefaultConfigurationProvider().getConfiguration()));
+                new ShareConfiguration(tomcatConfiguration));
         URL inputResource = getClass().getClassLoader().getResource("share-config-custom-input.xml");
         URL expectedResource = getClass().getClassLoader().getResource("share-config-custom-output.xml");
         assert inputResource != null;
@@ -31,10 +31,10 @@ class ShareTomcatFactoryHelperTest {
         Path inputPath = Paths.get(new File(inputResource.toURI()).getPath());
         Path expectedPath = Paths.get(new File(expectedResource.toURI()).getPath());
         shareConfiguration.setShareConfigTemplateFile(inputPath.toString());
-        shareConfiguration.setGeneratedClasspathDir(inputPath.toAbsolutePath().getParent().toString());
+        tomcatConfiguration.setGeneratedClasspathDir(inputPath.toAbsolutePath().getParent().toString());
         shareConfiguration.setShareConfigPath("result");
         assertTrue(ShareTomcatFactoryHelper.createShareConfigCustomFile(shareConfiguration));
-        Path tempProps = Paths.get(shareConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
+        Path tempProps = Paths.get(tomcatConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
         String actual = Files.readString(tempProps);
         String expected = Files.readString(expectedPath);
         assertEquals(actual, expected);
@@ -42,9 +42,9 @@ class ShareTomcatFactoryHelperTest {
 
     @Test
     void testCreateShareConfigCustomFileWithFileExist() throws URISyntaxException, IOException {
+        var tomcatConfiguration = new DefaultConfigurationProvider().getConfiguration();
         ShareConfiguration shareConfiguration = new DefaultShareConfigurationProvider().getConfiguration(
-                new ShareConfiguration(
-                        new DefaultConfigurationProvider().getConfiguration()));
+                new ShareConfiguration(tomcatConfiguration));
         URL inputResource = getClass().getClassLoader().getResource("share-config-custom-input.xml");
         URL expectedResource = getClass().getClassLoader().getResource("share-config-custom-output.xml");
         assert inputResource != null;
@@ -52,10 +52,10 @@ class ShareTomcatFactoryHelperTest {
         Path inputPath = Paths.get(new File(inputResource.toURI()).getPath());
         Path expectedPath = Paths.get(new File(expectedResource.toURI()).getPath());
         shareConfiguration.setShareConfigTemplateFile(inputPath.toString());
-        shareConfiguration.setGeneratedClasspathDir(inputPath.toAbsolutePath().getParent().toString());
+        tomcatConfiguration.setGeneratedClasspathDir(inputPath.toAbsolutePath().getParent().toString());
         shareConfiguration.setShareConfigPath("result-exist");
         assertTrue(ShareTomcatFactoryHelper.createShareConfigCustomFile(shareConfiguration));
-        Path tempProps = Paths.get(shareConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
+        Path tempProps = Paths.get(tomcatConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
         String actual = Files.readString(tempProps);
         String expected = Files.readString(expectedPath);
         assertEquals(actual, expected);
@@ -63,11 +63,11 @@ class ShareTomcatFactoryHelperTest {
 
     @Test
     void testCreateShareConfigCustomFileNoInputFile() {
+        var tomcatConfiguration = new DefaultConfigurationProvider().getConfiguration();
         ShareConfiguration shareConfiguration = new DefaultShareConfigurationProvider().getConfiguration(
-                new ShareConfiguration(
-                        new DefaultConfigurationProvider().getConfiguration()));
+                new ShareConfiguration(tomcatConfiguration));
         shareConfiguration.setShareConfigTemplateFile("/do/nothing/test.xml");
-        shareConfiguration.setGeneratedClasspathDir("/not_gonna_be_called");
+        tomcatConfiguration.setGeneratedClasspathDir("/not_gonna_be_called");
         shareConfiguration.setShareConfigPath("result");
         assertFalse(ShareTomcatFactoryHelper.createShareConfigCustomFile(shareConfiguration));
     }

@@ -17,9 +17,9 @@ import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVar
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @NoArgsConstructor
-public class ShareConfiguration extends TomcatConfiguration {
+public class ShareConfiguration {
 
     private String alfrescoHost;
     private String alfrescoInternalHost;
@@ -32,8 +32,10 @@ public class ShareConfiguration extends TomcatConfiguration {
     private String shareConfigPath;
     private String shareConfigTemplateFile;
 
+    private TomcatConfiguration tomcatConfiguration;
+
     public ShareConfiguration(TomcatConfiguration configuration) {
-        super(configuration);
+        this.tomcatConfiguration = configuration;
     }
 
     public String getValueOf(String key) {

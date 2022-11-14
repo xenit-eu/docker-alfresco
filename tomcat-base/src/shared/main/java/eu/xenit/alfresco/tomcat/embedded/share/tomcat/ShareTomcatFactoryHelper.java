@@ -22,9 +22,9 @@ public class ShareTomcatFactoryHelper {
         try {
             Path inputPath = Paths.get(shareConfiguration.getShareConfigTemplateFile());
             if (Files.exists(inputPath)) {
-                Path classesDir = Paths.get(shareConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath());
+                Path classesDir = Paths.get(shareConfiguration.getTomcatConfiguration().getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath());
                 Files.createDirectories(classesDir);
-                Path tempProps = Paths.get(shareConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
+                Path tempProps = Paths.get(shareConfiguration.getTomcatConfiguration().getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
                 if (Files.exists(tempProps)) {
                     Files.delete(tempProps);
                 }
