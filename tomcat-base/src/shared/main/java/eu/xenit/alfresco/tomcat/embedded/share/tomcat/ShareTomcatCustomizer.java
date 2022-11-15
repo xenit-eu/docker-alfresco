@@ -1,4 +1,4 @@
-package eu.xenit.alfresco.tomcat.embedded.share;
+package eu.xenit.alfresco.tomcat.embedded.share.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.share.config.DefaultShareConfigurationProvider;

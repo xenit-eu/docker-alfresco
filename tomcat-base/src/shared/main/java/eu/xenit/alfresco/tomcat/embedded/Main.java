@@ -1,10 +1,10 @@
 package eu.xenit.alfresco.tomcat.embedded;
 
-import eu.xenit.alfresco.tomcat.embedded.alfresco.AlfrescoTomcatCustomizer;
+import eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat.AlfrescoTomcatCustomizer;
 import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariableConfigurationProvider;
-import eu.xenit.alfresco.tomcat.embedded.share.ShareTomcatCustomizer;
+import eu.xenit.alfresco.tomcat.embedded.share.tomcat.ShareTomcatCustomizer;
 import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory;
 import eu.xenit.json.jul.JsonFormatter;
 import org.apache.catalina.startup.Tomcat;

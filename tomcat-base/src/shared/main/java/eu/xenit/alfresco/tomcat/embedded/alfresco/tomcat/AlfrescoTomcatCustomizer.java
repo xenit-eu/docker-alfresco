@@ -1,4 +1,4 @@
-package eu.xenit.alfresco.tomcat.embedded.alfresco;
+package eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.DefaultAlfrescoConfigurationProvider;
