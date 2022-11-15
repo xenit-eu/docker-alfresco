@@ -18,7 +18,7 @@ public class ShareTomcatFactoryHelper {
     private ShareTomcatFactoryHelper() {
     }
 
-    public static boolean createShareConfigCustomFile(ShareConfiguration shareConfiguration) {
+    public static void createShareConfigCustomFile(ShareConfiguration shareConfiguration) {
         try {
             Path inputPath = Paths.get(shareConfiguration.getShareConfigTemplateFile());
             if (Files.exists(inputPath)) {
@@ -42,9 +42,7 @@ public class ShareTomcatFactoryHelper {
                     }
 
                 }
-                return true;
             }
-            return false;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
