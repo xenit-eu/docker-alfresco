@@ -1,9 +1,11 @@
 package eu.xenit.alfresco.tomcat.embedded.config;
 
+
 public interface ConfigurationProvider {
 
-    public default Configuration getConfiguration() {
-        return getConfiguration(new Configuration());
+    default TomcatConfiguration getConfiguration() {
+        return getConfiguration(new TomcatConfiguration());
     }
-    public Configuration getConfiguration(Configuration baseConfiguration);
+
+    TomcatConfiguration getConfiguration(TomcatConfiguration baseConfiguration);
 }

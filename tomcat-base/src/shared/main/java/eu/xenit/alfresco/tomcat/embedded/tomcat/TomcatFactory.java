@@ -1,6 +1,6 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
-import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.json.valve.JsonAccessLogValve;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
@@ -11,10 +11,7 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
-import org.apache.tomcat.util.net.SSLHostConfig;
-import org.apache.tomcat.util.net.SSLHostConfig.CertificateVerification;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -28,35 +25,50 @@ import java.util.stream.Stream;
 public class TomcatFactory {
 
     private static final Logger LOG = Logger.getLogger(TomcatFactory.class.getName());
+    private final TomcatConfiguration configuration;
 
-    private Configuration configuration;
+    public TomcatFactory(TomcatConfiguration configuration) {
+        this.configuration =
+                configuration;
+    }
 
-    public TomcatFactory(Configuration configuration) {
-        this.configuration = configuration;
+    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize) {
+        Connector connector = new Connector(protocol);
+        connector.setPort(port);
+        connector.setProperty("connectionTimeout", "240000");
+        connector.setURIEncoding(StandardCharsets.UTF_8.name());
+        connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
+        connector.setProperty("maxThreads", String.valueOf(maxThreads));
+        connector.setProperty("maxHttpHeaderSize", String.valueOf(maxHttpHeaderSize));
+        connector.setScheme(scheme);
+        Service service = tomcat.getService();
+        service.setContainer(tomcat.getEngine());
+        connector.setService(service);
+        return connector;
+    }
+
+    private TomcatConfiguration getConfiguration() {
+        return configuration;
     }
 
     public Tomcat getTomcat() throws IOException {
         Tomcat tomcat = new Tomcat();
-        tomcat.setPort(configuration.getPort());
-        tomcat.getServer().setPort(configuration.getTomcatServerPort());
+        tomcat.setBaseDir(getConfiguration().getTomcatBaseDir());
+        tomcat.setPort(getConfiguration().getTomcatPort());
+        tomcat.getServer().setPort(getConfiguration().getTomcatServerPort());
         createDefaultConnector(tomcat);
-        if (configuration.isSolrSSLEnabled()) {
-            createSSLConnector(tomcat);
-        }
         addUserWithRole(tomcat, "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repoclient");
         addUserWithRole(tomcat, "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repository");
-
-        Path webapps = Paths.get(configuration.getWebappsPath());
+        Path webapps = Paths.get(getConfiguration().getWebappsPath());
         if (Files.exists(webapps)) {
             try (var directoryStream = Files.newDirectoryStream(webapps)) {
                 directoryStream.forEach(path -> addWebapp(tomcat, path));
             }
         }
-
         return tomcat;
     }
 
-    private boolean isEmptyDir(Path path) {
+    protected boolean isEmptyDir(Path path) {
         if (Files.isDirectory(path)) {
             try (Stream<Path> entries = Files.list(path)) {
                 return entries.findFirst().isEmpty();
@@ -78,25 +90,25 @@ public class TomcatFactory {
             String absolutePath = path.toAbsolutePath().toString();
             StandardContext ctx = (StandardContext) tomcat.addWebapp(contextPath, absolutePath);
             ctx.setParentClassLoader(Thread.currentThread().getContextClassLoader());
-
             LifecycleListener lifecycleListener = event -> {
                 if (event.getType().equals("before_start")) {
                     WebResourceRoot resources = new StandardRoot(ctx);
-                    Path globalPropertiesFile = getGlobalPropertiesFile();
-                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", globalPropertiesFile.toAbsolutePath().getParent().toString(), "/"));
-                    if (configuration.isJsonLogging() && redirectLog4j(path)) {
-                        //Load extra jars in classpath for json application logging
-                        resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", configuration.getLogLibraryDir(), "/"));
+                    resources.setCacheMaxSize(getConfiguration().getTomcatCacheMaxSize());
+                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getSharedClasspathDir(), "/"));
+                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getGeneratedClasspathDir(), "/"));
+                    resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedLibDir(), "/"));
+                    if (configuration.isJsonLogging()) {
+                        redirectLog4j(path);
                     }
                     ctx.setResources(resources);
                 }
-                if (configuration.isExitOnFailure() && event.getType().equals("after_stop")) {
+                if (getConfiguration().isExitOnFailure() && event.getType().equals("after_stop")) {
                     stopTomcat(tomcat);
                 }
             };
             ctx.addLifecycleListener(lifecycleListener);
 
-            if (configuration.isAccessLogging()) {
+            if (getConfiguration().isAccessLogging()) {
                 JsonAccessLogValve valve = new JsonAccessLogValve();
                 ctx.addValve(valve);
                 ctx.getAccessLog();
@@ -104,75 +116,10 @@ public class TomcatFactory {
         }
     }
 
-    private Path getGlobalPropertiesFile() {
-        Properties globalProperties = new Properties();
-        globalProperties.putAll(configuration.getGlobalProperties());
-        Path classesDir = Paths.get("/dev", "shm", "alfrescoClasses");
-        try {
-            Files.createDirectories(classesDir);
-            Path tempProps = Paths.get("/dev", "shm", "alfrescoClasses", "alfresco-global.properties");
-            if (Files.exists(tempProps)) {
-                Files.delete(tempProps);
-            }
-            tempProps = Files.createFile(tempProps);
-            try (OutputStream os = Files.newOutputStream(tempProps)) {
-                globalProperties.store(os, null);
-            }
-            return tempProps;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void createDefaultConnector(Tomcat tomcat) {
-        Connector connector = getConnector(tomcat, "HTTP/1.1", configuration.getPort(), false, "http");
-        connector.setRedirectPort(configuration.getTomcatSslPort());
+        Connector connector = getConnector(tomcat, "HTTP/1.1", getConfiguration().getTomcatPort(), false, "http", configuration.getTomcatMaxThreads(), configuration.getTomcatMaxHttpHeaderSize());
+        connector.setRedirectPort(getConfiguration().getTomcatSslPort());
         tomcat.setConnector(connector);
-    }
-
-    private void createSSLConnector(Tomcat tomcat) {
-        if (!new File(configuration.getTomcatSSLKeystore()).exists()) {
-            LOG.severe("Keystore file missing: " + configuration.getTomcatSSLKeystore());
-            System.exit(1);
-        }
-
-        if (!new File(configuration.getTomcatSSLTruststore()).exists()) {
-            LOG.severe("Truststore file missing: " + configuration.getTomcatSSLTruststore());
-            System.exit(1);
-        }
-
-        Connector connector = getConnector(tomcat, "org.apache.coyote.http11.Http11NioProtocol", configuration.getTomcatSslPort(), true, "https");
-
-        SSLHostConfig sslHostConfig = new SSLHostConfig();
-        sslHostConfig.setCertificateKeystoreFile(configuration.getTomcatSSLKeystore());
-        sslHostConfig.setCertificateKeystorePassword(configuration.getTomcatSSLKeystorePassword());
-        sslHostConfig.setCertificateKeystoreType("JCEKS");
-        sslHostConfig.setTruststoreFile(configuration.getTomcatSSLTruststore());
-        sslHostConfig.setTruststorePassword(configuration.getTomcatSSLTruststorePassword());
-        sslHostConfig.setTruststoreType("JCEKS");
-        sslHostConfig.setSslProtocol("TLS");
-        sslHostConfig.setCertificateVerification(CertificateVerification.REQUIRED.name());
-        connector.addSslHostConfig(sslHostConfig);
-        connector.setSecure(true);
-        connector.setProperty("clientAuth", "want");
-        connector.setProperty("allowUnsafeLegacyRenegotiation", "true");
-        connector.setMaxSavePostSize(-1);
-        tomcat.setConnector(connector);
-    }
-
-    private Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme) {
-        Connector connector = new Connector(protocol);
-        connector.setPort(port);
-        connector.setProperty("connectionTimeout", "240000");
-        connector.setURIEncoding(StandardCharsets.UTF_8.name());
-        connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
-        connector.setProperty("maxThreads", String.valueOf(configuration.getTomcatMaxThreads()));
-        connector.setProperty("maxHttpHeaderSize", String.valueOf(configuration.getTomcatMaxHttpHeaderSize()));
-        connector.setScheme(scheme);
-        Service service = tomcat.getService();
-        service.setContainer(tomcat.getEngine());
-        connector.setService(service);
-        return connector;
     }
 
     private void addUserWithRole(Tomcat tomcat, String username, String password, String role) {
@@ -218,6 +165,8 @@ public class TomcatFactory {
             }
         });
         thread.start();
+
     }
+
 
 }

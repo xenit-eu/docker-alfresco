@@ -1,0 +1,47 @@
+evaluationDependsOn(':tomcat-base')
+
+String getTomcatProject(Project p) {
+    println "p.share.version.major: ${p.share.version.major}"
+    if (p.share.version.major == 6) {
+        println 'tomcat-8.5'
+        return ":tomcat-base:tomcat-8.5"
+    }
+
+    if (p.share.version.major == 7) {
+        println 'tomcat-9'
+        return ":tomcat-base:tomcat-9"
+    }
+
+    return null
+}
+
+subprojects {
+    apply plugin: 'eu.xenit.docker'
+    apply plugin: 'eu.xenit.docker-alfresco'
+    apply plugin: 'eu.xenit.docker-compose'
+
+
+    if (new File("${project.projectDir}/overload.gradle").exists())
+        apply from: "${project.projectDir}/overload.gradle"
+
+    def tomcatProject = project(getTomcatProject(project))
+    def tomcatImage = tomcatProject.getTasks().getByName('buildDockerImage')
+    println "tomcatImage: ${tomcatImage.getImageId()}"
+
+    dockerBuild {
+        repositories = [calcRepository(project.share.flavor,false)]
+        tags = calcTags(project.share.version)
+    }
+    createDockerFile {
+        smartCopy "$project.projectDir/local", "/docker-config/"
+        dependsOn(tomcatImage)
+        baseImage = tomcatImage.getImageId()
+        environmentVariable('SHARE_VERSION', "${project.share.version.major}.${project.share.version.minor}.${project.share.version.rev}")
+        environmentVariable('SHARE_FLAVOR', "${project.share.flavor}")
+        environmentVariable('SHARE_ENABLED', "true")
+    }
+
+
+    // Disable pull because base image is built locally and not pushed to a repo
+    buildDockerImage.pull = false
+}

@@ -24,6 +24,10 @@ subprojects {
     }
 
     dependencies {
+
+        compileOnly "org.projectlombok:lombok:1.18.24"
+        annotationProcessor "org.projectlombok:lombok:1.18.24"
+
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
         implementation "org.apache.tomcat:tomcat-jasper:${tomcatVersion}"
@@ -32,9 +36,8 @@ subprojects {
         implementation "eu.xenit.logging:json-logging:0.0.3"
         implementation "com.fasterxml.jackson.core:jackson-databind:2.13.1"
 
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
-
+        testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.0"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.9.0"
         sharedLibs("eu.xenit.logging:json-logging:0.0.3") {
             transitive = false
         }
@@ -58,6 +61,11 @@ subprojects {
         test {
             java {
                 srcDir file("$project.parent.projectDir/src/shared/test/java")
+
+            }
+            resources {
+                srcDir file("$project.parent.projectDir/src/shared/test/resources")
+
             }
         }
     }
@@ -71,7 +79,7 @@ subprojects {
 
     createDockerFile {
         from 'docker.io/eclipse-temurin:11'
-        smartCopy configurations.sharedLibs, '/loglibrarydir/'
+        smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
         def jarName = archivesBaseName + '.jar'
@@ -83,12 +91,14 @@ subprojects {
         environmentVariable('BUILD_DATE', buildDate)
 
         runCommand 'useradd -u 990 tomcat'
-        runCommand 'mkdir /tmp/tomcat && chown tomcat:tomcat /tmp/tomcat'
-        workingDir '/tmp/tomcat'
+        runCommand 'mkdir -p /usr/local/tomcat/shared/classes'
+        runCommand 'mkdir -p /usr/local/tomcat/temp && chown tomcat:tomcat /usr/local/tomcat/temp'
+        workingDir '/usr/local/tomcat/temp'
         entryPoint('/docker-entrypoint.sh')
         def classPath = "/app/tomcat-embedded/$jarName:/app/tomcat-embedded/lib/*"
+        volume "/usr/local/tomcat/temp"
         defaultCommand('java', '$JAVA_OPTS', '-cp', classPath, 'eu.xenit.alfresco.tomcat.embedded.Main')
-        instruction("HEALTHCHECK CMD java -cp $classPath eu.xenit.alfresco.tomcat.embedded.HealthCheck")
+        instruction("HEALTHCHECK CMD java -cp $classPath eu.xenit.alfresco.tomcat.embedded.healthcheck.HealthCheck")
     }
 
     publishing {

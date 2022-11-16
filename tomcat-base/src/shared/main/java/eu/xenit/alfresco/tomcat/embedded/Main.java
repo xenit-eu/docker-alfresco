@@ -1,12 +1,16 @@
 package eu.xenit.alfresco.tomcat.embedded;
 
-import eu.xenit.alfresco.tomcat.embedded.config.Configuration;
+import eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat.AlfrescoTomcatCustomizer;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariableConfigurationProvider;
+import eu.xenit.alfresco.tomcat.embedded.share.tomcat.ShareTomcatCustomizer;
 import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory;
 import eu.xenit.json.jul.JsonFormatter;
 import org.apache.catalina.startup.Tomcat;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -18,13 +22,20 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Configuration configuration = new DefaultConfigurationProvider().getConfiguration();
-            configuration = new EnvironmentVariableConfigurationProvider().getConfiguration(configuration);
-
-            setSystemProperties(configuration);
-
+            TomcatConfiguration configuration = new EnvironmentVariableConfigurationProvider()
+                    .getConfiguration(new DefaultConfigurationProvider()
+                            .getConfiguration());
+            Files.createDirectories(Paths.get(configuration.getGeneratedClasspathDir()));
             TomcatFactory tomcatFactory = new TomcatFactory(configuration);
             Tomcat tomcat = tomcatFactory.getTomcat();
+            if (configuration.isAlfrescoEnabled()) {
+                var alfrescoTomcatCustomizer = new AlfrescoTomcatCustomizer();
+                alfrescoTomcatCustomizer.customize(tomcat, configuration);
+            }
+            if (configuration.isShareEnabled()) {
+                var shareTomcatCustomizer = new ShareTomcatCustomizer();
+                shareTomcatCustomizer.customize(tomcat, configuration);
+            }
             //Needs to be done after
             configureLogging(configuration.isJsonLogging());
             tomcat.start();
@@ -35,15 +46,8 @@ public class Main {
         }
     }
 
-    private static void setSystemProperties(Configuration configuration) {
-        configuration.getSystemProperties().forEach((key, value) -> {
-            if (System.getProperty(key) == null) {
-                System.setProperty(key, value);
-            }
-        });
-    }
 
-    private static void configureLogging(boolean json) {
+    public static void configureLogging(boolean json) {
         configureLoggerToJSONStdOut(Logger.getLogger(""), "tomcat", json);
         configureLoggerToJSONStdOut(LOG.getParent(), "tomcat", json);
         for (Handler handler : LOG.getHandlers()) {
@@ -51,7 +55,7 @@ public class Main {
         }
     }
 
-    private static void configureLoggerToJSONStdOut(Logger logger, String component, boolean json) {
+    public static void configureLoggerToJSONStdOut(Logger logger, String component, boolean json) {
         for (Handler handler : logger.getHandlers()) {
             logger.removeHandler(handler);
         }
@@ -74,5 +78,4 @@ public class Main {
 
         logger.addHandler(customHandler);
     }
-
 }

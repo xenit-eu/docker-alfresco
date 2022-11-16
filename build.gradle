@@ -35,8 +35,8 @@ copyPropertyValueIfExists('alfresco_nexus_password', 'org.alfresco.maven.nexus.p
 
 def calcTags(version) {
     def tags = [
-        "${version.major}.${version.minor}.${version.rev}".toString(),
-        "${version.major}.${version.minor}".toString()
+            "${version.major}.${version.minor}.${version.rev}".toString(),
+            "${version.major}.${version.minor}".toString()
     ]
 
     if (version.label) {
@@ -44,16 +44,20 @@ def calcTags(version) {
     }
     // For non-master/non-release builds, change the tags to contain branch and build number
     def isTestBuild = ci.isCi() && ci.branch != "master" && ci.branch != "release"
-    if(isTestBuild) {
+    if (isTestBuild) {
         tags = tags.stream().map({ it + "-build-${ci.branch}-${ci.buildNumber}" }).collect(Collectors.toList());
     }
 
     return tags
 }
 
-def calcRepository(flavor) {
+def calcRepository(flavor, isAlfresco) {
     def repoName = flavor == "enterprise" ? "docker.xenit.eu/private/alfresco-enterprise" : "docker.io/xenit"
-    return "${repoName}/alfresco-repository-${flavor}";
+    if (isAlfresco) {
+        return "${repoName}/alfresco-repository-${flavor}";
+    }
+    return "${repoName}/alfresco-share-${flavor}";
+
 }
 
 subprojects {
