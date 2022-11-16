@@ -29,7 +29,7 @@ subprojects {
     println "tomcatImage: ${tomcatImage.getImageId()}"
 
     dockerBuild {
-        repositories = [calcRepository(project.share.flavor)]
+        repositories = [calcRepository(project.share.flavor,false)]
         tags = calcTags(project.share.version)
     }
     createDockerFile {

@@ -11,20 +11,14 @@ This project builds Alfresco-specific docker images used by Xenit, starting with
 
 ## Images created
 
-* [`alfresco-skeleton`] = skeleton common for all images per major version; includes java, tomcat, init script, keystore
-* [`alfresco-repository-enterprise`] = enterprise Alfresco images
-* [`alfresco-repository-community`] = community Alfresco images
-* [`docker.io/xenit/share-enterprise`] = enterprise Share images
-* [`docker.io/xenit/share-community`] = community Share images
-
-## Supported Tags for Alfresco
+* [`docker.io/xenit/tomcat`] = Xenit specific tomcat images
+* [`docker.io/xenit/alfresco-skeleton`] = skeleton common for all images per major version; includes java, tomcat, init script, keystore
+* [`docker.xenit.eu/private/alfresco-enterprise/alfresco-repository-enterprise`] = enterprise Alfresco images
+* [`docker.io/xenit/alfresco-repository-community`] = community Alfresco images
+* [`docker.io/xenit/docker.io/xenit/share-community`] = community Share images
+## Supported Tags
 
 * [`:7.2.0`, `:7.2`, `:7`] = major, minor, revision
-
-## Supported Tags for Share
-
-* [`:5.1.5`, `:5.1`, `:5`] = major, minor, revision for enterprise
-* [`:5.1.e`, `:6.1.2-ga`] = major, minor, revision for community
 
 ## Overview
 

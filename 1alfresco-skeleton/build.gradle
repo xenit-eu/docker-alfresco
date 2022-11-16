@@ -28,7 +28,7 @@ subprojects {
     println "tomcatImage: ${tomcatImage.getImageId()}"
 
     dockerBuild {
-        repositories = [calcRepository(project.alfresco.flavor)]
+        repositories = [calcRepository(project.alfresco.flavor, true)]
         tags = calcTags(project.alfresco.version)
     }
 

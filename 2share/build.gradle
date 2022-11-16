@@ -12,7 +12,7 @@ subprojects {
     }
 
     dockerBuild {
-        repositories = [calcRepository(project.share.flavor)]
+        repositories = [calcRepository(project.share.flavor, false)]
         tags = calcTags(project.share.version)
         alfresco {
             baseImage = parentImage.getImageId()
@@ -30,6 +30,6 @@ subprojects {
 
     buildDockerImage {
         pull = false
-    }    
+    }
 }
 

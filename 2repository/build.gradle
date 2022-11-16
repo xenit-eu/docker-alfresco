@@ -42,7 +42,7 @@ subprojects {
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
 
     dockerBuild {
-        repositories = [calcRepository(project.alfresco.flavor)]
+        repositories = [calcRepository(project.alfresco.flavor,true)]
         tags = calcTags(project.alfresco.version)
         alfresco {
             baseImage = parentImage.getImageId()
