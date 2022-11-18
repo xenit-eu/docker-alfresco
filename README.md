@@ -136,7 +136,7 @@ and [`docker-tomcat`](https://github.com/xenit-eu/docker-tomcat).
 
 Environment variables:
 
-| Variable                   | Default   | Java variable                          |
+| Variable                   | Default   | Description                            |
 |----------------------------|-----------|----------------------------------------|
 | ALFRESCO_HOST              | alfresco  | Used to generate WebDav links.         |
 | ALFRESCO_PORT              | 8080      | Used to generate WebDav links.         |

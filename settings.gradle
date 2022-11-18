@@ -1,8 +1,8 @@
 rootProject.name = 'docker-alfresco'
 
 include ':tomcat-base'
-include ':tomcat-base:tomcat-8.5'
-include ':tomcat-base:tomcat-9'
+include ':tomcat-base:tomcat-embedded-8.5'
+include ':tomcat-base:tomcat-embedded-9'
 include ':1alfresco-skeleton'
 include ':1alfresco-skeleton:6.1'
 include ':1alfresco-skeleton:6.2'
