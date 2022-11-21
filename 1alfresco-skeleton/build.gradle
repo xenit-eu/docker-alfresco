@@ -1,20 +1,5 @@
 evaluationDependsOn(':tomcat-base')
 
-String getTomcatProject(Project p) {
-    println "p.alfresco.version.major: ${p.alfresco.version.major}"
-    if (p.alfresco.version.major == 6) {
-        println 'tomcat-8.5'
-        return ":tomcat-base:tomcat-8.5"
-    }
-
-    if (p.alfresco.version.major == 7) {
-        println 'tomcat-9'
-        return ":tomcat-base:tomcat-9"
-    }
-
-    return null
-}
-
 subprojects {
     apply plugin: 'eu.xenit.docker'
     apply plugin: 'eu.xenit.docker-alfresco'
@@ -23,7 +8,7 @@ subprojects {
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
-    def tomcatProject = project(getTomcatProject(project))
+    def tomcatProject = project(getTomcatProject(project.alfresco.version.major))
     def tomcatImage = tomcatProject.getTasks().getByName('buildDockerImage')
     println "tomcatImage: ${tomcatImage.getImageId()}"
 

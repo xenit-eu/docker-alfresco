@@ -60,6 +60,22 @@ def calcRepository(flavor, isAlfresco) {
 
 }
 
+
+String getTomcatProject(majorVersion) {
+    println "major version used : ${majorVersion}"
+    if (majorVersion == 6) {
+        println 'tomcat-embedded-8.5'
+        return ":tomcat-base:tomcat-embedded-8.5"
+    }
+
+    if (majorVersion == 7) {
+        println 'tomcat-embedded-9'
+        return ":tomcat-base:tomcat-embedded-9"
+    }
+
+    return null
+}
+
 subprojects {
     apply plugin: 'java'
 
