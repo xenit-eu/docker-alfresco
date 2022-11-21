@@ -71,5 +71,5 @@ jobs:
           ORG_GRADLE_PROJECT_sonatype_username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_sonatype_password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
         run: >
-          ./gradlew :tomcat-base:tomcat-8.5:publish :tomcat-base:tomcat-9:publish --info
+          ./gradlew :tomcat-base:tomcat-embedded-8.5:publish :tomcat-base:tomcat-embedded-9:publish --info
           -PsigningKeyId=CDE3528F
