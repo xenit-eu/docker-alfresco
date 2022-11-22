@@ -4,7 +4,7 @@ ext {
                     major: 6,
                     minor: 2,
                     rev: 2,
-                    label: 19
+                    label: 25
             ],
             flavor: 'enterprise'
     ]
@@ -15,9 +15,9 @@ ext {
 }
 
 dependencies {
-    alfrescoAmp 'org.alfresco:alfresco-share-services:6.2.2.5@amp'
+    alfrescoAmp 'org.alfresco:alfresco-share-services:6.2.2.7@amp'
 
-    baseAlfrescoWar platform('org.alfresco:acs-packaging:6.2.2.19')
+    baseAlfrescoWar platform('org.alfresco:acs-packaging:6.2.2.25')
     baseAlfrescoWar 'org.alfresco:content-services@war'
 
     sharedLib(group: 'org.postgresql', name: 'postgresql', version: '42.2.14')
