@@ -11,11 +11,12 @@ ext {
     shareimage = 'docker.io/xenit/alfresco-share-community:7.0.0'
     psqlimage = 'docker.io/xenit/postgres:13.1'
     tests = true
+    alfrescoBomVersion = '7.0.0'
 }
 
 dependencies {
-    alfrescoAmp 'org.alfresco:alfresco-share-services:7.0.0@amp'
-
-    baseAlfrescoWar platform('org.alfresco:acs-community-packaging:7.0.0')
+    alfrescoAmp platform("org.alfresco:acs-community-packaging:$alfrescoBomVersion")
+    alfrescoAmp 'org.alfresco:alfresco-share-services@amp'
+    baseAlfrescoWar platform("org.alfresco:acs-community-packaging:$alfrescoBomVersion")
     baseAlfrescoWar 'org.alfresco:content-services-community@war'
 }

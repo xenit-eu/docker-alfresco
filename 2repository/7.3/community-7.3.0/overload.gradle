@@ -1,21 +1,22 @@
-ext {
+ ext {
     alfresco = [
             version: [
                     major: 7,
-                    minor: 1,
-                    rev  : 1
+                    minor: 3,
+                    rev  : 0
             ],
             flavor : 'community'
     ]
     solrimage = 'docker.io/xenit/alfresco-solr6:2.0.2'
-    shareimage = 'docker.io/xenit/alfresco-share-community:7.1.0'
-    psqlimage = 'docker.io/xenit/postgres:13.3'
+    shareimage = 'docker.io/xenit/alfresco-share-community:7.3.0'
+    psqlimage = 'docker.io/xenit/postgres:13'
     tests = true
-    alfrescoBomVersion = '7.1.1'
+    alfrescoBomVersion='7.3.0'
 }
 
 dependencies {
-    alfrescoAmp 'org.alfresco:alfresco-share-services:12.24@amp'
+    alfrescoAmp platform("org.alfresco:acs-community-packaging:$alfrescoBomVersion")
+    alfrescoAmp 'org.alfresco:alfresco-share-services@amp'
     baseAlfrescoWar platform("org.alfresco:acs-community-packaging:$alfrescoBomVersion")
     baseAlfrescoWar 'org.alfresco:content-services-community@war'
 }

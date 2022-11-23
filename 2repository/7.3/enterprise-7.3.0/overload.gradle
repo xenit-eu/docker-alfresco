@@ -1,18 +1,17 @@
 ext {
     alfresco = [
             version: [
-                    major: 6,
-                    minor: 2,
-                    rev  : 2,
-                    label: 19
+                    major: 7,
+                    minor: 3,
+                    rev  : 0
             ],
             flavor : 'enterprise'
     ]
-    solrimage = 'hub.xenit.eu/alfresco-enterprise/alfresco-solr6:2.0.1'
-    shareimage = 'docker.io/xenit/alfresco-share-community:6.2.0'
-    psqlimage = 'docker.io/xenit/postgres:11.7'
+    solrimage = 'hub.xenit.eu/alfresco-enterprise/alfresco-solr6:2.0.2'
+    shareimage = 'docker.io/xenit/alfresco-share-community:7.3.0'
+    psqlimage = 'docker.io/xenit/postgres:13'
     tests = true
-    alfrescoBomVersion = '6.2.2.19'
+    alfrescoBomVersion = '7.3.0'
 }
 
 dependencies {
