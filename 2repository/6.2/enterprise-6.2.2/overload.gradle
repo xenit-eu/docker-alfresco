@@ -3,20 +3,21 @@ ext {
             version: [
                     major: 6,
                     minor: 2,
-                    rev: 2,
+                    rev  : 2,
                     label: 19
             ],
-            flavor: 'enterprise'
+            flavor : 'enterprise'
     ]
     solrimage = 'hub.xenit.eu/alfresco-enterprise/alfresco-solr6:2.0.1'
     shareimage = 'docker.io/xenit/alfresco-share-community:6.2.0'
     psqlimage = 'docker.io/xenit/postgres:11.7'
     tests = true
+    alfrescoBomVersion = '6.2.2.19'
 }
 
 dependencies {
-    alfrescoAmp 'org.alfresco:alfresco-share-services:6.2.2.5@amp'
-
-    baseAlfrescoWar platform('org.alfresco:acs-packaging:6.2.2.19')
+    alfrescoAmp platform("org.alfresco:acs-packaging:$alfrescoBomVersion")
+    alfrescoAmp 'org.alfresco:alfresco-share-services@amp'
+    baseAlfrescoWar platform("org.alfresco:acs-packaging:$alfrescoBomVersion")
     baseAlfrescoWar 'org.alfresco:content-services@war'
 }
