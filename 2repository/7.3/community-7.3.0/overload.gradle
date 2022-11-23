@@ -3,19 +3,20 @@
             version: [
                     major: 7,
                     minor: 3,
-                    rev: 0
+                    rev  : 0
             ],
-            flavor: 'community'
+            flavor : 'community'
     ]
     solrimage = 'docker.io/xenit/alfresco-solr6:2.0.2'
-    shareimage = 'docker.io/xenit/alfresco-share-community:7.2.1'
+    shareimage = 'docker.io/xenit/alfresco-share-community:7.3.0'
     psqlimage = 'docker.io/xenit/postgres:13'
     tests = true
+    alfrescoBomVersion='7.3.0'
 }
 
 dependencies {
-    alfrescoAmp 'org.alfresco:alfresco-share-services:17.184@amp'
-
-    baseAlfrescoWar platform('org.alfresco:acs-community-packaging:7.3.0')
+    alfrescoAmp platform("org.alfresco:acs-community-packaging:$alfrescoBomVersion")
+    alfrescoAmp 'org.alfresco:alfresco-share-services@amp'
+    baseAlfrescoWar platform("org.alfresco:acs-community-packaging:$alfrescoBomVersion")
     baseAlfrescoWar 'org.alfresco:content-services-community@war'
 }
