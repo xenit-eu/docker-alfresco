@@ -1,6 +1,6 @@
 subprojects {
     group = 'eu.xenit.alfresco'
-    version '2.0.1'
+    version '2.0.2'
 
     apply plugin: 'eu.xenit.docker'
     apply plugin: 'java'
@@ -106,7 +106,6 @@ subprojects {
     publishing {
         publications {
             maven(MavenPublication) {
-                groupId = 'eu.xenit.alfresco'
                 from components.java
             }
         }

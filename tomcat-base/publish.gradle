@@ -6,7 +6,7 @@ publishing {
         maven(MavenPublication) {
             pom {
                 url = 'https://github.com/xenit-eu/docker-alfresco'
-                groupId = 'eu.xenit'
+                groupId = 'eu.xenit.alfresco'
                 name = "docker-alfresco"
                 description = "A project to run a tomcat embedded in Java optimized for Alfresco"
 
