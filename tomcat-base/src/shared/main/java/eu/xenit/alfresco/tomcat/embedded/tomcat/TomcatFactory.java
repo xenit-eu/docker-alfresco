@@ -31,16 +31,16 @@ public class TomcatFactory {
         this.configuration = configuration;
     }
 
-    public static Connector getConnector(Tomcat tomcat, TomcatConfiguration configuration, String protocol, boolean sslEnabled, String scheme) {
+    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize, String relaxedPathChars, String relaxedQueryChars) {
         Connector connector = new Connector(protocol);
-        connector.setPort(configuration.getTomcatPort());
+        connector.setPort(port);
         connector.setProperty("connectionTimeout", "240000");
         connector.setURIEncoding(StandardCharsets.UTF_8.name());
         connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
-        connector.setProperty("maxThreads", String.valueOf(configuration.getTomcatMaxThreads()));
-        connector.setProperty("maxHttpHeaderSize", String.valueOf(configuration.getTomcatMaxHttpHeaderSize()));
-        connector.setProperty("relaxedPathChars", configuration.getTomcatRelaxedPathChars());
-        connector.setProperty("relaxedQueryChars", configuration.getTomcatRelaxedQueryChars());
+        connector.setProperty("maxThreads", String.valueOf(maxThreads));
+        connector.setProperty("maxHttpHeaderSize", String.valueOf(maxHttpHeaderSize));
+        connector.setProperty("relaxedPathChars", relaxedPathChars);
+        connector.setProperty("relaxedQueryChars", relaxedQueryChars);
         connector.setScheme(scheme);
         Service service = tomcat.getService();
         service.setContainer(tomcat.getEngine());
@@ -119,10 +119,15 @@ public class TomcatFactory {
 
     private void createDefaultConnector(Tomcat tomcat) {
         Connector connector = getConnector(tomcat,
-                getConfiguration(),
                 "HTTP/1.1",
+                getConfiguration().getTomcatPort(),
                 false,
-                "http");
+                "http",
+                getConfiguration().getTomcatMaxThreads(),
+                getConfiguration().getTomcatMaxHttpHeaderSize(),
+                getConfiguration().getTomcatRelaxedPathChars(),
+                getConfiguration().getTomcatRelaxedQueryChars()
+        );
         connector.setRedirectPort(getConfiguration().getTomcatSslPort());
         tomcat.setConnector(connector);
     }
