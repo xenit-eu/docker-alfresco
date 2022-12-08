@@ -28,11 +28,10 @@ public class TomcatFactory {
     private final TomcatConfiguration configuration;
 
     public TomcatFactory(TomcatConfiguration configuration) {
-        this.configuration =
-                configuration;
+        this.configuration = configuration;
     }
 
-    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize) {
+    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize, String relaxedPathChars, String relaxedQueryChars) {
         Connector connector = new Connector(protocol);
         connector.setPort(port);
         connector.setProperty("connectionTimeout", "240000");
@@ -40,6 +39,8 @@ public class TomcatFactory {
         connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
         connector.setProperty("maxThreads", String.valueOf(maxThreads));
         connector.setProperty("maxHttpHeaderSize", String.valueOf(maxHttpHeaderSize));
+        connector.setProperty("relaxedPathChars", relaxedPathChars);
+        connector.setProperty("relaxedQueryChars", relaxedQueryChars);
         connector.setScheme(scheme);
         Service service = tomcat.getService();
         service.setContainer(tomcat.getEngine());
@@ -97,7 +98,7 @@ public class TomcatFactory {
                     resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getSharedClasspathDir(), "/"));
                     resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getGeneratedClasspathDir(), "/"));
                     resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedLibDir(), "/"));
-                    if (configuration.isJsonLogging()) {
+                    if (getConfiguration().isJsonLogging()) {
                         redirectLog4j(path);
                     }
                     ctx.setResources(resources);
@@ -117,7 +118,16 @@ public class TomcatFactory {
     }
 
     private void createDefaultConnector(Tomcat tomcat) {
-        Connector connector = getConnector(tomcat, "HTTP/1.1", getConfiguration().getTomcatPort(), false, "http", configuration.getTomcatMaxThreads(), configuration.getTomcatMaxHttpHeaderSize());
+        Connector connector = getConnector(tomcat,
+                "HTTP/1.1",
+                getConfiguration().getTomcatPort(),
+                false,
+                "http",
+                getConfiguration().getTomcatMaxThreads(),
+                getConfiguration().getTomcatMaxHttpHeaderSize(),
+                getConfiguration().getTomcatRelaxedPathChars(),
+                getConfiguration().getTomcatRelaxedQueryChars()
+        );
         connector.setRedirectPort(getConfiguration().getTomcatSslPort());
         tomcat.setConnector(connector);
     }
@@ -127,11 +137,10 @@ public class TomcatFactory {
         tomcat.addRole(username, role);
     }
 
-    private boolean redirectLog4j(Path path) {
+    private void redirectLog4j(Path path) {
         Path log4JPropertiesPath = path.resolve("WEB-INF/classes/log4j.properties");
         if (!Files.exists(log4JPropertiesPath)) {
             LOG.warning("Log4j file doesn't exist under path " + log4JPropertiesPath);
-            return false;
         }
         Properties properties = new Properties();
         try {
@@ -152,7 +161,6 @@ public class TomcatFactory {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return true;
     }
 
     private void stopTomcat(Tomcat tomcat) {

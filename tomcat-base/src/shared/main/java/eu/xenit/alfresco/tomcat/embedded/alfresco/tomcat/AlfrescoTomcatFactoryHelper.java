@@ -54,10 +54,16 @@ public class AlfrescoTomcatFactoryHelper {
         }
 
         var tomcatConfiguration = alfrescoConfiguration.getTomcatConfiguration();
-        Connector connector = TomcatFactory.getConnector(tomcat, "org.apache.coyote.http11.Http11NioProtocol",
-                tomcatConfiguration.getTomcatSslPort(), true, "https",
+        Connector connector = TomcatFactory.getConnector(tomcat,
+                "org.apache.coyote.http11.Http11NioProtocol",
+                tomcatConfiguration.getTomcatSslPort(),
+                true,
+                "https",
                 tomcatConfiguration.getTomcatMaxThreads(),
-                tomcatConfiguration.getTomcatMaxHttpHeaderSize());
+                tomcatConfiguration.getTomcatMaxHttpHeaderSize(),
+                tomcatConfiguration.getTomcatRelaxedPathChars(),
+                tomcatConfiguration.getTomcatRelaxedQueryChars()
+        );
 
         SSLHostConfig sslHostConfig = new SSLHostConfig();
         sslHostConfig.setCertificateKeystoreFile(alfrescoConfiguration.getTomcatSSLKeystore());
