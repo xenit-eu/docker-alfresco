@@ -2,6 +2,9 @@ package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
 
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_FLAVOUR;
+import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_HOST;
+import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_PORT;
+import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_PROTOCOL;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_VERSION;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_DRIVER;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_HOST;
@@ -14,6 +17,9 @@ import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironm
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DIR_ROOT;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ENABLE_CLUSTERING;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.INDEX;
+import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SHARE_HOST;
+import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SHARE_PORT;
+import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SHARE_PROTOCOL;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SOLR_HOST;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SOLR_PORT;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SOLR_PORT_SSL;
@@ -62,6 +68,12 @@ public class EnvironmentVariableAlfrescoConfigurationProvider implements Alfresc
         setGlobalPropertyFromEnv(ENABLE_CLUSTERING, finalBaseAlfrescoConfiguration, "alfresco.cluster.enabled");
         setGlobalPropertyFromEnv(INDEX, finalBaseAlfrescoConfiguration, "index.subsystem.name");
         setGlobalPropertyFromEnv(DIR_ROOT, finalBaseAlfrescoConfiguration, "dir.root");
+        setGlobalPropertyFromEnv(ALFRESCO_HOST, finalBaseAlfrescoConfiguration, "alfresco.host");
+        setGlobalPropertyFromEnv(ALFRESCO_PORT, finalBaseAlfrescoConfiguration, "alfresco.port");
+        setGlobalPropertyFromEnv(ALFRESCO_PROTOCOL, finalBaseAlfrescoConfiguration, "alfresco.protocol");
+        setGlobalPropertyFromEnv(SHARE_HOST, finalBaseAlfrescoConfiguration, "share.host");
+        setGlobalPropertyFromEnv(SHARE_PORT, finalBaseAlfrescoConfiguration, "share.port");
+        setGlobalPropertyFromEnv(SHARE_PROTOCOL, finalBaseAlfrescoConfiguration, "share.protocol");
         setGlobalProperties(finalBaseAlfrescoConfiguration);
 
         return finalBaseAlfrescoConfiguration;

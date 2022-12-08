@@ -1,6 +1,12 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
 public class AlfrescoEnvironmentVariables {
+    public static final String ALFRESCO_HOST = "ALFRESCO_HOST";
+    public static final String ALFRESCO_PORT = "ALFRESCO_PORT";
+    public static final String ALFRESCO_PROTOCOL = "ALFRESCO_PROTOCOL";
+    public static final String SHARE_HOST = "SHARE_HOST";
+    public static final String SHARE_PORT = "SHARE_PORT";
+    public static final String SHARE_PROTOCOL = "SHARE_PROTOCOL";
     public static final String ALFRESCO_VERSION = "ALFRESCO_VERSION";
     public static final String ALFRESCO_FLAVOUR = "ALFRESCO_FLAVOUR";
     public static final String DB_HOST = "DB_HOST";
@@ -24,6 +30,7 @@ public class AlfrescoEnvironmentVariables {
     public static final String TOMCAT_SSL_TRUSTSTORE_PASSWORD = "TOMCAT_SSL_TRUSTSTORE_PASSWORD";
     public static final String ENABLE_CLUSTERING = "ENABLE_CLUSTERING";
     public static final String DIR_ROOT = "DIR_ROOT";
+
     private AlfrescoEnvironmentVariables() {
     }
 }
