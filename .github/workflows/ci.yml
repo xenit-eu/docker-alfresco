@@ -20,11 +20,6 @@ jobs:
           java-version: 11
       - name: Write build date
         run: "mkdir -p ~/.gradle && echo 'buildDate='$(date +%s) >> ~/.gradle/gradle.properties"
-      - name: Login to Xenit docker registry
-        env:
-          DOCKER_USER: ${{ secrets.XENIT_DOCKER_REGISTRY_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.XENIT_DOCKER_REGISTRY_PASSWORD }}
-        run: echo "$DOCKER_PASSWORD" | docker login hub.xenit.eu --username "$DOCKER_USER" --password-stdin
       - name: Login to CloudSmith docker registry
         env:
           DOCKER_USER: ${{ secrets.CLOUDSMITH_USER }}
