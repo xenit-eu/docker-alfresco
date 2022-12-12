@@ -30,7 +30,7 @@ import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironm
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.TOMCAT_SSL_TRUSTSTORE;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.TOMCAT_SSL_TRUSTSTORE_KEY_META_DATA_LOCATION;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.TOMCAT_SSL_TRUSTSTORE_PASSWORD;
-import static eu.xenit.alfresco.tomcat.embedded.utils.ConfigurationHelper.setPropertyFromEnv;
+import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.setPropertyFromEnv;
 
 public class EnvironmentVariableAlfrescoConfigurationProvider implements AlfrescoConfigurationProvider {
 
