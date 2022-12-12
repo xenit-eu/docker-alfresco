@@ -97,7 +97,7 @@ public class TomcatFactory {
                     resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getGeneratedClasspathDir(), "/"));
                     resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedLibDir(), "/"));
                     if (getConfiguration().isJsonLogging()) {
-                        redirectLog4j(path);
+                        redirectLog4j(path, configuration);
                     }
                     ctx.setResources(resources);
                 }
