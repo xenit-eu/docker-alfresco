@@ -24,8 +24,8 @@ public class Utils {
         }
     }
 
-    public static void redirectLog4j(Path path, TomcatConfiguration configuration) {
-        Path log4JPropertiesPath = path.resolve("WEB-INF/classes/log4j.properties");
+    public static void redirectLog4j(Path webappPath, Path destinationPath) {
+        Path log4JPropertiesPath = webappPath.resolve("WEB-INF/classes/log4j.properties");
         if (!Files.exists(log4JPropertiesPath)) {
             LOG.warning("Log4j file doesn't exist under path " + log4JPropertiesPath);
             return;
@@ -37,10 +37,10 @@ public class Utils {
                 properties.setProperty("log4j.rootLogger", "error, Console, jmxlogger1");
                 properties.setProperty("log4j.appender.Console.layout", "eu.xenit.json.log4j.JsonLayout");
                 properties.setProperty("log4j.appender.Console.layout.Type", "application");
-                properties.setProperty("log4j.appender.Console.layout.Component", path.getFileName().toString());
+                properties.setProperty("log4j.appender.Console.layout.Component", webappPath.getFileName().toString());
                 properties.setProperty("log4j.appender.Console.layout.ExtractStackTrace", "true");
                 properties.setProperty("log4j.appender.Console.layout.FilterStackTrace", "true");
-                Path tempProps = Files.createTempFile(Paths.get(configuration.getGeneratedClasspathDir()), "log4j-", ".properties");
+                Path tempProps = Files.createTempFile(destinationPath, "log4j-", ".properties");
                 try (OutputStream os = Files.newOutputStream(tempProps)) {
                     properties.store(os, null);
                 }
