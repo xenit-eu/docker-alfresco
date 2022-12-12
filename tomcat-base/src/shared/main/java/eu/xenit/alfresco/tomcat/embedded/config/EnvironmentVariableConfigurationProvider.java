@@ -19,7 +19,7 @@ import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMC
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_RELAXED_QUERY_CHARS;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_SERVER_PORT;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_WEBAPPS;
-import static eu.xenit.alfresco.tomcat.embedded.utils.ConfigurationHelper.setPropertyFromEnv;
+import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.setPropertyFromEnv;
 
 public class EnvironmentVariableConfigurationProvider implements ConfigurationProvider {
 

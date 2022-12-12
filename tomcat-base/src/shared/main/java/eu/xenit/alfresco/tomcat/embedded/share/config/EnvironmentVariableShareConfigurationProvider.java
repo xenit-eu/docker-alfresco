@@ -11,7 +11,7 @@ import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVar
 import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.ALFRESCO_PROTOCOL;
 import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.SHARE_CONFIG_PATH;
 import static eu.xenit.alfresco.tomcat.embedded.share.config.ShareEnvironmentVariables.SHARE_CONFIG_TEMPLATE_FILE;
-import static eu.xenit.alfresco.tomcat.embedded.utils.ConfigurationHelper.setPropertyFromEnv;
+import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.setPropertyFromEnv;
 
 public class EnvironmentVariableShareConfigurationProvider implements ShareConfigurationProvider {
 
