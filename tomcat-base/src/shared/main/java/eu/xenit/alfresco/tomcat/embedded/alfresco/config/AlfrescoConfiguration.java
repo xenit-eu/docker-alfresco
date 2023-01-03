@@ -35,7 +35,8 @@ public class AlfrescoConfiguration {
     }
 
     public void setSystemProperty(String key, String value) {
-        if (System.getProperty(key) == null)
+        if (System.getProperty(key) == null) {
             System.setProperty(key, value);
+        }
     }
 }
