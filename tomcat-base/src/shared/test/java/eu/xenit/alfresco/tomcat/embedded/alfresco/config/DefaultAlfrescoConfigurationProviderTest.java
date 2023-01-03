@@ -49,4 +49,14 @@ class DefaultAlfrescoConfigurationProviderTest {
         expected.setGlobalProperty("dir.root", "/opt/alfresco/alf_data");
         assertEquals(configuration, expected);
     }
+
+    @Test
+    void testSetSystemVariable() {
+        String expected = "testKeystore";
+        String key = "encryption.keystore.location";
+        System.setProperty(key, expected);
+        new DefaultAlfrescoConfigurationProvider().getConfiguration();
+        // Check that the custom setting is not overridden by the default configuration
+        assertEquals(expected, System.getProperty(key));
+    }
 }
