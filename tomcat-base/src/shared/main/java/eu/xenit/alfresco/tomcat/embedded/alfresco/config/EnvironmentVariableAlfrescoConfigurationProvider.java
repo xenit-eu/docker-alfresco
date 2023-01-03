@@ -45,7 +45,7 @@ public class EnvironmentVariableAlfrescoConfigurationProvider implements Alfresc
         setPropertyFromEnv(TOMCAT_SSL_KEYSTORE, finalBaseAlfrescoConfiguration::setTomcatSSLKeystore);
 
         setGlobalPropertyFromEnv(DB_HOST, finalBaseAlfrescoConfiguration, "db.host");
-        setGlobalPropertyFromEnv(DB_NAME, finalBaseAlfrescoConfiguration, "db.NAME");
+        setGlobalPropertyFromEnv(DB_NAME, finalBaseAlfrescoConfiguration, "db.name");
         setGlobalPropertyFromEnv(DB_PORT, finalBaseAlfrescoConfiguration, "db.port");
         setGlobalPropertyFromEnv(DB_DRIVER, finalBaseAlfrescoConfiguration, "db.driver");
         setGlobalPropertyFromEnv(DB_USERNAME, finalBaseAlfrescoConfiguration, "db.username");

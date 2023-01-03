@@ -15,7 +15,8 @@ public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurati
         baseAlfrescoConfiguration.setGlobalProperty("db.host", "postgresql");
         baseAlfrescoConfiguration.setGlobalProperty("db.port", "5432");
         baseAlfrescoConfiguration.setGlobalProperty("db.driver", "org.postgresql.Driver");
-        baseAlfrescoConfiguration.setGlobalProperty("db.user", "alfresco");
+        baseAlfrescoConfiguration.setGlobalProperty("db.username", "alfresco");
+        baseAlfrescoConfiguration.setGlobalProperty("db.name", "alfresco");
         baseAlfrescoConfiguration.setGlobalProperty("db.password", "admin");
         baseAlfrescoConfiguration.setGlobalProperty("db.url", "jdbc:postgresql://${db.host}:${db.port}/${db.name}");
 

@@ -17,7 +17,8 @@ class DefaultAlfrescoConfigurationProviderTest {
         expected.setGlobalProperty("db.host", "postgresql");
         expected.setGlobalProperty("db.port", "5432");
         expected.setGlobalProperty("db.driver", "org.postgresql.Driver");
-        expected.setGlobalProperty("db.user", "alfresco");
+        expected.setGlobalProperty("db.username", "alfresco");
+        expected.setGlobalProperty("db.name", "alfresco");
         expected.setGlobalProperty("db.password", "admin");
         expected.setGlobalProperty("db.url", "jdbc:postgresql://${db.host}:${db.port}/${db.name}");
         expected.setSystemProperty("encryption.keystore.type", "JCEKS");
@@ -47,5 +48,15 @@ class DefaultAlfrescoConfigurationProviderTest {
         expected.setGlobalProperty("solr.secureComms", "https");
         expected.setGlobalProperty("dir.root", "/opt/alfresco/alf_data");
         assertEquals(configuration, expected);
+    }
+
+    @Test
+    void testSetSystemVariable() {
+        String expected = "testKeystore";
+        String key = "encryption.keystore.location";
+        System.setProperty(key, expected);
+        new DefaultAlfrescoConfigurationProvider().getConfiguration();
+        // Check that the custom setting is not overridden by the default configuration
+        assertEquals(expected, System.getProperty(key));
     }
 }
