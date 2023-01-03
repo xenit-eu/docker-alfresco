@@ -3,7 +3,8 @@ ext {
             version: [
                     major: 7,
                     minor: 3,
-                    rev  : 0
+                    rev  : 0,
+                    label: 1
             ],
             flavor : 'enterprise'
     ]
@@ -11,7 +12,7 @@ ext {
     shareimage = 'docker.io/xenit/alfresco-share-community:7.3.0'
     psqlimage = 'docker.io/xenit/postgres:13'
     tests = true
-    alfrescoBomVersion = '7.3.0'
+    alfrescoBomVersion = '7.3.0.1'
 }
 
 dependencies {
