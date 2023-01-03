@@ -40,4 +40,44 @@ class EnvironmentVariableAlfrescoConfigurationProviderTest {
         assertEquals(expected, configuration);
         unsetEnv(Set.of("GLOBAL_test"));
     }
+
+    @Test
+    void testSolrSslSettings() throws Exception {
+        var secureCommsKey = "solr.secureComms";
+
+        setEnv(Map.of(SOLR_SSL, "https"));
+        var configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertEquals(true, configuration.isSolrSSLEnabled());
+        assertEquals("https", configuration.getGlobalProperties().get(secureCommsKey));
+
+        setEnv(Map.of(SOLR_SSL, "none"));
+        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertEquals(false, configuration.isSolrSSLEnabled());
+        assertEquals("none", configuration.getGlobalProperties().get(secureCommsKey));
+
+        setEnv(Map.of(SOLR_SSL, "secret"));
+        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertEquals(false, configuration.isSolrSSLEnabled());
+        assertEquals("secret", configuration.getGlobalProperties().get(secureCommsKey));
+
+        unsetEnv(Set.of(SOLR_SSL));
+
+        var solrSecureCommsEnv = "GLOBAL_"+secureCommsKey;
+        setEnv(Map.of(solrSecureCommsEnv, "https"));
+        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertEquals(true, configuration.isSolrSSLEnabled());
+        assertEquals("https", configuration.getGlobalProperties().get(secureCommsKey));
+
+        setEnv(Map.of(solrSecureCommsEnv, "none"));
+        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertEquals(false, configuration.isSolrSSLEnabled());
+        assertEquals("none", configuration.getGlobalProperties().get(secureCommsKey));
+
+        setEnv(Map.of(solrSecureCommsEnv, "secret"));
+        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertEquals(false, configuration.isSolrSSLEnabled());
+        assertEquals("secret", configuration.getGlobalProperties().get(secureCommsKey));
+
+        unsetEnv(Set.of(solrSecureCommsEnv));
+    }
 }

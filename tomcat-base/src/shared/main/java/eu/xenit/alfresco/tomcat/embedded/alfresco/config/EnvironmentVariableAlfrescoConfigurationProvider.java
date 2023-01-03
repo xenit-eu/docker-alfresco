@@ -55,9 +55,6 @@ public class EnvironmentVariableAlfrescoConfigurationProvider implements Alfresc
         setGlobalPropertyFromEnv(SOLR_HOST, finalBaseAlfrescoConfiguration, "solr.host");
         setGlobalPropertyFromEnv(SOLR_PORT, finalBaseAlfrescoConfiguration, "solr.port");
         setGlobalPropertyFromEnv(SOLR_PORT_SSL, finalBaseAlfrescoConfiguration, "solr.port.ssl");
-        if ("none".equals(System.getenv(SOLR_SSL))) {
-            finalBaseAlfrescoConfiguration.setSolrSSLEnabled(false);
-        }
         setGlobalPropertyFromEnv(SOLR_SSL, finalBaseAlfrescoConfiguration, "solr.secureComms");
         setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE, finalBaseAlfrescoConfiguration, "encryption.ssl.keystore.location");
         setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE_KEY_META_DATA_LOCATION, finalBaseAlfrescoConfiguration, "encryption.ssl.keystore.keyMetaData.location");
@@ -75,7 +72,11 @@ public class EnvironmentVariableAlfrescoConfigurationProvider implements Alfresc
         setGlobalPropertyFromEnv(SHARE_PORT, finalBaseAlfrescoConfiguration, "share.port");
         setGlobalPropertyFromEnv(SHARE_PROTOCOL, finalBaseAlfrescoConfiguration, "share.protocol");
         setGlobalProperties(finalBaseAlfrescoConfiguration);
-
+        if ("https".equals(finalBaseAlfrescoConfiguration.getGlobalProperties().get("solr.secureComms"))) {
+            finalBaseAlfrescoConfiguration.setSolrSSLEnabled(true);
+        } else {
+            finalBaseAlfrescoConfiguration.setSolrSSLEnabled(false);
+        }
         return finalBaseAlfrescoConfiguration;
     }
 
