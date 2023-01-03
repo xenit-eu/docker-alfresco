@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 ## released
 ### Fixed
 
-* [PR #110](https://github.com/xenit-eu/docker-alfresco/pull/110) XM2C-81 fix alfresco environment and default properties
+* [PR #110](https://github.com/xenit-eu/docker-alfresco/pull/110) XM2C-81 fix alfresco environment and default system properties
 
 ### Added
 
