@@ -4,7 +4,6 @@ import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.share.config.DefaultShareConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.share.config.EnvironmentVariableShareConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.share.config.ShareConfiguration;
-import eu.xenit.alfresco.tomcat.embedded.share.tomcat.ShareTomcatFactoryHelper;
 import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatCustomizer;
 import org.apache.catalina.startup.Tomcat;
 
@@ -15,6 +14,5 @@ public class ShareTomcatCustomizer implements TomcatCustomizer {
         ShareConfiguration shareConfiguration = new EnvironmentVariableShareConfigurationProvider()
                 .getConfiguration(new DefaultShareConfigurationProvider()
                         .getConfiguration(new ShareConfiguration(configuration)));
-        ShareTomcatFactoryHelper.createShareConfigCustomFile(shareConfiguration);
     }
 }
