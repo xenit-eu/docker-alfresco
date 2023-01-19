@@ -209,7 +209,7 @@
          If set, will present a WebDAV link for the current item on the Document and Folder details pages.
          Also used to generate the "View in Alfresco Explorer" action for folders.
       -->
-      <repository-url>${ALFRESCO_PROTOCOL}://${ALFRESCO_HOST}:${ALFRESCO_PORT}/${ALFRESCO_CONTEXT}</repository-url>
+      <repository-url>${ALFRESCO_PROTOCOL:http}://${ALFRESCO_HOST:alfresco}:${ALFRESCO_PORT:8080}/${ALFRESCO_CONTEXT:alfresco}</repository-url>
 
       <!--
          Google Docs™ integration
@@ -345,7 +345,7 @@
    <!-- Uncomment and modify the URL to Activiti Admin Console if required. -->
    <!--
    <config evaluator="string-compare" condition="ActivitiAdmin" replace="true">
-      <activiti-admin-url>${ALFRESCO_INTERNAL_PROTOCOL}://${ALFRESCO_INTERNAL_HOST}:${ALFRESCO_INTERNAL_PORT}/${ALFRESCO_INTERNAL_CONTEXT}/activiti-admin</activiti-admin-url>
+      <activiti-admin-url>${ALFRESCO_INTERNAL_PROTOCOL:http}://${ALFRESCO_INTERNAL_HOST:alfresco}:${ALFRESCO_INTERNAL_PORT:8080}/${ALFRESCO_INTERNAL_CONTEXT:alfresco}/activiti-admin</activiti-admin-url>
    </config>
    -->
 
@@ -356,7 +356,7 @@
             <name>Alfresco - unauthenticated access</name>
             <description>Access to Alfresco Repository WebScripts that do not require authentication</description>
             <connector-id>alfresco</connector-id>
-            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL}://${ALFRESCO_INTERNAL_HOST}:${ALFRESCO_INTERNAL_PORT}/${ALFRESCO_INTERNAL_CONTEXT}/s</endpoint-url>
+            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL:http}://${ALFRESCO_INTERNAL_HOST:alfresco}:${ALFRESCO_INTERNAL_PORT:8080}/${ALFRESCO_INTERNAL_CONTEXT:alfresco}/s</endpoint-url>
             <identity>none</identity>
          </endpoint>
 
@@ -365,7 +365,7 @@
             <name>Alfresco - user access</name>
             <description>Access to Alfresco Repository WebScripts that require user authentication</description>
             <connector-id>alfresco</connector-id>
-            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL}://${ALFRESCO_INTERNAL_HOST}:${ALFRESCO_INTERNAL_PORT}/${ALFRESCO_INTERNAL_CONTEXT}/s</endpoint-url>
+            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL:http}://${ALFRESCO_INTERNAL_HOST:alfresco}:${ALFRESCO_INTERNAL_PORT:8080}/${ALFRESCO_INTERNAL_CONTEXT:alfresco}/s</endpoint-url>
             <identity>user</identity>
          </endpoint>
 
@@ -374,7 +374,7 @@
             <name>Alfresco Feed</name>
             <description>Alfresco Feed - supports basic HTTP authentication via the EndPointProxyServlet</description>
             <connector-id>http</connector-id>
-            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL}://${ALFRESCO_INTERNAL_HOST}:${ALFRESCO_INTERNAL_PORT}/${ALFRESCO_INTERNAL_CONTEXT}/s</endpoint-url>
+            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL:http}://${ALFRESCO_INTERNAL_HOST:alfresco}:${ALFRESCO_INTERNAL_PORT:8080}/${ALFRESCO_INTERNAL_CONTEXT:alfresco}/s</endpoint-url>
             <basic-auth>true</basic-auth>
             <identity>user</identity>
          </endpoint>
@@ -386,7 +386,7 @@
             <description>Access to Alfresco Repository Public API that require user authentication.
                          This makes use of the authentication that is provided by parent 'alfresco' endpoint.</description>
             <connector-id>alfresco</connector-id>
-            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL}://${ALFRESCO_INTERNAL_HOST}:${ALFRESCO_INTERNAL_PORT}/${ALFRESCO_INTERNAL_CONTEXT}/api</endpoint-url>
+            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL:http}://${ALFRESCO_INTERNAL_HOST:alfresco}:${ALFRESCO_INTERNAL_PORT:8080}/${ALFRESCO_INTERNAL_CONTEXT:alfresco}/api</endpoint-url>
             <identity>user</identity>
          </endpoint>
       </remote>
@@ -460,7 +460,7 @@
             <name>Alfresco - user access</name>
             <description>Access to Alfresco Repository WebScripts that require user authentication</description>
             <connector-id>alfrescoCookie</connector-id>
-            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL}://${ALFRESCO_INTERNAL_HOST}:${ALFRESCO_INTERNAL_PORT}/${ALFRESCO_INTERNAL_CONTEXT}/wcs</endpoint-url>
+            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL:http}://${ALFRESCO_INTERNAL_HOST:alfresco}:${ALFRESCO_INTERNAL_PORT:8080}/${ALFRESCO_INTERNAL_CONTEXT:alfresco}/wcs</endpoint-url>
             <identity>user</identity>
             <external-auth>true</external-auth>
          </endpoint>
@@ -471,7 +471,7 @@
             <name>Alfresco Feed</name>
             <description>Alfresco Feed - supports basic HTTP authentication via the EndPointProxyServlet</description> 
             <connector-id>alfrescoHeader</connector-id> 
-            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL}://${ALFRESCO_INTERNAL_HOST}:${ALFRESCO_INTERNAL_PORT}/${ALFRESCO_INTERNAL_CONTEXT}/wcs</endpoint-url>
+            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL:http}://${ALFRESCO_INTERNAL_HOST:alfresco}:${ALFRESCO_INTERNAL_PORT:8080}/${ALFRESCO_INTERNAL_CONTEXT:alfresco}/wcs</endpoint-url>
             <identity>user</identity>
             <external-auth>true</external-auth>
          </endpoint>
@@ -483,7 +483,7 @@
             <description>Access to Alfresco Repository Public API that require user authentication.
                          This makes use of the authentication that is provided by parent 'alfresco' endpoint.</description>
             <connector-id>alfrescoHeader</connector-id>
-            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL}://${ALFRESCO_INTERNAL_HOST}:${ALFRESCO_INTERNAL_PORT}/${ALFRESCO_INTERNAL_CONTEXT}/api</endpoint-url>
+            <endpoint-url>${ALFRESCO_INTERNAL_PROTOCOL:http}://${ALFRESCO_INTERNAL_HOST:alfresco}:${ALFRESCO_INTERNAL_PORT:8080}/${ALFRESCO_INTERNAL_CONTEXT:alfresco}/api</endpoint-url>
             <identity>user</identity>
             <external-auth>true</external-auth>
          </endpoint>

@@ -36,7 +36,7 @@ class ShareTomcatFactoryHelperTest {
         Path tempProps = Paths.get(tomcatConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
         String actual = Files.readString(tempProps);
         String expected = Files.readString(expectedPath);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
