@@ -20,7 +20,7 @@ subprojects {
         tags = calcTags(project.share.version)
     }
     createDockerFile {
-        smartCopy "$project.projectDir/local", "/usr/local/tomcat/shared/classes/"
+        smartCopy "$project.projectDir/local", "/usr/local/tomcat/shared/classes/alfresco/web-extension/"
         dependsOn(tomcatImage)
         baseImage = tomcatImage.getImageId()
         environmentVariable('SHARE_VERSION', "${project.share.version.major}.${project.share.version.minor}.${project.share.version.rev}")
