@@ -55,7 +55,7 @@ Images with the repository and share are no longer built.
 ## Environment variables
 
 There are several environment variables available to tweak the behaviour. While none of the variables are required, they
-may significantly aid you in using these images.
+may significantly aid you in using these images. this doesn't set your environment variables to default values.
 
 ### Common Environment variables
 
