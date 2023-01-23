@@ -26,11 +26,9 @@ jobs:
           password: ${{ secrets.CLOUDSMITH_APIKEY }}
       - name: Unit tests
         run: ./gradlew test --parallel --info -Penterprise
-      - name: Run integration tests
-        env:
-          VERSIONS_TO_BUILD: ${{ matrix.version }}
+      - name: Build image and Run integration tests
         run: ./gradlew integrationTests --info -Penterprise
-      - name: 'Upload Artifact'
+      - name: Upload Artifact
         if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
