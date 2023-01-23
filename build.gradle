@@ -25,15 +25,7 @@ def calcTags(version) {
 }
 
 def calcRepository(flavor) {
-    def repoName = project.properties.getOrDefault("repoName", "hub.xenit.eu");
-    if(repoName == "hub.xenit.eu") {
-        def namespace = (flavor == "enterprise" || flavor == "legacy") ? "alfresco-enterprise" : "public";
-        repoName += "/" + namespace;
-    }
-    if(flavor == "legacy") {
-        return "${repoName}/alfresco-enterprise";
-    }
-    return "${repoName}/alfresco-repository-${flavor}";
+    return "private.docker.xenit.eu/customer/ethias/alfresco-enterprise";
 }
 
 subprojects {
