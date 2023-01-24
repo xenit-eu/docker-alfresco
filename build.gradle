@@ -27,6 +27,9 @@ def calcTags(version) {
     def isTestBuild = ci.isCi() && ci.branch != "master" && ci.branch != "release" && ci.branch != "ethias"
     if(isTestBuild) {
         tags = tags.stream().map({ it + "-build-${ci.branch}-${ci.buildNumber}" }).collect(Collectors.toList());
+    } else {
+        String timestamp = new Date().format('yyyyMMddHHmmss')
+        tags = tags.stream().map({ it + "-${timestamp}" }).collect(Collectors.toList());
     }
 
     return tags
