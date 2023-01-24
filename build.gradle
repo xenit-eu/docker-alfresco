@@ -5,6 +5,14 @@ plugins {
 
 import java.util.stream.Collectors
 
+def copyPropertyValueIfExists(sourcePropertyName, targetPropertyName) {
+    if (project.hasProperty(sourcePropertyName)) {
+        project.ext[targetPropertyName] = project.property(sourcePropertyName)
+    }
+}
+
+copyPropertyValueIfExists('alfresco_nexus_username', 'org.alfresco.maven.nexus.username')
+copyPropertyValueIfExists('alfresco_nexus_password', 'org.alfresco.maven.nexus.password')
 
 def calcTags(version) {
     def tags = [
@@ -16,7 +24,7 @@ def calcTags(version) {
         tags += "${version.major}.${version.minor}.${version.rev}.${version.label}".toString()
     }
     // For non-master/non-release builds, change the tags to contain branch and build number
-    def isTestBuild = ci.isCi() && ci.branch != "master" && ci.branch != "release"
+    def isTestBuild = ci.isCi() && ci.branch != "master" && ci.branch != "release" && ci.branch != "ethias"
     if(isTestBuild) {
         tags = tags.stream().map({ it + "-build-${ci.branch}-${ci.buildNumber}" }).collect(Collectors.toList());
     }
@@ -25,15 +33,7 @@ def calcTags(version) {
 }
 
 def calcRepository(flavor) {
-    def repoName = project.properties.getOrDefault("repoName", "hub.xenit.eu");
-    if(repoName == "hub.xenit.eu") {
-        def namespace = (flavor == "enterprise" || flavor == "legacy") ? "alfresco-enterprise" : "public";
-        repoName += "/" + namespace;
-    }
-    if(flavor == "legacy") {
-        return "${repoName}/alfresco-enterprise";
-    }
-    return "${repoName}/alfresco-repository-${flavor}";
+    return "private.docker.xenit.eu/customer/ethias/alfresco-enterprise";
 }
 
 subprojects {
@@ -46,14 +46,11 @@ subprojects {
         }
         // This private repository provides Xenit with Alfresco enterprise artefacts.
         // External developers should replace it with their own library repository.
-        if(project.hasProperty('eu.xenit.artifactory.username') && project.hasProperty('eu.xenit.artifactory.password')) {
-            maven {
-                name 'Xenit artifactory release local'
-                url 'https://artifactory.xenit.eu/artifactory/libs-release'
-                credentials {
-                    username property("eu.xenit.artifactory.username")
-                    password property("eu.xenit.artifactory.password")
-                }
+        maven {
+            url 'https://artifacts.alfresco.com/nexus/content/groups/private'
+            credentials {
+                username project.property('org.alfresco.maven.nexus.username')
+                password project.property('org.alfresco.maven.nexus.password')
             }
         }
     }
