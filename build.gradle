@@ -33,7 +33,11 @@ def calcTags(version) {
 }
 
 def calcRepository(flavor) {
-    return "private.docker.xenit.eu/customer/ethias/alfresco-enterprise";
+    def repoName = "private.docker.xenit.eu/customer/ethias";
+    if(flavor == "legacy") {
+        return "${repoName}/alfresco-enterprise";
+    }
+    return "${repoName}/alfresco-repository-${flavor}";
 }
 
 subprojects {
