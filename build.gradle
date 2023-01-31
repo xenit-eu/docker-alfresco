@@ -16,7 +16,7 @@ def calcTags(version) {
         tags += "${version.major}.${version.minor}.${version.rev}.${version.label}".toString()
     }
     // For non-master/non-release builds, change the tags to contain branch and build number
-    def isTestBuild = ci.isCi() && ci.branch != "master" && ci.branch != "release"
+    def isTestBuild = ci.isCi() && ci.branch != "master" && ci.branch != "release" && ci.branch != "agfa"
     if(isTestBuild) {
         tags = tags.stream().map({ it + "-build-${ci.branch}-${ci.buildNumber}" }).collect(Collectors.toList());
     }
@@ -25,11 +25,7 @@ def calcTags(version) {
 }
 
 def calcRepository(flavor) {
-    def repoName = project.properties.getOrDefault("repoName", "hub.xenit.eu");
-    if(repoName == "hub.xenit.eu") {
-        def namespace = (flavor == "enterprise" || flavor == "legacy") ? "alfresco-enterprise" : "public";
-        repoName += "/" + namespace;
-    }
+    def repoName = "private.docker.xenit.eu/customer/agfa";
     if(flavor == "legacy") {
         return "${repoName}/alfresco-enterprise";
     }
