@@ -30,7 +30,7 @@ class UtilsTest {
         try (var reader = Files.newBufferedReader(Paths.get(log4JFilePath.split("file:")[1]))) {
             properties.load(reader);
             Assertions.assertEquals("error, Console, jmxlogger1", properties.getProperty("log4j.rootLogger"));
-            Assertions.assertEquals("eu.xenit.json.log4j.JsonLayout", properties.getProperty("log4j.appender.Console.layout"));
+            Assertions.assertEquals("eu.xenit.logging.json.log4j.JsonLayout", properties.getProperty("log4j.appender.Console.layout"));
             Assertions.assertEquals("application", properties.getProperty("log4j.appender.Console.layout.Type"));
             Assertions.assertEquals(parent.getFileName().toString(), properties.getProperty("log4j.appender.Console.layout.Component"));
             Assertions.assertEquals("true", properties.getProperty("log4j.appender.Console.layout.ExtractStackTrace"));
