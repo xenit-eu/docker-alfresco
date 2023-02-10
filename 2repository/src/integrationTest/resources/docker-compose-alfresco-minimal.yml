@@ -12,3 +12,5 @@ services:
    - SOLR_HOST=solr
    - GLOBAL_legacy.transform.service.enabled=false
    - GLOBAL_local.transform.service.enabled=false
+   - JSON_LOGGING=true
+   - ACCESS_LOGGING=true
