@@ -1,7 +1,5 @@
 package eu.xenit.alfresco.tomcat.embedded.utils;
 
-import eu.xenit.logging.json.log4j.JsonLayout;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -34,7 +32,7 @@ public class Utils {
             try (var reader = Files.newBufferedReader(log4JPropertiesPath)) {
                 properties.load(reader);
                 properties.setProperty("log4j.rootLogger", "error, Console, jmxlogger1");
-                properties.setProperty("log4j.appender.Console.layout", JsonLayout.class.getCanonicalName());
+                properties.setProperty("log4j.appender.Console.layout", "eu.xenit.logging.json.log4j.JsonLayout");
                 properties.setProperty("log4j.appender.Console.layout.Type", "application");
                 properties.setProperty("log4j.appender.Console.layout.Component", webappPath.getFileName().toString());
                 properties.setProperty("log4j.appender.Console.layout.ExtractStackTrace", "true");

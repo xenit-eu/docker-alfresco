@@ -25,3 +25,4 @@ services:
    - GLOBAL_localTransform.tika.url=http://tika:8090/
    - GLOBAL_localTransform.misc.url=http://transform-misc:8090/
 
+
