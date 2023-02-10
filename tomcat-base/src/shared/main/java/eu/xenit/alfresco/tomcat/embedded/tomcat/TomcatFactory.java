@@ -1,7 +1,7 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
-import eu.xenit.json.valve.JsonAccessLogValve;
+import eu.xenit.logging.json.valve.JsonAccessLogValve;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.Service;
