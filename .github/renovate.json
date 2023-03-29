@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard"
+  ],
+  "hostRules": [
+    {
+      "matchHost": "https://repo.xenit.eu/basic/private/maven/",
+      "hostType": "maven",
+      "username": "token",
+      "encrypted": {
+        "password": "wcFMA/xDdHCJBTolAQ//XOvlh+qzdMUStH8AXlDolT3GQFHuPVPwd5/NGbb/fN60GesdbWVRpF6icPJPzZwBNMk8K3LLfCshda9M2K9PSv1k8bkqp32HvvfbfPFT2W+5amzaHT4Q3qqNZ+icHBtRfykCdlCVyOp13I2SwGb7xIZq5qMm+PBJyWJvAFxPgYoLT+IUNawd8/wmhPWaNv26GUQTvBtZpo2t6SmEswYeYrgwx0vwYKlRDb8vcLL2GINfOEYoPPBt28+Q2koJlBkHwaLc2LmIqV1GHV7vBkTgQugFoHEZSEN/URJR4UsoOMPL+zwo5Gj0/ez2ibKJr2daXcfGiuOo6ecNpzWZI2PnF6l8pdb3NMZn6bKc3EXBAjZOl9t6Ta0SU9OBMfelT7uKtePbqp/Dfdq5MXF3SfBJepIJ4NtJBI3tdu6i/Nzkzkr0S/T4m669AiugHao4+yGyfRxVKAVkygNx2T2br0cmVBwqDnmJA3JzKyDsRQrvrxA0L+/aH1XMZYkk1br8vkVZnQYFfS0ueT2Ca15dPp1yLLz7H8oqGWvfjD9nWWrYYCG97UAZVE6/rkpPKhW8U07DVb1zYjFSMZFZushFTvXdeKm2kGP3kM8jQgDJkMZaUc8cEeoYwCiZb8y3RI6LDSn2VY9h4bY2+sCJqzWYpVe328ah2aJThZCrrKajCQ2GdujSXwFurksAl9DS6lzEhXvh4f/nC2zaZ9TzXwR7JXKGEhjoO04XBx2uS1urws0LPbS2jht6mmHOMC6rqHK6LLeIPPi7xmz6TtB7A6CwYh0Zaom+7aL5wFKb08tZ2iYfP8JY"
+      }
+    },
+    {
+      "matchHost": "https://artifacts.alfresco.com/nexus/content/groups/private",
+      "hostType": "maven",
+      "username": "xenit",
+      "encrypted": {
+        "password": "wcFMA/xDdHCJBTolAQ//a+lY0NC6siBoLUdqSvVDFHoagX6qJUZDaPxfPHtdzq22hnUqScpHdqfYr9uhRMJRNAnuuFjKTU7pRLzi8mIYAzpfozqXgrkukHHaCMx2GUPJgvSjguSqMwZ5DY2vq66FIBCDCLh2O+1dZ/9wCfmk8uVsbAOFdEaG/gywtW8kerw6NWBVvI1MzZLPC+Stz0j8sT2ZSc2WuQc0WBMc99w8W3yqBDai2ke0+eH9c4dsp9JzLUJpd8B0Y0dweev9EhjrqlKj1MaA8MhjKKaLhVljyR7pS66A1mrZEwpUwUnjjRp97r5zdPLiR/JgyD+foUyJPc67S1be53Soikc9z2xcVFme1tjRReEdLp2QAdM2eNG81ho29LgNwzgFkuVptmoacAyfIYWeNJkHMphiFBA3ixXzykxgyt74u3TK/0rDrbKg3fPjBYBEZryb4EFkkND19CzKdbMDUxwDUYvbp97XkALIx20m67K1o2djoKRuFs6FiZVlufV3TMBMq3COSAOOGZB7mFhkXBextwR5+Jws9CHjMbrBEyPGquCk3W/ILBYYdVgFgPsaiImjI5u9bZGnqOopL5U5rmAB86Qr6+EYgFkYlujwy1qc63xXuSVY8hq5Fk7xKcN2WHDQCP3oOqO8ZNhM7xo4MICzETIFmWfVzMV6ZOg+hLIT5SoyJ4G5BRbSWQEv4Gb3KvrTf+x2852hPKu47L1xwAc27Fas8DWkQuo3JDFf89oJ2gpq7P85dxHV7hVXXBw5AE1J4fpzSXieRze6h00aLgOtjwbCQvY9q+mty0+vjYuE570e"
+      }
+    },
+    {
+      "matchHost": "https://artifactory.xenit.eu/artifactory/libs-release",
+      "hostType": "maven",
+      "username": "xenit",
+      "encrypted": {
+        "password": "wcFMA/xDdHCJBTolAQ//VRR6dx1fbEDOwsasVZjzSLzEhQUoVc5ODhHSbMz8U+MzH5x96MaVTMib31IEvDTXjJM6xGCMTk8IraWAeSbmwQlRLdnWDg1sRe7UrKhxhiVD6aCpom4VhM2UIV0VxsoeSFv2L/kxJ1/y+SPgiC8+Xuvn1u3xs2niqu5gMf9+fekMWWHnf47KUMnR2SyKfpxSbGt6AZT12631NPE3jhQ9s+J57/m7R8CW3kgvEvu7Cnq4lBJJkTiyjRBgXTeJkiV3iEasLQLpnc9ld4wHoU2/vcSg1vIo85ePzRwc4hld2y8oguz6yylZwONgfY7tuJvtW7FHbt9binPSBfy3ko715TYQvS58ApM5HSbAosxt/NLGRLBGxxA7pzGOZXmwZh8iNTPWAt1sr+4nrKk1uNKhhJTbqx4oXGMivADnNJ5OB+dI55fTbDNRuiscLuFxcAlaAvBIVqzyNfknRgQYQ5swq3tYuhxIdcqo0tZipnJUuhoPmp8g+pm49ZLqAjQh0YM+sekkws+fKYRPaSI5jafm9YKqbIKKdSrh9HaSRnT+0CD5RJ4rjaQ5bLcC+rcPcgKTl4EvVUqU37l0dQ4g+bBl8s5jWodY+CubUds41lU/CrmNe4/FC7Kk/IexKVfBnA7DtFwc3eGdqFp0adyjsu8fG0/tv1CDtL67ZAmVI8sXr9TSXAH4pLNOunKY5RsMk23TJJWf6ry30Vvu5zMtDSE05FmYcrWclB1LsGFzjWJplTzHHp40gpWTcD6yKVwvTQrU0WpaRv0Vs044KYTse9mWzxMyg4WiiUEH8wEKoKdQ"
+      }
+    }
+  ],
+  "pinDigests": true
+}
