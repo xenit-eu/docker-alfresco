@@ -55,9 +55,6 @@ subprojects {
 
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
-
-        def buildDate = project.properties.getOrDefault("buildDate", ((int) (new Date().getTime() / 1000)).toString());
-        environmentVariable('BUILD_DATE', buildDate)
     }
 
     createDockerFile.dependsOn(parentImage)

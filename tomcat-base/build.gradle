@@ -88,7 +88,7 @@ subprojects {
         smartCopy jar.outputs.files.singleFile, "/app/tomcat-embedded/$jarName"
         smartCopy "${project.parent.projectDir}/src/shared/main/bash/entrypoint/", '/'
 
-        def buildDate = project.properties.getOrDefault("buildDate", (new Date().getTime() / 1000).toString());
+        def buildDate = project.properties.getOrDefault("buildDate", ((int) (new Date().getTime() / 1000)).toString())
         environmentVariable('BUILD_DATE', buildDate)
 
         runCommand 'useradd -u 990 tomcat'
