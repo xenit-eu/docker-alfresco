@@ -52,7 +52,7 @@ def calcTags(version) {
 }
 
 def calcRepository(flavor, isAlfresco) {
-    def repoName = flavor == "enterprise" ? "docker.xenit.eu/private/alfresco-enterprise" : "docker.io/xenit"
+    def repoName = flavor == "enterprise" ? "private.docker.xenit.eu/alfresco-enterprise" : "docker.io/xenit"
     if (isAlfresco) {
         return "${repoName}/alfresco-repository-${flavor}";
     }
