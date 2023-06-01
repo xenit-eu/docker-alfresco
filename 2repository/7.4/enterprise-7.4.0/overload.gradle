@@ -9,7 +9,7 @@ ext {
             flavor : 'enterprise'
     ]
     solrimage = 'docker.io/xenit/alfresco-solr6:2.0.6'
-    shareimage = 'docker.io/xenit/alfresco-share-community:7.3.0'
+    shareimage = 'docker.io/xenit/alfresco-share-community:7.4.0.1'
     psqlimage = 'docker.io/xenit/postgres:13'
     tests = true
     alfrescoBomVersion = '7.4.0.1'
