@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [ "community-6.1.2-ga","community-6.2.0-ga","community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0","enterprise-6.1.1","enterprise-6.2.2","enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0" ]
+        version: [ "community-6.1.2-ga","community-6.2.0-ga","community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "enterprise-6.1.1","enterprise-6.2.2","enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0" ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
