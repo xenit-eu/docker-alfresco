@@ -49,7 +49,7 @@ public class ShareTomcatFactoryHelper {
     }
 
     private static String replaceWithEnvironmentVariables(String input, ShareConfiguration shareConfiguration) {
-        String patternString = "\\$\\{[A-Z_]*}";
+        String patternString = "\\$\\{[A-Za-z_]*}";
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(input);
         return matcher.replaceAll(matchResult -> {

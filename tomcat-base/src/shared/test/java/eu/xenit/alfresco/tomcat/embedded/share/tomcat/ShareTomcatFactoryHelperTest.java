@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -20,20 +21,25 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class ShareTomcatFactoryHelperTest {
     @Test
     void testCreateShareConfigCustomFile() throws URISyntaxException, IOException {
+        checkShareConfigCustom("result", "share-config-custom-input.xml", "share-config-custom-output.xml");
+    }
+
+    private void checkShareConfigCustom(String shareConfigPath, String shareConfigCustomTemplate, String shareConfigCustomRendered) throws URISyntaxException, IOException {
         var tomcatConfiguration = new DefaultConfigurationProvider().getConfiguration();
         ShareConfiguration shareConfiguration = new DefaultShareConfigurationProvider().getConfiguration(
                 new ShareConfiguration(tomcatConfiguration));
-        URL inputResource = getClass().getClassLoader().getResource("share-config-custom-input.xml");
-        URL expectedResource = getClass().getClassLoader().getResource("share-config-custom-output.xml");
+        URL inputResource = getClass().getClassLoader().getResource(shareConfigCustomTemplate);
+        URL expectedResource = getClass().getClassLoader().getResource(shareConfigCustomRendered);
         assert inputResource != null;
         assert expectedResource != null;
         Path inputPath = Paths.get(new File(inputResource.toURI()).getPath());
         Path expectedPath = Paths.get(new File(expectedResource.toURI()).getPath());
         shareConfiguration.setShareConfigTemplateFile(inputPath.toString());
         tomcatConfiguration.setGeneratedClasspathDir(inputPath.toAbsolutePath().getParent().toString());
-        shareConfiguration.setShareConfigPath("result");
+        shareConfiguration.setShareConfigPath(shareConfigPath);
         ShareTomcatFactoryHelper.createShareConfigCustomFile(shareConfiguration);
-        Path tempProps = Paths.get(tomcatConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
+        Path tempProps = Paths.get(tomcatConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(),
+                "share-config-custom.xml");
         String actual = Files.readString(tempProps);
         String expected = Files.readString(expectedPath);
         assertEquals(actual, expected);
@@ -41,23 +47,7 @@ class ShareTomcatFactoryHelperTest {
 
     @Test
     void testCreateShareConfigCustomFileWithFileExist() throws URISyntaxException, IOException {
-        var tomcatConfiguration = new DefaultConfigurationProvider().getConfiguration();
-        ShareConfiguration shareConfiguration = new DefaultShareConfigurationProvider().getConfiguration(
-                new ShareConfiguration(tomcatConfiguration));
-        URL inputResource = getClass().getClassLoader().getResource("share-config-custom-input.xml");
-        URL expectedResource = getClass().getClassLoader().getResource("share-config-custom-output.xml");
-        assert inputResource != null;
-        assert expectedResource != null;
-        Path inputPath = Paths.get(new File(inputResource.toURI()).getPath());
-        Path expectedPath = Paths.get(new File(expectedResource.toURI()).getPath());
-        shareConfiguration.setShareConfigTemplateFile(inputPath.toString());
-        tomcatConfiguration.setGeneratedClasspathDir(inputPath.toAbsolutePath().getParent().toString());
-        shareConfiguration.setShareConfigPath("result-exist");
-        ShareTomcatFactoryHelper.createShareConfigCustomFile(shareConfiguration);
-        Path tempProps = Paths.get(tomcatConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
-        String actual = Files.readString(tempProps);
-        String expected = Files.readString(expectedPath);
-        assertEquals(actual, expected);
+        checkShareConfigCustom("result-exist", "share-config-custom-input.xml", "share-config-custom-output.xml");
     }
 
     @Test
@@ -72,4 +62,12 @@ class ShareTomcatFactoryHelperTest {
         Path fileNotExisiting = Paths.get(shareConfiguration.getTomcatConfiguration().getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(), "share-config-custom.xml");
         assertFalse(Files.exists(fileNotExisiting));
     }
+
+    @Test
+    @SetEnvironmentVariable(key = "MY_CUSTOM_env", value = "http://localhost:8083/activiti-app/api/enterprise")
+    void testShareConfigCustomWithCustomEnvVar() throws URISyntaxException, IOException {
+        checkShareConfigCustom("testcustomenv", "share-config-custom-custom-env/share-config-custom-template.xml", "share-config-custom-custom-env/share-config-custom.xml");
+    }
+
+
 }

@@ -57,7 +57,7 @@ public class ShareConfiguration {
             case ALFRESCO_INTERNAL_CONTEXT:
                 return getAlfrescoInternalContext();
             default:
-                return null;
+                return System.getenv(key);
         }
     }
 

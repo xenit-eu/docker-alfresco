@@ -137,18 +137,18 @@ and [`docker-tomcat`](https://github.com/xenit-eu/docker-tomcat).
 
 Environment variables:
 
-| Variable                   | Default   | Description                            |
-|----------------------------|-----------|----------------------------------------|
-| ALFRESCO_HOST              | alfresco  | Used to generate WebDav links.         |
-| ALFRESCO_PORT              | 8080      | Used to generate WebDav links.         |
-| ALFRESCO_PROTOCOL          | http      | Used to generate WebDav links.         |
-| ALFRESCO_CONTEXT           | alfresco  | Used to generate WebDav links.         |
-| ALFRESCO_INTERNAL_HOST     | alfresco  | Used for communication share-alfresco. |
-| ALFRESCO_INTERNAL_PORT     | 8080      | Used for communication share-alfresco. |
-| ALFRESCO_INTERNAL_PROTOCOL | http      | Used for communication share-alfresco. |
-| ALFRESCO_INTERNAL_CONTEXT  | alfresco  | Used for communication share-alfresco. |
-| SHARE_CONFIG_PATH          | alfresco  | alfresco/web-extension                 |
-| SHARE_CONFIG_TEMPLATE_FILE | alfresco  | /docker-config/share-config-custom.xml |
+| Variable                   | Default                                | Description                                                                                                                                                    |
+|----------------------------|----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ALFRESCO_HOST              | alfresco                               | Used to generate WebDav links.                                                                                                                                 |
+| ALFRESCO_PORT              | 8080                                   | Used to generate WebDav links.                                                                                                                                 |
+| ALFRESCO_PROTOCOL          | http                                   | Used to generate WebDav links.                                                                                                                                 |
+| ALFRESCO_CONTEXT           | alfresco                               | Used to generate WebDav links.                                                                                                                                 |
+| ALFRESCO_INTERNAL_HOST     | alfresco                               | Used for communication share-alfresco.                                                                                                                         |
+| ALFRESCO_INTERNAL_PORT     | 8080                                   | Used for communication share-alfresco.                                                                                                                         |
+| ALFRESCO_INTERNAL_PROTOCOL | http                                   | Used for communication share-alfresco.                                                                                                                         |
+| ALFRESCO_INTERNAL_CONTEXT  | alfresco                               | Used for communication share-alfresco.                                                                                                                         |
+| SHARE_CONFIG_PATH          | alfresco/web-extension                 | Parent folder for the share-config-custom.xml relative to GENERATED_CLASSPATH_DIR	                                                                             |
+| SHARE_CONFIG_TEMPLATE_FILE | /docker-config/share-config-custom.xml | Path for a template file for share-config-custom.xml. This file supports variable replacement of the above variables, but also any other environment variable. |
 
 If environment variables are not sufficient to cover the use-case desired, a custom share-config-custom.xml file can be
 mounted in /docker-config/share-config-custom.xml.
