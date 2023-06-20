@@ -1,0 +1,20 @@
+<alfresco-config>
+
+    <!-- Endpoint for APS -->
+    <config evaluator="string-compare" condition="Remote">
+        <!-- Endpoint configuration to make requests to APS from Share JavaScript
+            controllers. -->
+        <remote>
+            <endpoint>
+                <id>aps</id>
+                <name>Alfresco Process Services</name>
+                <connector-id>http</connector-id>
+                <endpoint-url>http://localhost:8083/activiti-app/api/enterprise</endpoint-url>
+                <identity>declared</identity>
+                <username>admin@app.activiti.com</username>
+                <password>admin</password>
+            </endpoint>
+        </remote>
+    </config>
+
+</alfresco-config>
