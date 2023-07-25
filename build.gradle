@@ -45,7 +45,8 @@ def calcTags(version) {
     // For non-master/non-release builds, change the tags to contain branch and build number
     def isTestBuild = ci.isCi() && ci.branch != "master" && ci.branch != "release"
     if (isTestBuild) {
-        tags = tags.stream().map({ it + "-build-${ci.branch}-${ci.buildNumber}" }).collect(Collectors.toList());
+        def branch = ci.branch.replace("/", ".") //slashes are not allowed in docker tags
+        tags = tags.stream().map({ it + "-build-${branch}-${ci.buildNumber}" }).collect(Collectors.toList());
     }
 
     return tags
