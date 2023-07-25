@@ -43,7 +43,6 @@ if (includeCommunity == 'true') {
     includeRepoProject('community', '7.4.0')
 
     includeShareProject('community', '6.1.0')
-    includeShareProject('community', '6.2.0')
     includeShareProject('community', '6.2.2')
     includeShareProject('community', '7.0.1')
     includeShareProject('community', '7.1.0')
