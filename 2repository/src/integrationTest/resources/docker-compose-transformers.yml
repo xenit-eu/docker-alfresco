@@ -36,7 +36,7 @@ services:
 
  # only works from Alfresco 6.1 on
  transform-misc:
-   image: alfresco/alfresco-transform-misc:2.1.0@sha256:35864cf3ea84fefcfb539e947e1df12e856f749a674b1b5a63c86300b09af9ac
+   image: alfresco/alfresco-transform-misc:2.6.0@sha256:ebe36babe53a165de78d2f66046bfa9e9a802a1c716ec46c0d4f5579b6e1f465
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
    ports:
