@@ -25,7 +25,7 @@ subprojects {
         targetCompatibility = JavaVersion.VERSION_11
     }
     ext{
-        jsonLoggingVersion = '0.0.6'
+        jsonLoggingVersion = '0.0.7'
     }
     dependencies {
 
