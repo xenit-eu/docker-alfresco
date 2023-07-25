@@ -30,7 +30,7 @@ subprojects {
         integrationTestImplementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.3"
         integrationTestImplementation "org.glassfish.jaxb:jaxb-runtime:2.3.8"
 
-        alfrescoSM(group: 'org.postgresql', name: 'postgresql', version: '42.4.1')
+        alfrescoSM(group: 'org.postgresql', name: 'postgresql', version: '42.6.0')
     }
 
 
