@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
  alfresco-pdf-renderer:
-   image: alfresco/alfresco-pdf-renderer:2.6.0@sha256:db4f71c7c4edba330391f71e8f7881f44188851d53c1714e26a9c1586749d164
+   image: alfresco/alfresco-pdf-renderer:4.0.0@sha256:28bf5d258ba9572b5c5e09ca04b2e859b03b0cdfaa774a0d8fb85466d3ebaa30
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
    ports:
