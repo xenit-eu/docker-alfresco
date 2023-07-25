@@ -15,5 +15,5 @@ ext {
 
 dependencies {
     alfrescoAmp 'org.alfresco:alfresco-share-services:6.2.2.7@amp'
-    baseAlfrescoWar 'org.alfresco:content-services-community:6.2.0-ga@war'
+    baseAlfrescoWar 'org.alfresco:content-services-community:6.56.15.306@war'
 }
