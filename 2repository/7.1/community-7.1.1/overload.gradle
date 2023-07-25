@@ -15,7 +15,7 @@ ext {
 }
 
 dependencies {
-    alfrescoAmp 'org.alfresco:alfresco-share-services:12.24@amp'
+    alfrescoAmp 'org.alfresco:alfresco-share-services:12.32@amp'
     baseAlfrescoWar platform("org.alfresco:acs-community-packaging:$alfrescoBomVersion")
     baseAlfrescoWar 'org.alfresco:content-services-community@war'
 }
