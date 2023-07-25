@@ -3,7 +3,7 @@ version: '3.2'
 services:
 
  postgresql:
-   image: ${PSQL_IMAGE:-docker.io/xenit/postgres:12}
+   image: ${PSQL_IMAGE:-docker.io/xenit/postgres:12@sha256:839b649a15222f101ddd3b0921ff6d2cd07f90531805b3bf9127130af66f1297}
    environment:
    - POSTGRES_USER=alfresco
    - POSTGRES_PASSWORD=admin

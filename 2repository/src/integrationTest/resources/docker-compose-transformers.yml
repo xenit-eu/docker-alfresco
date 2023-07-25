@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
  alfresco-pdf-renderer:
-   image: alfresco/alfresco-pdf-renderer:2.1.0
+   image: alfresco/alfresco-pdf-renderer:2.1.0@sha256:883d0630f1b5adde96ca87b77c96c9eee946ae16311855bb0f9ca7556f74d330
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
    ports:
@@ -10,7 +10,7 @@ services:
        mode: host
 
  libreoffice:
-   image: alfresco/alfresco-libreoffice:2.1.0
+   image: alfresco/alfresco-libreoffice:2.1.0@sha256:bcded99d3b5f5533361d3eeb6b9e0b42c23e7362c90929cc0d7564df336b6edd
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
    ports:
@@ -18,7 +18,7 @@ services:
        mode: host
 
  imagemagick:
-   image: alfresco/alfresco-imagemagick:2.1.0
+   image: alfresco/alfresco-imagemagick:2.1.0@sha256:e05dd146a1951d6723c761894634322dac7b3d21a26bda09468f46de0bd944a3
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
    ports:
@@ -27,7 +27,7 @@ services:
 
  # only works from Alfresco 6.1 on
  tika:
-   image: alfresco/alfresco-tika:1.2
+   image: alfresco/alfresco-tika:1.2@sha256:2d6022c2cb2036b9a4e9c914ad276024bed6d1f80967780c60b445f9c2aee5d4
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
    ports:
@@ -36,7 +36,7 @@ services:
 
  # only works from Alfresco 6.1 on
  transform-misc:
-   image: alfresco/alfresco-transform-misc:2.1.0
+   image: alfresco/alfresco-transform-misc:2.1.0@sha256:35864cf3ea84fefcfb539e947e1df12e856f749a674b1b5a63c86300b09af9ac
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
    ports:
