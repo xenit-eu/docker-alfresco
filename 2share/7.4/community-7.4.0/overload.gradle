@@ -11,5 +11,5 @@ ext {
 }
 
 dependencies {
-    baseShareWar 'org.alfresco:share:20.165@war'
+    baseShareWar 'org.alfresco:share:20.166@war'
 }
