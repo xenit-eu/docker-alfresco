@@ -4,7 +4,7 @@ ext {
                     major: 7,
                     minor: 0,
                     rev: 1,
-                    label: 2
+                    label: 3
             ],
             flavor: 'community'
     ]
