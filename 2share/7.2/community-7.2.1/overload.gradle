@@ -10,6 +10,6 @@ ext {
 }
 
 dependencies {
-    baseShareWar 'org.alfresco:share:15.2@war'
+    baseShareWar 'org.alfresco:share:15.39@war'
 }
 
