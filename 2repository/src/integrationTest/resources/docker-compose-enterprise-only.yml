@@ -30,7 +30,7 @@ services:
      volumes:
         - shared-file-store-volume:/tmp/Alfresco/sfs
   activemq:
-     image: alfresco/alfresco-activemq:5.15.8@sha256:f0d855904632ffea6d4f32c16f8887845a10adda60e98a936a708a366b243e2c
+     image: alfresco/alfresco-activemq:5.16.1@sha256:9372b0856645714fe448c49e5d9df550b330869f60d9cb1b9e10a030681b5df7
      ports:
        - 8161:8161 # Web Console
        - 5672:5672 # AMQP
