@@ -13,7 +13,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: Set up JDK 17
         uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2 # v3
         with:
@@ -46,7 +46,7 @@ jobs:
       matrix:
         version: [ "community-6.1.2-ga","community-6.2.0-ga","community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "enterprise-6.1.1","enterprise-6.2.2","enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0" ]
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: Set up JDK 17
         uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2 # v3
         with:
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/heads/release') }}
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: Set up JDK 17
         uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2 # v3
         with:
