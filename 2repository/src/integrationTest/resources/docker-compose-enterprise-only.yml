@@ -22,7 +22,7 @@ services:
         MISC_URL : "http://transform-misc:8090"
         FILE_STORE_URL: "http://shared-file-store:8099/alfresco/api/-default-/private/sfs/versions/1/file"
   shared-file-store:
-     image: alfresco/alfresco-shared-file-store:0.5.3
+     image: alfresco/alfresco-shared-file-store:0.5.3@sha256:c1b8823d100b25547155c94ab50014414e14b6727ce18c9664d9ca94817d00fa
      environment:
         JAVA_OPTS: " -Xms256m -Xmx512m"
         scheduler.content.age.millis: 86400000
@@ -30,7 +30,7 @@ services:
      volumes:
         - shared-file-store-volume:/tmp/Alfresco/sfs
   activemq:
-     image: alfresco/alfresco-activemq:5.15.8
+     image: alfresco/alfresco-activemq:5.15.8@sha256:f0d855904632ffea6d4f32c16f8887845a10adda60e98a936a708a366b243e2c
      ports:
        - 8161:8161 # Web Console
        - 5672:5672 # AMQP
