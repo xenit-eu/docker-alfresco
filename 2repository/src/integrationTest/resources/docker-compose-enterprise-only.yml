@@ -22,7 +22,7 @@ services:
         MISC_URL : "http://transform-misc:8090"
         FILE_STORE_URL: "http://shared-file-store:8099/alfresco/api/-default-/private/sfs/versions/1/file"
   shared-file-store:
-     image: alfresco/alfresco-shared-file-store:0.5.3@sha256:c1b8823d100b25547155c94ab50014414e14b6727ce18c9664d9ca94817d00fa
+     image: alfresco/alfresco-shared-file-store:0.16.1@sha256:01b78feb7e63ce8dc3765533f208976559ab8638f96662d9a07b7c2ec649edd9
      environment:
         JAVA_OPTS: " -Xms256m -Xmx512m"
         scheduler.content.age.millis: 86400000
