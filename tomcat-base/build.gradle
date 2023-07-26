@@ -24,7 +24,7 @@ subprojects {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    ext{
+    ext {
         jsonLoggingVersion = '0.0.7'
     }
     dependencies {
@@ -54,6 +54,8 @@ subprojects {
 
     test {
         useJUnitPlatform()
+        jvmArgs('--add-opens', 'java.base/java.util=ALL-UNNAMED',
+                '--add-opens', 'java.base/java.lang=ALL-UNNAMED')
     }
 
     sourceSets {
