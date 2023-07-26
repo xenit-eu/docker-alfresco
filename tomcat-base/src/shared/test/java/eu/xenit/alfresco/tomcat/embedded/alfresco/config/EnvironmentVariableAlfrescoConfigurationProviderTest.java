@@ -1,17 +1,20 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
 
+import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
+
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_URL;
 import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SOLR_SSL;
-import static eu.xenit.alfresco.tomcat.embedded.test.utils.TestUtils.setEnv;
-import static eu.xenit.alfresco.tomcat.embedded.test.utils.TestUtils.unsetEnv;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Map;
-import java.util.Set;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EnvironmentVariableAlfrescoConfigurationProviderTest {
+
+    private final static String SECURE_COMMS_KEY = "solr.secureComms";
+    private final static String SOLR_SECURE_COMMS_ENV = "GLOBAL_" + SECURE_COMMS_KEY;
+
     @Test
     void testGetConfiguration() {
         AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
@@ -19,65 +22,72 @@ class EnvironmentVariableAlfrescoConfigurationProviderTest {
         assertEquals(expected, configuration);
     }
 
+    @SetEnvironmentVariable(key = DB_URL, value = "test db url")
+    @SetEnvironmentVariable(key = SOLR_SSL, value = "none")
     @Test
-    void testGetConfigurationWithEnv() throws Exception {
-        setEnv(Map.of(DB_URL, "test db url", SOLR_SSL, "none"));
+    void testGetConfigurationWithEnv() {
         AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
         AlfrescoConfiguration expected = new AlfrescoConfiguration();
         expected.setGlobalProperty("db.url", "test db url");
         expected.setGlobalProperty("solr.secureComms", "none");
         expected.setSolrSSLEnabled(false);
         assertEquals(expected, configuration);
-        unsetEnv(Set.of(DB_URL, SOLR_SSL));
     }
 
+    @SetEnvironmentVariable(key = "GLOBAL_test", value = "test env")
     @Test
-    void testGetConfigurationWithGlobalEnv() throws Exception {
-        setEnv(Map.of("GLOBAL_test", "test env"));
+    void testGetConfigurationWithGlobalEnv() {
         AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
         AlfrescoConfiguration expected = new AlfrescoConfiguration();
         expected.setGlobalProperty("test", "test env");
         assertEquals(expected, configuration);
-        unsetEnv(Set.of("GLOBAL_test"));
     }
 
+    @SetEnvironmentVariable(key = SOLR_SSL, value = "https")
     @Test
-    void testSolrSslSettings() throws Exception {
-        var secureCommsKey = "solr.secureComms";
+    void testSolrSslSettings_SOLR_SSL_https() {
+        AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertTrue(configuration.isSolrSSLEnabled());
+        assertEquals("https", configuration.getGlobalProperties().get(SECURE_COMMS_KEY));
+    }
 
-        setEnv(Map.of(SOLR_SSL, "https"));
-        var configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
-        assertEquals(true, configuration.isSolrSSLEnabled());
-        assertEquals("https", configuration.getGlobalProperties().get(secureCommsKey));
+    @SetEnvironmentVariable(key = SOLR_SSL, value = "none")
+    @Test
+    void testSolrSslSettings_SOLR_SSL_none() {
+        AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertFalse(configuration.isSolrSSLEnabled());
+        assertEquals("none", configuration.getGlobalProperties().get(SECURE_COMMS_KEY));
+    }
 
-        setEnv(Map.of(SOLR_SSL, "none"));
-        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
-        assertEquals(false, configuration.isSolrSSLEnabled());
-        assertEquals("none", configuration.getGlobalProperties().get(secureCommsKey));
+    @SetEnvironmentVariable(key = SOLR_SSL, value = "secret")
+    @Test
+    void testSolrSslSettings_SOLR_SSL_secret() {
+        AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertFalse(configuration.isSolrSSLEnabled());
+        assertEquals("secret", configuration.getGlobalProperties().get(SECURE_COMMS_KEY));
+    }
 
-        setEnv(Map.of(SOLR_SSL, "secret"));
-        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
-        assertEquals(false, configuration.isSolrSSLEnabled());
-        assertEquals("secret", configuration.getGlobalProperties().get(secureCommsKey));
+    @SetEnvironmentVariable(key = SOLR_SECURE_COMMS_ENV, value = "https")
+    @Test
+    void testSolrSslSettings_secureComms_https() {
+        AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertTrue(configuration.isSolrSSLEnabled());
+        assertEquals("https", configuration.getGlobalProperties().get(SECURE_COMMS_KEY));
+    }
 
-        unsetEnv(Set.of(SOLR_SSL));
+    @SetEnvironmentVariable(key = SOLR_SECURE_COMMS_ENV, value = "none")
+    @Test
+    void testSolrSslSettings_secureComms_none() {
+        AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertFalse(configuration.isSolrSSLEnabled());
+        assertEquals("none", configuration.getGlobalProperties().get(SECURE_COMMS_KEY));
+    }
 
-        var solrSecureCommsEnv = "GLOBAL_"+secureCommsKey;
-        setEnv(Map.of(solrSecureCommsEnv, "https"));
-        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
-        assertEquals(true, configuration.isSolrSSLEnabled());
-        assertEquals("https", configuration.getGlobalProperties().get(secureCommsKey));
-
-        setEnv(Map.of(solrSecureCommsEnv, "none"));
-        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
-        assertEquals(false, configuration.isSolrSSLEnabled());
-        assertEquals("none", configuration.getGlobalProperties().get(secureCommsKey));
-
-        setEnv(Map.of(solrSecureCommsEnv, "secret"));
-        configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
-        assertEquals(false, configuration.isSolrSSLEnabled());
-        assertEquals("secret", configuration.getGlobalProperties().get(secureCommsKey));
-
-        unsetEnv(Set.of(solrSecureCommsEnv));
+    @SetEnvironmentVariable(key = SOLR_SECURE_COMMS_ENV, value = "secret")
+    @Test
+    void testSolrSslSettings_secureComms_secret() {
+        AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
+        assertFalse(configuration.isSolrSSLEnabled());
+        assertEquals("secret", configuration.getGlobalProperties().get(SECURE_COMMS_KEY));
     }
 }
