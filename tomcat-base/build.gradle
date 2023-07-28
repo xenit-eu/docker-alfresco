@@ -1,7 +1,7 @@
 subprojects {
     group = 'eu.xenit.alfresco'
-    version '2.1.0'
-
+    def baseVersion = ci.isTag() ? ci.tag : 'v2.1.0'
+    version = baseVersion[1..baseVersion.length() - 1]
     apply plugin: 'eu.xenit.docker'
     apply plugin: 'java'
     apply plugin: "maven-publish"
