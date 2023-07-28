@@ -23,15 +23,6 @@ sonarqube {
 
 import java.util.stream.Collectors
 
-def copyPropertyValueIfExists(sourcePropertyName, targetPropertyName) {
-    if (project.hasProperty(sourcePropertyName)) {
-        project.ext[targetPropertyName] = project.property(sourcePropertyName)
-    }
-}
-
-copyPropertyValueIfExists('alfresco_nexus_username', 'org.alfresco.maven.nexus.username')
-copyPropertyValueIfExists('alfresco_nexus_password', 'org.alfresco.maven.nexus.password')
-
 
 def calcTags(version) {
     def tags = [
