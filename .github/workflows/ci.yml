@@ -19,12 +19,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Unit tests
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2
         with:
           cache-read-only: false
           arguments: test --parallel --info
       - name: Upload analysis to sonarcloud
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }}
@@ -54,7 +54,7 @@ jobs:
       - name: Login to CloudSmith docker registry
         run: echo "${{ secrets.CLOUDSMITH_APIKEY }}" | docker login private.docker.xenit.eu --username "${{ secrets.CLOUDSMITH_USER }}" --password-stdin
       - name: Integration tests
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2
         with:
           cache-read-only: false
           arguments: :2repository:${{ matrix.version }}:integrationTests --info --stacktrace
@@ -85,12 +85,12 @@ jobs:
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2
         with:
           cache-read-only: false
           arguments: pushDockerImage -PincludeEnterprise=false
       - name: Publish private docker images
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2
         with:
           cache-read-only: false
           arguments: :2repository:pushDockerImage -PincludeCommunity=false
@@ -100,7 +100,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
           ORG_GRADLE_PROJECT_sonatype_username: ${{ secrets.SONATYPE_S01_USERNAME  }}
           ORG_GRADLE_PROJECT_sonatype_password: ${{ secrets.SONATYPE_S01_PASSWORD  }}
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2
         with:
           cache-read-only: false
           arguments: :tomcat-base:tomcat-embedded-8.5:publish :tomcat-base:tomcat-embedded-9:publish --info -PsigningKeyId=CDE3528F
