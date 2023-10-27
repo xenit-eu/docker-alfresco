@@ -6,7 +6,9 @@ import eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariableConfiguration
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Version;
 import java.net.http.HttpConnectTimeoutException;
@@ -29,7 +31,7 @@ public class HealthCheck {
         TomcatConfiguration configuration = new EnvironmentVariableConfigurationProvider()
                 .getConfiguration(new DefaultConfigurationProvider()
                         .getConfiguration());
-        var exitCode = 0;
+        int exitCode = 0;
         if (configuration.isAlfrescoEnabled()) {
             exitCode = healthCheck(ALFRESCO_DEFAULT_LIVE_PROBE, 0, args);
         }
@@ -40,8 +42,8 @@ public class HealthCheck {
     }
 
     private static int healthCheck(String endpoint, int statusCode, String[] args) throws IOException, InterruptedException {
-        var spec = HealthCheck.setupHealthCheck(endpoint, statusCode, args);
-        var exitCode = doHealthCheck(spec);
+        HealthCheckSpec spec = HealthCheck.setupHealthCheck(endpoint, statusCode, args);
+        int exitCode = doHealthCheck(spec);
         if(exitCode != 0) {
             System.exit(exitCode);
         }
@@ -66,24 +68,27 @@ public class HealthCheck {
     }
 
     public static int doHealthCheck(HealthCheckSpec spec)
-            throws IOException, InterruptedException {
-        var client = HttpClient.newBuilder()
-                .version(Version.HTTP_1_1)
-                .connectTimeout(Duration.ofMillis(spec.getTimeOut()))
-                .build();
-        var httpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(spec.getEndPoint()))
-                .build();
+            throws IOException {
+        HttpURLConnection connection = null;
         try {
-            var response = client.send(httpRequest, BodyHandlers.ofString());
-            if (response.statusCode() == spec.getStatusCode()) {
+            URL url = new URL(spec.getEndPoint());
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(spec.getTimeOut());
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == spec.getStatusCode()) {
                 return 0;
             }
             return 1;
         } catch (ConnectException e) {
             return 2;
-        } catch (HttpConnectTimeoutException e) {
+        } catch (java.net.SocketTimeoutException e) {
             return 3;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
     }
 

@@ -4,6 +4,10 @@ ext {
     ]
 }
 
+java {
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 sonarqube {
     properties {
         property 'sonar.projectBaseDir', "$project.parent.projectDir/src/shared/"

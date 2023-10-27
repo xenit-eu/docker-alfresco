@@ -1,0 +1,10 @@
+ext {
+    tomcat = [
+            version: '7.0.109'
+    ]
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}

@@ -1,10 +1,10 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoConfiguration;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.tomcat.util.net.SSLHostConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class AlfrescoTomcatFactoryHelper {
             System.exit(1);
         }
 
-        var tomcatConfiguration = alfrescoConfiguration.getTomcatConfiguration();
+        TomcatConfiguration tomcatConfiguration = alfrescoConfiguration.getTomcatConfiguration();
         Connector connector = TomcatFactory.getConnector(tomcat,
                 "org.apache.coyote.http11.Http11NioProtocol",
                 tomcatConfiguration.getTomcatSslPort(),
@@ -65,20 +65,39 @@ public class AlfrescoTomcatFactoryHelper {
                 tomcatConfiguration.getTomcatRelaxedQueryChars()
         );
 
-        SSLHostConfig sslHostConfig = new SSLHostConfig();
-        sslHostConfig.setCertificateKeystoreFile(alfrescoConfiguration.getTomcatSSLKeystore());
-        sslHostConfig.setCertificateKeystorePassword(alfrescoConfiguration.getTomcatSSLKeystorePassword());
-        sslHostConfig.setCertificateKeystoreType("JCEKS");
-        sslHostConfig.setTruststoreFile(alfrescoConfiguration.getTomcatSSLTruststore());
-        sslHostConfig.setTruststorePassword(alfrescoConfiguration.getTomcatSSLTruststorePassword());
-        sslHostConfig.setTruststoreType("JCEKS");
-        sslHostConfig.setSslProtocol("TLS");
-        sslHostConfig.setCertificateVerification(SSLHostConfig.CertificateVerification.REQUIRED.name());
-        connector.addSslHostConfig(sslHostConfig);
+        addSslHost(alfrescoConfiguration, connector);
         connector.setSecure(true);
         connector.setProperty("clientAuth", "want");
         connector.setProperty("allowUnsafeLegacyRenegotiation", "true");
         connector.setMaxSavePostSize(-1);
         tomcat.setConnector(connector);
+    }
+
+    private static void addSslHost(AlfrescoConfiguration alfrescoConfiguration, Connector connector) {
+
+        // Assuming you already have the Connector object initialized as 'connector'
+        connector.setScheme("https");
+        connector.setSecure(true);
+        connector.setPort(8443); // or any other port you want to use for SSL
+
+// Set the SSL protocol
+        connector.setProtocol("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setAttribute("SSLEnabled", true);
+        connector.setAttribute("sslProtocol", "TLS");
+        connector.setAttribute("clientAuth", "want");
+
+// Keystore configurations
+        connector.setAttribute("keystoreFile", alfrescoConfiguration.getTomcatSSLKeystore());
+        connector.setAttribute("keystorePass", alfrescoConfiguration.getTomcatSSLKeystorePassword());
+        connector.setAttribute("keystoreType", "JCEKS");
+
+// Truststore configurations
+        connector.setAttribute("truststoreFile", alfrescoConfiguration.getTomcatSSLTruststore());
+        connector.setAttribute("truststorePass", alfrescoConfiguration.getTomcatSSLTruststorePassword());
+        connector.setAttribute("truststoreType", "JCEKS");
+
+// Other properties
+        connector.setAttribute("allowUnsafeLegacyRenegotiation", "true");
+        connector.setMaxSavePostSize(-1);
     }
 }

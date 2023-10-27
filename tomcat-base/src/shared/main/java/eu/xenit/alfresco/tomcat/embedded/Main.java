@@ -6,7 +6,7 @@ import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariableConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.share.tomcat.ShareTomcatCustomizer;
 import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory;
-import eu.xenit.logging.json.jul.JsonFormatter;
+//import eu.xenit.logging.json.jul.JsonFormatter;
 import org.apache.catalina.startup.Tomcat;
 
 import java.nio.file.Files;
@@ -29,11 +29,11 @@ public class Main {
             TomcatFactory tomcatFactory = new TomcatFactory(configuration);
             Tomcat tomcat = tomcatFactory.getTomcat();
             if (configuration.isAlfrescoEnabled()) {
-                var alfrescoTomcatCustomizer = new AlfrescoTomcatCustomizer();
+                AlfrescoTomcatCustomizer alfrescoTomcatCustomizer = new AlfrescoTomcatCustomizer();
                 alfrescoTomcatCustomizer.customize(tomcat, configuration);
             }
             if (configuration.isShareEnabled()) {
-                var shareTomcatCustomizer = new ShareTomcatCustomizer();
+                ShareTomcatCustomizer shareTomcatCustomizer = new ShareTomcatCustomizer();
                 shareTomcatCustomizer.customize(tomcat, configuration);
             }
             //Needs to be done after
@@ -67,14 +67,14 @@ public class Main {
             }
         };
 
-        if (json) {
-            JsonFormatter formatter = new JsonFormatter();
-            formatter.setType("application");
-            formatter.setComponent(component);
-            formatter.setExtractStackTrace("true");
-            formatter.setFilterStackTrace(true);
-            customHandler.setFormatter(formatter);
-        }
+//        if (json) {
+//            JsonFormatter formatter = new JsonFormatter();
+//            formatter.setType("application");
+//            formatter.setComponent(component);
+//            formatter.setExtractStackTrace("true");
+//            formatter.setFilterStackTrace(true);
+//            customHandler.setFormatter(formatter);
+//        }
 
         logger.addHandler(customHandler);
     }

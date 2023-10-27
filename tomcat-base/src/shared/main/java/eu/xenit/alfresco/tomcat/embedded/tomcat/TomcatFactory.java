@@ -1,25 +1,24 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
-import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
-import eu.xenit.logging.json.valve.JsonAccessLogValve;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.LifecycleListener;
-import org.apache.catalina.Service;
-import org.apache.catalina.WebResourceRoot;
-import org.apache.catalina.connector.Connector;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.webresources.DirResourceSet;
-import org.apache.catalina.webresources.StandardRoot;
+import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.redirectLog4j;
 
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
+//import eu.xenit.logging.json.valve.JsonAccessLogValve;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
-
-import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.redirectLog4j;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.Service;
+import org.apache.catalina.connector.Connector;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.loader.WebappLoader;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.naming.resources.VirtualDirContext;
 
 public class TomcatFactory {
 
@@ -60,7 +59,7 @@ public class TomcatFactory {
         addUserWithRole(tomcat, "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repository");
         Path webapps = Paths.get(getConfiguration().getWebappsPath());
         if (Files.exists(webapps)) {
-            try (var directoryStream = Files.newDirectoryStream(webapps)) {
+            try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(webapps)) {
                 directoryStream.forEach(path -> addWebapp(tomcat, path));
             }
         }
@@ -70,7 +69,7 @@ public class TomcatFactory {
     protected boolean isEmptyDir(Path path) {
         if (Files.isDirectory(path)) {
             try (Stream<Path> entries = Files.list(path)) {
-                return entries.findFirst().isEmpty();
+                return entries.findFirst().isPresent();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -91,11 +90,18 @@ public class TomcatFactory {
             ctx.setParentClassLoader(Thread.currentThread().getContextClassLoader());
             LifecycleListener lifecycleListener = event -> {
                 if (event.getType().equals("before_start")) {
-                    WebResourceRoot resources = new StandardRoot(ctx);
-                    resources.setCacheMaxSize(getConfiguration().getTomcatCacheMaxSize());
-                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getSharedClasspathDir(), "/"));
-                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getGeneratedClasspathDir(), "/"));
-                    resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedLibDir(), "/"));
+                    // Create a standard context (assuming you already have it as 'ctx')
+                    WebappLoader webappLoader = new WebappLoader();
+
+                    // Add classpath directories
+                    webappLoader.addRepository("file:" + getConfiguration().getSharedClasspathDir() + "/");
+                    webappLoader.addRepository("file:" + getConfiguration().getGeneratedClasspathDir() + "/");
+                    ctx.setLoader(webappLoader);
+
+// Additional resources (like JARs) can be added using a virtual loader
+                    VirtualDirContext resources = new VirtualDirContext();
+                    resources.setExtraResourcePaths("/WEB-INF/lib=" + getConfiguration().getSharedLibDir());
+
                     if (getConfiguration().isJsonLogging()) {
                         redirectLog4j(path, Paths.get(configuration.getGeneratedClasspathDir()));
                     }
@@ -107,11 +113,11 @@ public class TomcatFactory {
             };
             ctx.addLifecycleListener(lifecycleListener);
 
-            if (getConfiguration().isAccessLogging()) {
-                JsonAccessLogValve valve = new JsonAccessLogValve();
-                ctx.addValve(valve);
-                ctx.getAccessLog();
-            }
+//            if (getConfiguration().isAccessLogging()) {
+//                JsonAccessLogValve valve = new JsonAccessLogValve();
+//                ctx.addValve(valve);
+//                ctx.getAccessLog();
+//            }
         }
     }
 
