@@ -1,6 +1,7 @@
 package eu.xenit.alfresco.tomcat.embedded.utils;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +28,7 @@ class UtilsTest {
         Assertions.assertNotNull(log4JFilePath);
         Assertions.assertTrue(log4JFilePath.split("file:").length > 1);
         Properties properties = new Properties();
-        try (var reader = Files.newBufferedReader(Paths.get(log4JFilePath.split("file:")[1]))) {
+        try (Reader reader = Files.newBufferedReader(Paths.get(log4JFilePath.split("file:")[1]))) {
             properties.load(reader);
             Assertions.assertEquals("error, Console, jmxlogger1", properties.getProperty("log4j.rootLogger"));
             Assertions.assertEquals("eu.xenit.logging.json.log4j.JsonLayout", properties.getProperty("log4j.appender.Console.layout"));

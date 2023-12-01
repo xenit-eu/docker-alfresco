@@ -23,12 +23,12 @@ class HealthCheckTest {
 
     @Test
     void testSetupHealthCheck() {
-        var spec = HealthCheck.setupHealthCheck(HealthCheck.ALFRESCO_DEFAULT_LIVE_PROBE, 200);
+        HealthCheckSpec spec = HealthCheck.setupHealthCheck(HealthCheck.ALFRESCO_DEFAULT_LIVE_PROBE, 200);
         assertHealthCheckSpec(spec, HealthCheck.ALFRESCO_DEFAULT_LIVE_PROBE, HealthCheck.DEFAULT_TIMEOUT, 200);
 
-        var endpoint = "http://testcheck";
-        var timeout = 654;
-        var statusCode = 500;
+        String endpoint = "http://testcheck";
+        int timeout = 654;
+        int statusCode = 500;
         spec = HealthCheck.setupHealthCheck(HealthCheck.SHARE_DEFAULT_LIVE_PROBE, 302, endpoint,
                 Integer.toString(timeout), Integer.toString(statusCode));
         assertHealthCheckSpec(spec, endpoint, timeout, statusCode);

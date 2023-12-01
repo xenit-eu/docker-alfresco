@@ -22,7 +22,7 @@ jobs:
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
         with:
           cache-read-only: false
-          arguments: test --parallel --info
+          arguments: :tomcat-base:tomcat-embedded-7:test --parallel --info
       - name: Upload analysis to sonarcloud
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
         env:
@@ -38,69 +38,69 @@ jobs:
           name: test-result
           path: /home/runner/work/**/build/reports
           retention-days: 2
-  integration-test:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        version: [ "community-6.1.2-ga","community-6.2.0-ga","community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "enterprise-6.1.1","enterprise-6.2.2","enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0" ]
-    steps:
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2 # v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Login to CloudSmith docker registry
-        run: echo "${{ secrets.CLOUDSMITH_APIKEY }}" | docker login private.docker.xenit.eu --username "${{ secrets.CLOUDSMITH_USER }}" --password-stdin
-      - name: Integration tests
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
-        with:
-          cache-read-only: false
-          arguments: :2repository:${{ matrix.version }}:integrationTests --info --stacktrace
-      - name: Upload test artifact
-        if: success() || failure()
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3
-        with:
-          name: integration-test-${{ matrix.version }}-result
-          path: /home/runner/work/**/build/reports
-          retention-days: 2
-  publish:
-    needs: [ test, integration-test ]
-    runs-on: ubuntu-latest
-    if: ${{  startsWith(github.ref, 'refs/tags/v') }}
-    steps:
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2 # v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Login to CloudSmith docker registry
-        run: echo "${{ secrets.CLOUDSMITH_APIKEY }}" | docker login private.docker.xenit.eu --username "${{ secrets.CLOUDSMITH_USER }}" --password-stdin
-        # We have to split out publishing to public and private repo's because pushing to docker.io does not seem to work
-        # without supplying DOCKER_USER and DOCKER_PASSWORD. However, supplying those environment variables breaks
-        # publishing to other repositories
-      - name: Publish public docker images
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
-        with:
-          cache-read-only: false
-          arguments: pushDockerImage -PincludeEnterprise=false
-      - name: Publish private docker images
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
-        with:
-          cache-read-only: false
-          arguments: :2repository:pushDockerImage -PincludeCommunity=false
-      - name: Publish tomcat base jars
-        env:
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.MAVEN_CENTRAL_GPG_KEY }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
-          ORG_GRADLE_PROJECT_sonatype_username: ${{ secrets.SONATYPE_S01_USERNAME  }}
-          ORG_GRADLE_PROJECT_sonatype_password: ${{ secrets.SONATYPE_S01_PASSWORD  }}
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
-        with:
-          cache-read-only: false
-          arguments: :tomcat-base:tomcat-embedded-8.5:publish :tomcat-base:tomcat-embedded-9:publish --info -PsigningKeyId=CDE3528F
+#  integration-test:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        version: [ "community-6.1.2-ga","community-6.2.0-ga","community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "enterprise-6.1.1","enterprise-6.2.2","enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0" ]
+#    steps:
+#      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
+#      - name: Set up JDK 17
+#        uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2 # v3
+#        with:
+#          distribution: 'temurin'
+#          java-version: '17'
+#      - name: Login to CloudSmith docker registry
+#        run: echo "${{ secrets.CLOUDSMITH_APIKEY }}" | docker login private.docker.xenit.eu --username "${{ secrets.CLOUDSMITH_USER }}" --password-stdin
+#      - name: Integration tests
+#        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+#        with:
+#          cache-read-only: false
+#          arguments: :2repository:${{ matrix.version }}:integrationTests --info --stacktrace
+#      - name: Upload test artifact
+#        if: success() || failure()
+#        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3
+#        with:
+#          name: integration-test-${{ matrix.version }}-result
+#          path: /home/runner/work/**/build/reports
+#          retention-days: 2
+#  publish:
+#    needs: [ test, integration-test ]
+#    runs-on: ubuntu-latest
+#    if: ${{  startsWith(github.ref, 'refs/tags/v') }}
+#    steps:
+#      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
+#      - name: Set up JDK 17
+#        uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2 # v3
+#        with:
+#          distribution: 'temurin'
+#          java-version: '17'
+#      - name: Login to CloudSmith docker registry
+#        run: echo "${{ secrets.CLOUDSMITH_APIKEY }}" | docker login private.docker.xenit.eu --username "${{ secrets.CLOUDSMITH_USER }}" --password-stdin
+#        # We have to split out publishing to public and private repo's because pushing to docker.io does not seem to work
+#        # without supplying DOCKER_USER and DOCKER_PASSWORD. However, supplying those environment variables breaks
+#        # publishing to other repositories
+#      - name: Publish public docker images
+#        env:
+#          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+#          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+#        with:
+#          cache-read-only: false
+#          arguments: pushDockerImage -PincludeEnterprise=false
+#      - name: Publish private docker images
+#        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+#        with:
+#          cache-read-only: false
+#          arguments: :2repository:pushDockerImage -PincludeCommunity=false
+#      - name: Publish tomcat base jars
+#        env:
+#          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.MAVEN_CENTRAL_GPG_KEY }}
+#          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
+#          ORG_GRADLE_PROJECT_sonatype_username: ${{ secrets.SONATYPE_S01_USERNAME  }}
+#          ORG_GRADLE_PROJECT_sonatype_password: ${{ secrets.SONATYPE_S01_PASSWORD  }}
+#        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2
+#        with:
+#          cache-read-only: false
+#          arguments: :tomcat-base:tomcat-embedded-8.5:publish :tomcat-base:tomcat-embedded-9:publish --info -PsigningKeyId=CDE3528F

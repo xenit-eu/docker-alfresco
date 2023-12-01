@@ -1,21 +1,22 @@
 package eu.xenit.alfresco.tomcat.embedded.share.tomcat;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.share.config.DefaultShareConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.share.config.ShareConfiguration;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 class ShareTomcatFactoryHelperTest {
@@ -25,7 +26,7 @@ class ShareTomcatFactoryHelperTest {
     }
 
     private void checkShareConfigCustom(String shareConfigPath, String shareConfigCustomTemplate, String shareConfigCustomRendered) throws URISyntaxException, IOException {
-        var tomcatConfiguration = new DefaultConfigurationProvider().getConfiguration();
+        TomcatConfiguration tomcatConfiguration = new DefaultConfigurationProvider().getConfiguration();
         ShareConfiguration shareConfiguration = new DefaultShareConfigurationProvider().getConfiguration(
                 new ShareConfiguration(tomcatConfiguration));
         URL inputResource = getClass().getClassLoader().getResource(shareConfigCustomTemplate);
@@ -40,8 +41,8 @@ class ShareTomcatFactoryHelperTest {
         ShareTomcatFactoryHelper.createShareConfigCustomFile(shareConfiguration);
         Path tempProps = Paths.get(tomcatConfiguration.getGeneratedClasspathDir(), shareConfiguration.getShareConfigPath(),
                 "share-config-custom.xml");
-        String actual = Files.readString(tempProps);
-        String expected = Files.readString(expectedPath);
+        String actual = new String(Files.readAllBytes(tempProps), StandardCharsets.UTF_8);
+        String expected = new String(Files.readAllBytes(expectedPath), StandardCharsets.UTF_8);
         assertEquals(actual, expected);
     }
 
@@ -52,7 +53,7 @@ class ShareTomcatFactoryHelperTest {
 
     @Test
     void testCreateShareConfigCustomFileNoInputFile() {
-        var tomcatConfiguration = new DefaultConfigurationProvider().getConfiguration();
+        TomcatConfiguration tomcatConfiguration = new DefaultConfigurationProvider().getConfiguration();
         ShareConfiguration shareConfiguration = new DefaultShareConfigurationProvider().getConfiguration(
                 new ShareConfiguration(tomcatConfiguration));
         shareConfiguration.setShareConfigTemplateFile("/do/nothing/test.xml");
