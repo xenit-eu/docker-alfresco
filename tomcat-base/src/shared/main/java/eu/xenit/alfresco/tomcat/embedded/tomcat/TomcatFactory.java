@@ -67,15 +67,15 @@ public class TomcatFactory {
     }
 
     protected boolean isEmptyDir(Path path) {
-        if (Files.isDirectory(path)) {
-            try (Stream<Path> entries = Files.list(path)) {
-                return entries.findFirst().isPresent();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        if (!Files.isDirectory(path)) {
+            return false;
         }
 
-        return false;
+        try (Stream<Path> entries = Files.list(path)) {
+            return !entries.findAny().isPresent();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void addWebapp(Tomcat tomcat, Path path) {
