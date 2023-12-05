@@ -12,7 +12,7 @@ ext {
     shareimage = 'docker.io/xenit/alfresco-share-community:6.2.0'
     psqlimage = 'docker.io/xenit/postgres:11.7'
     tests = true
-    alfrescoBomVersion = '6.2.2.19'
+    alfrescoBomVersion = '6.2.2.25'
 }
 
 dependencies {

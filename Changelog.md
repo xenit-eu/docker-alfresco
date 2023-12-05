@@ -36,6 +36,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 * [PR #78](https://github.com/xenit-eu/docker-alfresco/pull/78) DOCKER-408 Add timeout to health check commands
 
+### Changed
+
+* [PR #201](https://github.com/xenit-eu/docker-alfresco/pull/201) XENOPS-1127 Bumped acs packageing version to the latest path version
+
 ## 2022-02.03 (2022-02-03)
 
 ### Added
