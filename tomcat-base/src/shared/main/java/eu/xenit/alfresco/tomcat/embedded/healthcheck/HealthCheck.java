@@ -18,7 +18,7 @@ import java.time.Duration;
 import java.util.Objects;
 
 public class HealthCheck {
-    public static final String ALFRESCO_DEFAULT_LIVE_PROBE = "http://localhost:8080/alfresco/api/-default-/public/alfresco/versions/1/probes/-live-";
+    public static final String ALFRESCO_DEFAULT_LIVE_PROBE = "http://localhost:8080/alfresco";
     public static final String SHARE_DEFAULT_LIVE_PROBE = "http://localhost:8080/share";
 
     public static final int DEFAULT_TIMEOUT = 2000;
@@ -36,7 +36,7 @@ public class HealthCheck {
             exitCode = healthCheck(ALFRESCO_DEFAULT_LIVE_PROBE, 0, args);
         }
         if (configuration.isShareEnabled()) {
-            exitCode = healthCheck(SHARE_DEFAULT_LIVE_PROBE, 302, args);
+            exitCode = healthCheck(SHARE_DEFAULT_LIVE_PROBE, 0, args);
         }
         System.exit(exitCode);
     }
