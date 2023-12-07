@@ -52,15 +52,26 @@ public class ShareTomcatFactoryHelper {
         String patternString = "\\$\\{[A-Za-z_]*}";
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(input);
-        return matcher.replaceAll(matchResult -> {
-            String match = matchResult.group();
+        StringBuffer result = new StringBuffer();
+
+        while (matcher.find()) {
+            String match = matcher.group();
             String envProp = match.substring(2, match.length() - 1);
+            String replacement = match; // default replacement is the match itself
+
             if (!envProp.isEmpty()) {
                 String env = shareConfiguration.getValueOf(envProp);
-                if (env != null && !env.isEmpty())
-                    return env;
+                if (env != null && !env.isEmpty()) {
+                    replacement = env; // use the environment variable value as replacement
+                } else {
+                    replacement = "\\$\\{" + match.substring(2);
+                }
             }
-            return "\\$\\{" + match.substring(2);
-        });
+
+            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+        }
+        matcher.appendTail(result);
+
+        return result.toString();
     }
 }
