@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
+import org.apache.catalina.Host;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.Service;
@@ -18,6 +19,8 @@ import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.loader.WebappLoader;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.coyote.http11.Http11NioProtocol;
+import org.apache.coyote.http11.Http11Protocol;
 import org.apache.naming.resources.VirtualDirContext;
 
 public class TomcatFactory {
@@ -51,10 +54,12 @@ public class TomcatFactory {
 
     public Tomcat getTomcat() throws IOException {
         Tomcat tomcat = new Tomcat();
+        Host host = tomcat.getHost();
+        host.setName("localhost");
         tomcat.setBaseDir(getConfiguration().getTomcatBaseDir());
         tomcat.setPort(getConfiguration().getTomcatPort());
         tomcat.getServer().setPort(getConfiguration().getTomcatServerPort());
-        createDefaultConnector(tomcat);
+        configureDefaultConnector(tomcat);
         addUserWithRole(tomcat, "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repoclient");
         addUserWithRole(tomcat, "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repository");
         Path webapps = Paths.get(getConfiguration().getWebappsPath());
@@ -121,19 +126,15 @@ public class TomcatFactory {
         }
     }
 
-    private void createDefaultConnector(Tomcat tomcat) {
-        Connector connector = getConnector(tomcat,
-                "HTTP/1.1",
-                getConfiguration().getTomcatPort(),
-                false,
-                "http",
-                getConfiguration().getTomcatMaxThreads(),
-                getConfiguration().getTomcatMaxHttpHeaderSize(),
-                getConfiguration().getTomcatRelaxedPathChars(),
-                getConfiguration().getTomcatRelaxedQueryChars()
-        );
-        connector.setRedirectPort(getConfiguration().getTomcatSslPort());
-        tomcat.setConnector(connector);
+    private void configureDefaultConnector(Tomcat tomcat) {
+        Connector connector = tomcat.getConnector();
+        connector.setProperty("connectionTimeout", "240000");
+        connector.setURIEncoding(StandardCharsets.UTF_8.name());
+        Http11Protocol protocol = (Http11Protocol) connector.getProtocolHandler();
+        protocol.setMaxThreads(getConfiguration().getTomcatMaxThreads());
+        protocol.setMaxHttpHeaderSize(getConfiguration().getTomcatMaxHttpHeaderSize());
+        protocol.setRelaxedPathChars(getConfiguration().getTomcatRelaxedPathChars());
+        protocol.setRelaxedQueryChars(getConfiguration().getTomcatRelaxedQueryChars());
     }
 
     private void addUserWithRole(Tomcat tomcat, String username, String password, String role) {

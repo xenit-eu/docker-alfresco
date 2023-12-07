@@ -57,15 +57,17 @@ public class ShareTomcatFactoryHelper {
         while (matcher.find()) {
             String match = matcher.group();
             String envProp = match.substring(2, match.length() - 1);
-            String replacement = match; // default replacement is the match itself
+            String replacement;
 
             if (!envProp.isEmpty()) {
                 String env = shareConfiguration.getValueOf(envProp);
                 if (env != null && !env.isEmpty()) {
                     replacement = env; // use the environment variable value as replacement
                 } else {
-                    replacement = "\\$\\{" + match.substring(2);
+                    replacement = match; // retain original pattern
                 }
+            } else {
+                replacement = match; // retain original pattern if envProp is empty
             }
 
             matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
@@ -74,4 +76,5 @@ public class ShareTomcatFactoryHelper {
 
         return result.toString();
     }
+
 }
