@@ -1,21 +1,13 @@
 package eu.xenit.alfresco.tomcat.embedded.healthcheck;
 
-import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariableConfigurationProvider;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpClient.Version;
-import java.net.http.HttpConnectTimeoutException;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse.BodyHandlers;
-import java.time.Duration;
-import java.util.Objects;
 
 public class HealthCheck {
     public static final String ALFRESCO_DEFAULT_LIVE_PROBE = "http://localhost:8080/alfresco";
@@ -44,7 +36,7 @@ public class HealthCheck {
     private static int healthCheck(String endpoint, int statusCode, String[] args) throws IOException, InterruptedException {
         HealthCheckSpec spec = HealthCheck.setupHealthCheck(endpoint, statusCode, args);
         int exitCode = doHealthCheck(spec);
-        if(exitCode != 0) {
+        if (exitCode != 0) {
             System.exit(exitCode);
         }
         return exitCode;

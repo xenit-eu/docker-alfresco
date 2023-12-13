@@ -1,16 +1,7 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
-import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.redirectLog4j;
-
 import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
-//import eu.xenit.logging.json.valve.JsonAccessLogValve;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Stream;
+import eu.xenit.logging.json.valve.JsonAccessLogValve;
 import org.apache.catalina.Host;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
@@ -19,9 +10,18 @@ import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.loader.WebappLoader;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.coyote.http11.Http11NioProtocol;
 import org.apache.coyote.http11.Http11Protocol;
 import org.apache.naming.resources.VirtualDirContext;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
+import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.redirectLog4j;
 
 public class TomcatFactory {
 
@@ -118,11 +118,11 @@ public class TomcatFactory {
             };
             ctx.addLifecycleListener(lifecycleListener);
 
-//            if (getConfiguration().isAccessLogging()) {
-//                JsonAccessLogValve valve = new JsonAccessLogValve();
-//                ctx.addValve(valve);
-//                ctx.getAccessLog();
-//            }
+            if (getConfiguration().isAccessLogging()) {
+                JsonAccessLogValve valve = new JsonAccessLogValve();
+                ctx.addValve(valve);
+                ctx.getAccessLog();
+            }
         }
     }
 

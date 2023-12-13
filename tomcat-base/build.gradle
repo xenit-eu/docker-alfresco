@@ -42,14 +42,14 @@ subprojects {
         implementation "org.apache.tomcat:tomcat-jasper:${tomcatVersion}"
         implementation "org.apache.tomcat:tomcat-jasper-el:${tomcatVersion}"
         implementation "org.apache.tomcat:tomcat-jsp-api:${tomcatVersion}"
-//        implementation "eu.xenit.logging:json-logging:${jsonLoggingVersion}"
+        implementation "eu.xenit.logging:json-logging-java-8:${jsonLoggingVersion}"
         implementation "com.fasterxml.jackson.core:jackson-databind:2.15.2"
         testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
         testImplementation("org.junit-pioneer:junit-pioneer:1.9.1")
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
-//        sharedLibs("eu.xenit.logging:json-logging:${jsonLoggingVersion}") {
-//            transitive = false
-//        }
+        sharedLibs("eu.xenit.logging:json-logging-java-8:${jsonLoggingVersion}") {
+            transitive = false
+        }
     }
 
     boolean isRelease = ci.branch?.equals("master")
