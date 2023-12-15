@@ -11,7 +11,12 @@ subprojects {
     def tomcatProject = project(getTomcatProject(project.alfresco.version.major))
     def tomcatImage = tomcatProject.getTasks().getByName('buildDockerImage')
     println "tomcatImage: ${tomcatImage.getImageId()}"
-
+    configurations {
+        sharedBin
+    }
+    dependencies {
+        sharedBin(group: 'org.alfresco', name: 'alfresco-pdf-renderer', version: '1.1', classifier: 'linux', ext: 'tgz')
+    }
     dockerBuild {
         repositories = [calcRepository(project.alfresco.flavor, true)]
         tags = calcTags(project.alfresco.version)
@@ -19,6 +24,9 @@ subprojects {
 
     createDockerFile {
         smartCopy "${project.parent.projectDir}/src/shared/main/bash/entrypoint/docker-entrypoint.d/", '/docker-entrypoint.d/'
+        if (!configurations.sharedBin.isEmpty())
+            smartCopy(tarTree(resources.gzip(configurations.sharedBin.singleFile)), '/opt/alfresco')
+
         dependsOn(tomcatImage)
         baseImage = tomcatImage.getImageId()
         volume('/opt/alfresco/alf_data')
@@ -26,6 +34,24 @@ subprojects {
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.version.flavor}")
         environmentVariable('ALFRESCO_ENABLED', "true")
 
+        runCommand("apt-get update")
+        runCommand("apt-get install -y unzip vim locate jq gettext-base")
+        runCommand("apt-get install -y ghostscript imagemagick")
+        runCommand("apt-get install -y libice6 libsm6 libxt6 libxrender1 libxinerama1 libfontconfig1 libcups2 libdbus-glib-1-2 libglu1 libreoffice")
+        runCommand("apt-get install -y -f libjpeg62 libart-2.0-2")
+
+
+        environmentVariable("GLOBAL_transform.service.enabled", "true")
+        environmentVariable("GLOBAL_ooo.enabled", "false")
+        environmentVariable("GLOBAL_jodconverter.enabled", "true")
+        environmentVariable("GLOBAL_ooo.exe", "/usr/lib/libreoffice/program/soffice")
+        environmentVariable("GLOBAL_jodconverter.officeHome", "/usr/lib/libreoffice/")
+        environmentVariable("GLOBAL_img.exe", "/usr/bin/convert")
+        environmentVariable("GLOBAL_img.root", "/etc/ImageMagick")
+        environmentVariable("GLOBAL_img.dyn", "/usr/lib")
+        environmentVariable("GLOBAL_swf.exe", "/usr/bin/pdf2swf")
+        environmentVariable("GLOBAL_alfresco-pdf-renderer.root", "/opt/alfresco")
+        environmentVariable("GLOBAL_alfresco-pdf-renderer.exe", "/opt/alfresco/alfresco-pdf-renderer")
     }
 
     // Disable pull because base image is built locally and not pushed to a repo
