@@ -392,6 +392,17 @@
       </remote>
    </config>
 
+   <config evaluator="string-compare" condition="Users">
+      <users>
+         <!-- minimum length for username and password -->
+         <username-min-length>2</username-min-length>
+         <password-min-length>8</password-min-length>
+         <show-authorization-status>false</show-authorization-status>
+      </users>
+      <!-- This enables/disables the Add External Users Panel on the Add Users page. -->
+      <enable-external-users-panel>false</enable-external-users-panel>
+   </config>
+
    <!-- 
         Overriding endpoints to reference an Alfresco server with external SSO enabled
         NOTE: If utilising a load balancer between web-tier and repository cluster, the "sticky
