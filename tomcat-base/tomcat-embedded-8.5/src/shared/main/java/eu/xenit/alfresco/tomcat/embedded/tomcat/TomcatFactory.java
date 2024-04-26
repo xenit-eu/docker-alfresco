@@ -1,7 +1,7 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
-import eu.xenit.logging.json.valve.JsonAccessLogValve;
+import eu.xenit.logging.json.valve.JsonAccessLogValve85;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.Service;
@@ -108,7 +108,7 @@ public class TomcatFactory {
             ctx.addLifecycleListener(lifecycleListener);
 
             if (getConfiguration().isAccessLogging()) {
-                JsonAccessLogValve valve = new JsonAccessLogValve();
+                JsonAccessLogValve85 valve = new JsonAccessLogValve85();
                 ctx.addValve(valve);
                 ctx.getAccessLog();
             }
