@@ -117,3 +117,8 @@ project(":tomcat-base:tomcat-embedded-9") {
         skipProject = true
     }
 }
+project(":tomcat-base:tomcat-embedded-10") {
+    sonarqube {
+        skipProject = true
+    }
+}
