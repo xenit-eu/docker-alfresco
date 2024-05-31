@@ -67,10 +67,6 @@ public class AlfrescoTomcatFactoryHelper {
         );
 
         SSLHostConfig sslHostConfig = new SSLHostConfig();
-        // This is deprecated in Tomcat 9 and deleted from Tomcat V10.1!
-//            sslHostConfig.setCertificateKeystoreFile(alfrescoConfiguration.getTomcatSSLKeystore());
-//            sslHostConfig.setCertificateKeystorePassword(alfrescoConfiguration.getTomcatSSLKeystorePassword());
-//            sslHostConfig.setCertificateKeystoreType("JCEKS");
         SSLHostConfigCertificate sslHostConfigCertificate = new SSLHostConfigCertificate(sslHostConfig, SSLHostConfigCertificate.Type.UNDEFINED);
         sslHostConfigCertificate.setCertificateKeystoreFile(alfrescoConfiguration.getTomcatSSLKeystore());
         sslHostConfigCertificate.setCertificateKeystorePassword(alfrescoConfiguration.getTomcatSSLKeystorePassword());

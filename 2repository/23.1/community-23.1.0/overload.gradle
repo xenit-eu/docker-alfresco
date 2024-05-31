@@ -10,8 +10,7 @@ ext {
     ]
     solrimage = 'docker.io/xenit/alfresco-solr6:2.0.8.2'
     shareimage = 'docker.io/xenit/alfresco-share-community:23.1.0'
-//    13,14,15 are supported
-    psqlimage = 'docker.io/xenit/postgres:13'
+    psqlimage = 'postgres:15'
     tests = true
     alfrescoBomVersion='23.1.0'
 }
