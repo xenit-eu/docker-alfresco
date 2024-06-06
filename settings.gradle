@@ -1,11 +1,8 @@
 rootProject.name = 'docker-alfresco'
 include ':tomcat-base'
-include ':tomcat-base:tomcat-embedded-8.5'
 include ':tomcat-base:tomcat-embedded-9'
 include ':tomcat-base:tomcat-embedded-10'
 include ':1alfresco-skeleton'
-include ':1alfresco-skeleton:6.1'
-include ':1alfresco-skeleton:6.2'
 include ':1alfresco-skeleton:7.0'
 include ':1alfresco-skeleton:7.1'
 include ':1alfresco-skeleton:7.2'
@@ -15,8 +12,6 @@ include ':1alfresco-skeleton:23.1'
 include ':1alfresco-skeleton:23.2'
 include ':2repository'
 include ':1share-skeleton'
-include ':1share-skeleton:6.1'
-include ':1share-skeleton:6.2'
 include ':1share-skeleton:7.0'
 include ':1share-skeleton:7.1'
 include ':1share-skeleton:7.2'
@@ -43,8 +38,6 @@ def getSecondDotPosition(String version) {
 
 
 if (includeCommunity == 'true') {
-    includeRepoProject('community', '6.1.2-ga')
-    includeRepoProject('community', '6.2.0-ga')
     includeRepoProject('community', '7.0.0')
     includeRepoProject('community', '7.1.1')
     includeRepoProject('community', '7.2.0')
@@ -53,8 +46,6 @@ if (includeCommunity == 'true') {
     includeRepoProject('community', '23.1.0')
     includeRepoProject('community', '23.2.0')
 
-    includeShareProject('community', '6.1.0')
-    includeShareProject('community', '6.2.2')
     includeShareProject('community', '7.0.1')
     includeShareProject('community', '7.1.0')
     includeShareProject('community', '7.2.1')
@@ -65,8 +56,6 @@ if (includeCommunity == 'true') {
 }
 
 if (includeEnterprise == 'true') {
-    includeRepoProject('enterprise', '6.1.1')
-    includeRepoProject('enterprise', '6.2.2')
     includeRepoProject('enterprise', '7.0.1')
     includeRepoProject('enterprise', '7.1.0')
     includeRepoProject('enterprise', '7.2.0')

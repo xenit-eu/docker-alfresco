@@ -70,7 +70,7 @@ subprojects {
         main {
             java {
                 srcDir file("$project.parent.projectDir/src/shared/main/java")
-                srcDir file("$project.projectDir/src/shared/main/java")
+                srcDir file("$project.projectDir/src/main/java")
             }
         }
         test {

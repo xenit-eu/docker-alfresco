@@ -1,5 +1,0 @@
-ext {
-    tomcat = [
-            version: '8.5.78'
-    ]
-}

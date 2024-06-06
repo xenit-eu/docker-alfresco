@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [ "community-6.1.2-ga","community-6.2.0-ga","community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "enterprise-6.1.1","enterprise-6.2.2","enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0", "enterprise-23.1.0", "enterprise-23.2.0" ]
+        version: [ "community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0", "enterprise-23.1.0", "enterprise-23.2.0" ]
     steps:
       - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
       - name: Set up JDK 17
@@ -114,4 +114,4 @@ jobs:
         uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2
         with:
           cache-read-only: false
-          arguments: :tomcat-base:tomcat-embedded-8.5:publish :tomcat-base:tomcat-embedded-9:publish :tomcat-base:tomcat-embedded-10:publish --info -PsigningKeyId=CDE3528F
+          arguments: :tomcat-base:tomcat-embedded-9:publish :tomcat-base:tomcat-embedded-10:publish --info -PsigningKeyId=CDE3528F
