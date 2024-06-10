@@ -1,0 +1,5 @@
+ext {
+    tomcat = [
+            version: '10.1.23'
+    ]
+}

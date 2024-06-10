@@ -5,7 +5,6 @@ subprojects {
     apply plugin: 'eu.xenit.docker'
     apply plugin: 'java'
     apply plugin: "maven-publish"
-
     apply from: "${rootProject.projectDir}/jacoco.gradle"
 
     if (new File("${project.projectDir}/overload.gradle").exists()) {
@@ -17,28 +16,37 @@ subprojects {
     configurations {
         sharedLibs
     }
+    // This can be deleted when support for Alfresco V7.X is dropped.
+    if (!tomcatVersion.contains("10")) {
+        java {
+            withJavadocJar()
+            withSourcesJar()
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
 
-    java {
-        withJavadocJar()
-        withSourcesJar()
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        }
+    }else{
+        java {
+            withJavadocJar()
+            withSourcesJar()
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+
+        }
     }
     ext {
-        jsonLoggingVersion = '0.0.7'
+        jsonLoggingVersion = '0.0.8'
     }
     dependencies {
 
-        compileOnly "org.projectlombok:lombok:1.18.28"
-        annotationProcessor "org.projectlombok:lombok:1.18.28"
-
+        compileOnly "org.projectlombok:lombok:1.18.32"
+        annotationProcessor "org.projectlombok:lombok:1.18.32"
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
         implementation "org.apache.tomcat:tomcat-jasper:${tomcatVersion}"
         implementation "org.apache.tomcat:tomcat-jasper-el:${tomcatVersion}"
         implementation "org.apache.tomcat:tomcat-jsp-api:${tomcatVersion}"
         implementation "eu.xenit.logging:json-logging:${jsonLoggingVersion}"
-        implementation "com.fasterxml.jackson.core:jackson-databind:2.15.3"
         testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
         testImplementation("org.junit-pioneer:junit-pioneer:2.1.0")
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
@@ -62,6 +70,7 @@ subprojects {
         main {
             java {
                 srcDir file("$project.parent.projectDir/src/shared/main/java")
+                srcDir file("$project.projectDir/src/main/java")
             }
         }
         test {
@@ -84,7 +93,12 @@ subprojects {
     }
 
     createDockerFile {
-        from 'docker.io/eclipse-temurin:11'
+        if (!tomcatVersion.contains("10")) {
+            from 'docker.io/eclipse-temurin:11'
+        }
+        else{
+            from 'docker.io/eclipse-temurin:17-jre'
+        }
         smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'

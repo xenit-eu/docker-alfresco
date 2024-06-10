@@ -1,0 +1,23 @@
+ext {
+    alfresco = [
+            version: [
+                    major: 23,
+                    minor: 2,
+                    rev  : 0,
+                    label: 1
+            ],
+            flavor : 'community'
+    ]
+    solrimage = 'docker.io/xenit/alfresco-solr6:2.0.8.2'
+    shareimage = 'docker.io/xenit/alfresco-share-community:23.2.0'
+    psqlimage = 'postgres:15'
+    tests = true
+    alfrescoBomVersion='23.2.0'
+}
+
+dependencies {
+    alfrescoAmp platform("org.alfresco:acs-community-packaging:$alfrescoBomVersion")
+    alfrescoAmp 'org.alfresco:alfresco-share-services@amp'
+    baseAlfrescoWar platform("org.alfresco:acs-community-packaging:$alfrescoBomVersion")
+    baseAlfrescoWar 'org.alfresco:content-services-community@war'
+}

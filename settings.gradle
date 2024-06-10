@@ -1,62 +1,66 @@
 rootProject.name = 'docker-alfresco'
-
 include ':tomcat-base'
-include ':tomcat-base:tomcat-embedded-8.5'
 include ':tomcat-base:tomcat-embedded-9'
+include ':tomcat-base:tomcat-embedded-10'
 include ':1alfresco-skeleton'
-include ':1alfresco-skeleton:6.1'
-include ':1alfresco-skeleton:6.2'
 include ':1alfresco-skeleton:7.0'
 include ':1alfresco-skeleton:7.1'
 include ':1alfresco-skeleton:7.2'
 include ':1alfresco-skeleton:7.3'
 include ':1alfresco-skeleton:7.4'
+include ':1alfresco-skeleton:23.1'
+include ':1alfresco-skeleton:23.2'
 include ':2repository'
 include ':1share-skeleton'
-include ':1share-skeleton:6.1'
-include ':1share-skeleton:6.2'
 include ':1share-skeleton:7.0'
 include ':1share-skeleton:7.1'
 include ':1share-skeleton:7.2'
 include ':1share-skeleton:7.3'
 include ':1share-skeleton:7.4'
+include ':1share-skeleton:23.1'
+include ':1share-skeleton:23.2'
 include ':2share'
 
 def includeRepoProject(String flavor, String version) {
     def projectName = ":2repository:${flavor}-$version"
     include projectName
-    project(projectName).projectDir = file("2repository/${version.substring(0,3)}/${flavor}-$version")
+    project(projectName).projectDir = file("2repository/${version.substring(0,getSecondDotPosition(version))}/${flavor}-$version")
 }
 def includeShareProject(String flavor, String version) {
     def projectName = ":2share:${flavor}-$version"
     include projectName
-    project(projectName).projectDir = file("2share/${version.substring(0,3)}/${flavor}-$version")
+    project(projectName).projectDir = file("2share/${version.substring(0,getSecondDotPosition(version))}/${flavor}-$version")
 }
 
+def getSecondDotPosition(String version) {
+    return version.split(/\./)[0].length() + 1 + version.split(/\./)[1].length()
+}
+
+
 if (includeCommunity == 'true') {
-    includeRepoProject('community', '6.1.2-ga')
-    includeRepoProject('community', '6.2.0-ga')
     includeRepoProject('community', '7.0.0')
     includeRepoProject('community', '7.1.1')
     includeRepoProject('community', '7.2.0')
     includeRepoProject('community', '7.3.0')
     includeRepoProject('community', '7.4.0')
+    includeRepoProject('community', '23.1.0')
+    includeRepoProject('community', '23.2.0')
 
-    includeShareProject('community', '6.1.0')
-    includeShareProject('community', '6.2.2')
     includeShareProject('community', '7.0.1')
     includeShareProject('community', '7.1.0')
     includeShareProject('community', '7.2.1')
     includeShareProject('community', '7.3.0')
     includeShareProject('community', '7.4.0')
+    includeShareProject('community', '23.1.0')
+    includeShareProject('community', '23.2.0')
 }
 
 if (includeEnterprise == 'true') {
-    includeRepoProject('enterprise', '6.1.1')
-    includeRepoProject('enterprise', '6.2.2')
     includeRepoProject('enterprise', '7.0.1')
     includeRepoProject('enterprise', '7.1.0')
     includeRepoProject('enterprise', '7.2.0')
     includeRepoProject('enterprise', '7.3.0')
     includeRepoProject('enterprise', '7.4.0')
+    includeRepoProject('enterprise', '23.1.0')
+    includeRepoProject('enterprise', '23.2.0')
 }

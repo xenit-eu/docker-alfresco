@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Logger;
+import org.apache.tomcat.util.net.SSLHostConfigCertificate;
 
 public class AlfrescoTomcatFactoryHelper {
 
@@ -66,9 +67,12 @@ public class AlfrescoTomcatFactoryHelper {
         );
 
         SSLHostConfig sslHostConfig = new SSLHostConfig();
-        sslHostConfig.setCertificateKeystoreFile(alfrescoConfiguration.getTomcatSSLKeystore());
-        sslHostConfig.setCertificateKeystorePassword(alfrescoConfiguration.getTomcatSSLKeystorePassword());
-        sslHostConfig.setCertificateKeystoreType("JCEKS");
+        SSLHostConfigCertificate sslHostConfigCertificate = new SSLHostConfigCertificate(sslHostConfig, SSLHostConfigCertificate.Type.UNDEFINED);
+        sslHostConfigCertificate.setCertificateKeystoreFile(alfrescoConfiguration.getTomcatSSLKeystore());
+        sslHostConfigCertificate.setCertificateKeystorePassword(alfrescoConfiguration.getTomcatSSLKeystorePassword());
+        sslHostConfigCertificate.setCertificateKeystoreType("JCEKS");
+
+        sslHostConfig.addCertificate(sslHostConfigCertificate);
         sslHostConfig.setTruststoreFile(alfrescoConfiguration.getTomcatSSLTruststore());
         sslHostConfig.setTruststorePassword(alfrescoConfiguration.getTomcatSSLTruststorePassword());
         sslHostConfig.setTruststoreType("JCEKS");

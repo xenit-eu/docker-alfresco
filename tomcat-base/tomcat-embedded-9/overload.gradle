@@ -3,9 +3,3 @@ ext {
             version: '9.0.59'
     ]
 }
-
-sonarqube {
-    properties {
-        property 'sonar.projectBaseDir', "$project.parent.projectDir/src/shared/"
-    }
-}

@@ -55,14 +55,15 @@ def calcRepository(flavor, isAlfresco) {
 
 String getTomcatProject(majorVersion) {
     println "major version used : ${majorVersion}"
-    if (majorVersion == 6) {
-        println 'tomcat-embedded-8.5'
-        return ":tomcat-base:tomcat-embedded-8.5"
-    }
 
     if (majorVersion == 7) {
         println 'tomcat-embedded-9'
         return ":tomcat-base:tomcat-embedded-9"
+    }
+
+    if (majorVersion == 23) {
+        println 'tomcat-embedded-10'
+        return ":tomcat-base:tomcat-embedded-10"
     }
 
     return null
@@ -98,5 +99,17 @@ subprojects {
                 logger.debug "using default credentials"
             }
         }
+    }
+}
+
+// Remove when Alfresco V7.X support is dropped.
+project(":tomcat-base:tomcat-embedded-9") {
+    sonarqube {
+        skipProject = true
+    }
+}
+project(":tomcat-base:tomcat-embedded-10") {
+    sonarqube {
+        skipProject = true
     }
 }
