@@ -18,7 +18,7 @@ services:
        mode: host
 
  imagemagick:
-   image: alfresco/alfresco-imagemagick:4.0.0@sha256:6be4b9ea43081d083bfe933fd0796339e004c4d5ddbce36350a38c0840be2386
+   image: alfresco/alfresco-imagemagick:4.0.1@sha256:df630b558bbee2b2e24eeec8882007418904fc7882318350c0f3bb33a9b1b85f
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
    ports:
