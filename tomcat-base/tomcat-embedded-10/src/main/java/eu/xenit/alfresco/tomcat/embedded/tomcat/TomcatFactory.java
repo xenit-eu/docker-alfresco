@@ -112,6 +112,10 @@ public class TomcatFactory {
                 ctx.addValve(valve);
                 ctx.getAccessLog();
             }
+
+            ctx.setAllowCasualMultipartParsing(true);
+            ctx.setAllowMultipleLeadingForwardSlashInPath(true);
+            ctx.setCrossContext(true);
         }
     }
 
