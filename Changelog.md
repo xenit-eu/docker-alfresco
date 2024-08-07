@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## released
-### Fixed
 
+### Fixed
 * [PR #118](https://github.com/xenit-eu/docker-alfresco/pull/118) ALFREDOPS-842 upgrade json logging version to 0.0.6
 * [PR #112](https://github.com/xenit-eu/docker-alfresco/pull/111) DOCKER-423 SOLR_SSL setting secret does not disable the tomcat ssl connector
 * [PR #110](https://github.com/xenit-eu/docker-alfresco/pull/110) XM2C-81 fix alfresco environment and default system properties
+* [PR #78](https://github.com/xenit-eu/docker-alfresco/pull/78) DOCKER-408 Add timeout to health check commands
 
 ### Added
 * [PR #208](https://xenitsupport.jira.com/browse/DOCKER-450) DOCKER-450 Add Alfresco V23.1 & V23.2 support
@@ -32,14 +33,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 * [PR #74](https://github.com/xenit-eu/docker-alfresco/pull/74) DOCKER-406 Added Alfresco 7.2 to subprojects
 * [PR #76](https://github.com/xenit-eu/docker-alfresco/pull/76) Allow manual triggers of workflow
 
-### Fixed
-
-* [PR #78](https://github.com/xenit-eu/docker-alfresco/pull/78) DOCKER-408 Add timeout to health check commands
-
 ### Changed
-
-* [PR #201](https://github.com/xenit-eu/docker-alfresco/pull/201) XENOPS-1127 Bumped acs packageing version to the latest path version
+* [PR #210](https://github.com/xenit-eu/docker-alfresco/pull/210) DOCKER-457 Adapt default context settings for Tomcat 10 (this includes multipart form data parsing)
 * [PR #205](https://github.com/xenit-eu/docker-alfresco/pull/205) DOCKER-446 Instead of webscript org/alfresco/enterprise/repository/person/people-enterprise.get, webscript org/alfresco/repository/person/people.get is now used by default to list the Alfresco users in the admin tools.
+* [PR #201](https://github.com/xenit-eu/docker-alfresco/pull/201) XENOPS-1127 Bumped acs packageing version to the latest path version
+
 
 ## 2022-02.03 (2022-02-03)
 

@@ -1,7 +1,15 @@
 package eu.xenit.alfresco.tomcat.embedded.tomcat;
 
+import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.redirectLog4j;
+
 import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.logging.json.valve.JsonAccessLogValve10;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.Service;
@@ -12,15 +20,6 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Stream;
-
-import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.redirectLog4j;
-
 public class TomcatFactory {
 
     private final TomcatConfiguration configuration;
@@ -29,7 +28,16 @@ public class TomcatFactory {
         this.configuration = configuration;
     }
 
-    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize, String relaxedPathChars, String relaxedQueryChars) {
+    public static Connector getConnector(
+            Tomcat tomcat,
+            String protocol,
+            int port,
+            boolean sslEnabled,
+            String scheme,
+            int maxThreads,
+            int maxHttpHeaderSize,
+            String relaxedPathChars,
+            String relaxedQueryChars) {
         Connector connector = new Connector(protocol);
         connector.setPort(port);
         connector.setProperty("connectionTimeout", "240000");
@@ -56,8 +64,16 @@ public class TomcatFactory {
         tomcat.setPort(getConfiguration().getTomcatPort());
         tomcat.getServer().setPort(getConfiguration().getTomcatServerPort());
         createDefaultConnector(tomcat);
-        addUserWithRole(tomcat, "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repoclient");
-        addUserWithRole(tomcat, "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB", null, "repository");
+        addUserWithRole(
+                tomcat,
+                "CN=Alfresco Repository Client, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB",
+                null,
+                "repoclient");
+        addUserWithRole(
+                tomcat,
+                "CN=Alfresco Repository, OU=Unknown, O=Alfresco Software Ltd., L=Maidenhead, ST=UK, C=GB",
+                null,
+                "repository");
         Path webapps = Paths.get(getConfiguration().getWebappsPath());
         if (Files.exists(webapps)) {
             try (var directoryStream = Files.newDirectoryStream(webapps)) {
@@ -93,9 +109,12 @@ public class TomcatFactory {
                 if (event.getType().equals("before_start")) {
                     WebResourceRoot resources = new StandardRoot(ctx);
                     resources.setCacheMaxSize(getConfiguration().getTomcatCacheMaxSize());
-                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getSharedClasspathDir(), "/"));
-                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes", getConfiguration().getGeneratedClasspathDir(), "/"));
-                    resources.addJarResources(new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedLibDir(), "/"));
+                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes",
+                            getConfiguration().getSharedClasspathDir(), "/"));
+                    resources.addPostResources(new DirResourceSet(resources, "/WEB-INF/classes",
+                            getConfiguration().getGeneratedClasspathDir(), "/"));
+                    resources.addJarResources(
+                            new DirResourceSet(resources, "/WEB-INF/lib", getConfiguration().getSharedLibDir(), "/"));
                     if (getConfiguration().isJsonLogging()) {
                         redirectLog4j(path, Paths.get(configuration.getGeneratedClasspathDir()));
                     }
@@ -112,6 +131,10 @@ public class TomcatFactory {
                 ctx.addValve(valve);
                 ctx.getAccessLog();
             }
+
+            ctx.setAllowCasualMultipartParsing(true);
+            ctx.setAllowMultipleLeadingForwardSlashInPath(true);
+            ctx.setCrossContext(true);
         }
     }
 
@@ -135,7 +158,6 @@ public class TomcatFactory {
         tomcat.addRole(username, role);
     }
 
-
     private void stopTomcat(Tomcat tomcat) {
         Thread thread = new Thread(() -> {
             try {
@@ -146,8 +168,5 @@ public class TomcatFactory {
             }
         });
         thread.start();
-
     }
-
-
 }
