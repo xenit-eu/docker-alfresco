@@ -35,7 +35,7 @@ subprojects {
         }
     }
     ext {
-        jsonLoggingVersion = '0.0.8'
+        jsonLoggingVersion = '0.0.11'
     }
     dependencies {
 
