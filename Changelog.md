@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 ## released
 
 ### Fixed
+* [PR #213](https://github.com/xenit-eu/docker-alfresco/pull/213) DOCKER-460 update tomcat for CVE-2024-50379
 * [PR #118](https://github.com/xenit-eu/docker-alfresco/pull/118) ALFREDOPS-842 upgrade json logging version to 0.0.6
 * [PR #112](https://github.com/xenit-eu/docker-alfresco/pull/111) DOCKER-423 SOLR_SSL setting secret does not disable the tomcat ssl connector
 * [PR #110](https://github.com/xenit-eu/docker-alfresco/pull/110) XM2C-81 fix alfresco environment and default system properties
@@ -380,4 +381,3 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 * [DOCKER-37] Removed bundled images for versions >=5.0
 * [DOCKER-26] Removed the PROXY_<variable> parameters from the init
-	
