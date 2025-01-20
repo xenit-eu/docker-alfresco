@@ -35,10 +35,8 @@ def calcTags(version) {
     }
     // For non-master/non-release builds, change the tags to contain branch and build number
     def isReleaseBuild = ci.isCi() && (ci.branch != null && (ci.branch.startsWith("master") || ci.branch.startsWith("release")) || ci.tag != null)
-    System.out.println("ci branch: " + ci.branch)
-    System.out.println("ci tag: " + ci.tag)
     if (!isReleaseBuild) {
-        def branch = ci.tag ? ci.tag : ci.branch.replace("/", ".")
+        def branch = ci.tag ? ci.tag : ci.branch ? ci.branch.replace("/", ".") : "1.0.0"
         tags = tags.stream().map({ it + "-build-${branch}-${ci.buildNumber}" }).collect(Collectors.toList())
     }
 

@@ -85,6 +85,10 @@ subprojects {
         }
     }
 
+    sourcesJar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+
     archivesBaseName = 'xenit-tomcat-embedded'
 
     dockerBuild {
