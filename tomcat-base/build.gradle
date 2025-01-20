@@ -55,7 +55,7 @@ subprojects {
         }
     }
 
-    boolean isRelease = ci.branch?.equals("master")
+    boolean isRelease = ci.branch?.equals("master") || ci.branch?.equals("master") || ci.tag != null
     if (!isRelease) {
         version += "-SNAPSHOT"
     }
