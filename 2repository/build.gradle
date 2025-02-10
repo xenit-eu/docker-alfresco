@@ -120,7 +120,7 @@ subprojects {
             def composeDir = "${project.parent.projectDir}/src/integrationTest/resources";
 
             useComposeFiles = ["$composeDir/docker-compose-alfresco-minimal.yml",
-                               "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml"];
+                               "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml", "$composeDir/docker-compose-share.yml"];
 
             changedPorts {
                 isRequiredBy(project.tasks.integrationTestChangedPorts)

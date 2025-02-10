@@ -28,4 +28,7 @@ public class TomcatConfiguration {
     protected boolean shareEnabled;
     protected String generatedClasspathDir;
     protected long tomcatCacheMaxSize;
+    protected boolean allowCasualMultipartParsing;
+    protected boolean allowMultipleLeadingForwardSlashInPath;
+    protected boolean crossContext;
 }

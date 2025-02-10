@@ -132,9 +132,9 @@ public class TomcatFactory {
                 ctx.getAccessLog();
             }
 
-            ctx.setAllowCasualMultipartParsing(true);
-            ctx.setAllowMultipleLeadingForwardSlashInPath(true);
-            ctx.setCrossContext(true);
+            ctx.setAllowCasualMultipartParsing(getConfiguration().isAllowCasualMultipartParsing());
+            ctx.setAllowMultipleLeadingForwardSlashInPath(getConfiguration().isAllowMultipleLeadingForwardSlashInPath());
+            ctx.setCrossContext(getConfiguration().isCrossContext());
         }
     }
 
