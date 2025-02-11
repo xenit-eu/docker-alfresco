@@ -26,8 +26,8 @@ class DefaultConfigurationProviderTest {
         expected.setSharedClasspathDir("/usr/local/tomcat/shared/classes");
         expected.setTomcatCacheMaxSize(100000);
         expected.setAllowCasualMultipartParsing(false);
-        expected.setAllowMultipleLeadingForwardSlashInPath(true);
-        expected.setCrossContext(true);
+        expected.setAllowMultipleLeadingForwardSlashInPath(false);
+        expected.setCrossContext(false);
         assertEquals(configuration, expected);
     }
 
