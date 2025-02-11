@@ -12,19 +12,19 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up JDK 17
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           distribution: 'temurin'
           java-version: '17'
       - name: Unit tests
-        uses: gradle/gradle-build-action@v3.5.0
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
           cache-read-only: false
           arguments: test --parallel --info
       - name: Upload analysis to sonarcloud
-        uses: gradle/gradle-build-action@v3.5.0
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }}
@@ -33,7 +33,7 @@ jobs:
           arguments: sonarqube -i
       - name: Upload test artifact
         if: success() || failure()
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: test-result
           path: /home/runner/work/**/build/reports
@@ -45,22 +45,22 @@ jobs:
       matrix:
         version: [ "community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0", "enterprise-23.1.0", "enterprise-23.2.0" ]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up JDK 17
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           distribution: 'temurin'
           java-version: '17'
       - name: Login to CloudSmith docker registry
         run: echo "${{ secrets.CLOUDSMITH_APIKEY }}" | docker login private.docker.xenit.eu --username "${{ secrets.CLOUDSMITH_USER }}" --password-stdin
       - name: Integration tests
-        uses: gradle/gradle-build-action@v3.5.0
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
           cache-read-only: false
           arguments: :2repository:${{ matrix.version }}:integrationTests --info --stacktrace
       - name: Upload test artifact
         if: success() || failure()
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: integration-test-${{ matrix.version }}-result
           path: /home/runner/work/**/build/reports
@@ -70,9 +70,9 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/tags/v') }}
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up JDK 17
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -85,12 +85,12 @@ jobs:
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        uses: gradle/gradle-build-action@v3.5.0
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
           cache-read-only: false
           arguments: pushDockerImage -PincludeEnterprise=false
       - name: Publish private docker images
-        uses: gradle/gradle-build-action@v3.5.0
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
           cache-read-only: false
           arguments: :2repository:pushDockerImage -PincludeCommunity=false
@@ -99,9 +99,9 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{  startsWith(github.ref, 'refs/tags/v') }}
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up JDK 17
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -111,7 +111,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
           ORG_GRADLE_PROJECT_sonatype_username: ${{ secrets.SONATYPE_S01_USERNAME  }}
           ORG_GRADLE_PROJECT_sonatype_password: ${{ secrets.SONATYPE_S01_PASSWORD  }}
-        uses: gradle/gradle-build-action@v3.5.0
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
           cache-read-only: false
           arguments: :tomcat-base:tomcat-embedded-9:publish :tomcat-base:tomcat-embedded-10:publish --info -PsigningKeyId=CDE3528F
