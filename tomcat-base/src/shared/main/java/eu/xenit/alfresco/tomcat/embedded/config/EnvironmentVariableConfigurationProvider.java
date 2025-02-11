@@ -9,8 +9,11 @@ import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.JSON
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARED_CLASSPATH_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARED_LIB_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.SHARE_ENABLED;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_ALLOW_CASUAL_MULTIPART_PARSING;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_BASE_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_CACHE_MAX_SIZE;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_CROSS_CONTEXT;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_HTTP_HEADER_SIZE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_THREADS;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT;
@@ -44,6 +47,9 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(ALFRESCO_ENABLED, value -> baseConfiguration.setAlfrescoEnabled(Boolean.parseBoolean(value)));
         setPropertyFromEnv(SHARE_ENABLED, value -> baseConfiguration.setShareEnabled(Boolean.parseBoolean(value)));
         setPropertyFromEnv(TOMCAT_CACHE_MAX_SIZE, value -> baseConfiguration.setTomcatCacheMaxSize(Long.parseLong(value)));
+        setPropertyFromEnv(TOMCAT_ALLOW_CASUAL_MULTIPART_PARSING, value -> baseConfiguration.setAllowCasualMultipartParsing(Boolean.parseBoolean(value)));
+        setPropertyFromEnv(TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH, value -> baseConfiguration.setAllowMultipleLeadingForwardSlashInPath(Boolean.parseBoolean(value)));
+        setPropertyFromEnv(TOMCAT_CROSS_CONTEXT, value -> baseConfiguration.setCrossContext(Boolean.parseBoolean(value)));
         return baseConfiguration;
     }
 }

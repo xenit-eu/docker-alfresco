@@ -19,6 +19,9 @@ public class EnvironmentVariables {
     public static final String GENERATED_CLASSPATH_DIR = "GENERATED_CLASSPATH_DIR";
     public static final String SHARED_LIB_DIR = "SHARED_LIB_DIR";
     public static final String TOMCAT_CACHE_MAX_SIZE = "TOMCAT_CACHE_MAX_SIZE";
+    public static final String TOMCAT_ALLOW_CASUAL_MULTIPART_PARSING = "TOMCAT_ALLOW_CASUAL_MULTIPART_PARSING";
+    public static final String TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH = "TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH";
+    public static final String TOMCAT_CROSS_CONTEXT = "TOMCAT_CROSS_CONTEXT";
     private EnvironmentVariables() {
     }
 
