@@ -10,7 +10,7 @@ services:
        mode: host
 
  libreoffice:
-   image: alfresco/alfresco-libreoffice:4.0.0@sha256:9bb89e6b84cac57ad48b74d4d34a3d2f4b8a9b19cdc67f6afed25e561e957a3f
+   image: alfresco/alfresco-libreoffice:5.1.6@sha256:283d80b4d8d5bbad5f9b01aebceca5a8fcce671219553f2c9472f84341a2013d
    environment:
      JAVA_OPTS: " -Xms256m -Xmx512m"
    ports:
