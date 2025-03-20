@@ -40,8 +40,10 @@ class UtilsTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.clearProperty("log4j.configuration");
-
+        finally {
+            System.clearProperty("log4j.configuration");
+            System.clearProperty("log4j2.configurationFile");
+        }
     }
 
     @Test
@@ -57,11 +59,11 @@ class UtilsTest {
                 "log4j2.properties"));
         Assertions.assertNull(System.getProperty("log4j2.configurationFile"));
         Utils.redirectLog4j(parent, Files.createTempDirectory("redirectLog4j2Test"));
-        String log4JFilePath = System.getProperty("log4j2.configurationFile");
-        Assertions.assertNotNull(log4JFilePath);
-        Assertions.assertTrue(log4JFilePath.split("file:").length > 1);
+        String log4J2FilePath = System.getProperty("log4j2.configurationFile");
+        Assertions.assertNotNull(log4J2FilePath);
+        Assertions.assertTrue(log4J2FilePath.split("file:").length > 1);
         Properties properties = new Properties();
-        try (var reader = Files.newBufferedReader(Paths.get(log4JFilePath.split("file:")[1]))) {
+        try (var reader = Files.newBufferedReader(Paths.get(log4J2FilePath.split("file:")[1]))) {
             properties.load(reader);
             Assertions.assertEquals("error", properties.getProperty("rootLogger.level"));
             Assertions.assertEquals("stdout", properties.getProperty("rootLogger.appenderRefs"));
@@ -83,7 +85,10 @@ class UtilsTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.clearProperty("log4j2.configurationFile");
+        finally {
+            System.clearProperty("log4j.configuration");
+            System.clearProperty("log4j2.configurationFile");
+        }
     }
 
     @Test
@@ -98,7 +103,7 @@ class UtilsTest {
     void redirectLog4j2TestNoPath() throws Exception {
         Path parent = Files.createTempDirectory("FailingDir");
         Assertions.assertNull(System.getProperty("log4j2.configurationFile"));
-        Utils.redirectLog4j(parent, Files.createTempDirectory("redirectLog4jTestNoPath"));
+        Utils.redirectLog4j(parent, Files.createTempDirectory("redirectLog4j2TestNoPath"));
         Assertions.assertNull(System.getProperty("log4j2.configurationFile"));
     }
 }
