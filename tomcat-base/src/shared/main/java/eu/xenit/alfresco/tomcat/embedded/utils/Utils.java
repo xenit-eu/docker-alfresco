@@ -31,17 +31,38 @@ public class Utils {
         try {
             try (var reader = Files.newBufferedReader(log4JPropertiesPath)) {
                 properties.load(reader);
+                // log4j 1.x properties
                 properties.setProperty("log4j.rootLogger", "error, Console, jmxlogger1");
                 properties.setProperty("log4j.appender.Console.layout", "eu.xenit.logging.json.log4j.JsonLayout");
                 properties.setProperty("log4j.appender.Console.layout.Type", "application");
                 properties.setProperty("log4j.appender.Console.layout.Component", webappPath.getFileName().toString());
                 properties.setProperty("log4j.appender.Console.layout.ExtractStackTrace", "true");
                 properties.setProperty("log4j.appender.Console.layout.FilterStackTrace", "true");
+                // log4j 2.x properties
+                properties.setProperty("rootLogger.level", "error");
+                properties.setProperty("rootLogger.appenderRefs", "stdout");
+                properties.setProperty("rootLogger.appenderRef.stdout.ref", "ConsoleAppender");
+                properties.setProperty("appender.console.type", "Console");
+                properties.setProperty("appender.console.name", "ConsoleAppender");
+                properties.setProperty("appender.console.layout.type", "JsonTemplateLayout");
+                properties.setProperty("appender.console.layout.eventTemplateUri"
+                        , "file:///usr/local/tomcat/log4j2/jsonLayout/jsonLayout.json");
+                properties.setProperty("appender.console.layout.eventTemplateAdditionalField[0].type", "EventTemplateAdditionalField");
+                properties.setProperty("appender.console.layout.eventTemplateAdditionalField[0].key", "facility");
+                properties.setProperty("appender.console.layout.eventTemplateAdditionalField[0].value", "xenit-json");
+                properties.setProperty("appender.console.layout.eventTemplateAdditionalField[1].type", "EventTemplateAdditionalField");
+                properties.setProperty("appender.console.layout.eventTemplateAdditionalField[1].key", "component");
+                properties.setProperty("appender.console.layout.eventTemplateAdditionalField[1].value", webappPath.getFileName().toString());
+                properties.setProperty("appender.console.layout.eventTemplateAdditionalField[2].type", "EventTemplateAdditionalField");
+                properties.setProperty("appender.console.layout.eventTemplateAdditionalField[2].key", "type");
+                properties.setProperty("appender.console.layout.eventTemplateAdditionalField[2].value", "application");
                 Path tempProps = Files.createTempFile(destinationPath, "log4j-", ".properties");
                 try (OutputStream os = Files.newOutputStream(tempProps)) {
                     properties.store(os, null);
                 }
+
                 System.setProperty("log4j.configuration", "file:" + tempProps.toAbsolutePath());
+                System.setProperty("log4j2.configurationFile", "file:" + tempProps.toAbsolutePath());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
