@@ -73,14 +73,11 @@ class UtilsTest {
             Assertions.assertEquals("JsonTemplateLayout", properties.getProperty("appender.console.layout.type"));
             Assertions.assertEquals("file:///usr/local/tomcat/log4j2/jsonLayout/jsonLayout.json", properties.getProperty("appender.console.layout.eventTemplateUri"));
             Assertions.assertEquals("EventTemplateAdditionalField", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[0].type"));
-            Assertions.assertEquals("facility", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[0].key"));
-            Assertions.assertEquals("xenit-json", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[0].value"));
+            Assertions.assertEquals("component", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[0].key"));
+            Assertions.assertEquals(parent.getFileName().toString(), properties.getProperty("appender.console.layout.eventTemplateAdditionalField[0].value"));
             Assertions.assertEquals("EventTemplateAdditionalField", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[1].type"));
-            Assertions.assertEquals("component", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[1].key"));
-            Assertions.assertEquals(parent.getFileName().toString(), properties.getProperty("appender.console.layout.eventTemplateAdditionalField[1].value"));
-            Assertions.assertEquals("EventTemplateAdditionalField", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[2].type"));
-            Assertions.assertEquals("type", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[2].key"));
-            Assertions.assertEquals("application", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[2].value"));
+            Assertions.assertEquals("type", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[1].key"));
+            Assertions.assertEquals("application", properties.getProperty("appender.console.layout.eventTemplateAdditionalField[1].value"));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
