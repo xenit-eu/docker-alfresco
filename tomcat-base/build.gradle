@@ -36,6 +36,7 @@ subprojects {
     }
     ext {
         jsonLoggingVersion = '0.0.11'
+        jsonTemplateLayoutVersion = '2.20.0'
     }
     dependencies {
 
@@ -51,6 +52,9 @@ subprojects {
         testImplementation("org.junit-pioneer:junit-pioneer:2.1.0")
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
         sharedLibs("eu.xenit.logging:json-logging:${jsonLoggingVersion}") {
+            transitive = false
+        }
+        sharedLibs("org.apache.logging.log4j:log4j-layout-template-json:${jsonTemplateLayoutVersion}") {
             transitive = false
         }
     }
@@ -107,12 +111,12 @@ subprojects {
         }
         smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
+        smartCopy "${project.parent.projectDir}/src/shared/main/resources/jsonLayout/jsonLayout.json", '/usr/local/tomcat/log4j2/jsonLayout/jsonLayout.json'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
         def jarName = archivesBaseName + '.jar'
         dependsOn jar
         smartCopy jar.outputs.files.singleFile, "/app/tomcat-embedded/$jarName"
         smartCopy "${project.parent.projectDir}/src/shared/main/bash/entrypoint/", '/'
-
         def buildDate = project.properties.getOrDefault("buildDate", ((int) (new Date().getTime() / 1000)).toString())
         environmentVariable('BUILD_DATE', buildDate)
 

@@ -1,0 +1,53 @@
+{
+  "shortMessage": {
+    "$resolver": "message",
+    "stringified": true
+  },
+  "fullMessage": {
+    "$resolver": "message",
+    "stringified": true
+  },
+  "stackTrace": {
+    "$resolver": "exception",
+    "field": "stackTrace",
+    "stackTrace": {
+      "stringified": true
+    }
+  },
+  "timestamp":
+  {
+    "$resolver": "timestamp",
+    "epoch": {
+      "unit": "secs",
+      "rounded": false
+    }
+  },
+  "level": {
+    "$resolver": "level",
+    "field": "severity",
+    "severity": {
+      "field": "code"
+    }
+  },
+  "severity": {
+    "$resolver": "level",
+    "field": "name"
+  },
+  "time":
+  {
+    "$resolver": "timestamp",
+    "pattern": {
+      "format": "yyyy-MM-dd HH:mm:ss,SSS",
+      "timeZone": "UTC",
+      "locale": "en_US"
+    }
+  },
+  "thread": {
+    "$resolver": "thread",
+    "field": "name"
+  },
+  "loggerName": {
+    "$resolver": "logger",
+    "field": "name"
+  }
+}
