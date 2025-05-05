@@ -14,16 +14,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import uk.org.webcompere.systemstubs.rules.EnvironmentVariablesRule;
 
 public class LoggingTests {
 
     final Set<String> REQ_COMMON_LOGGING_FIELDS = Set.of("timestamp", "type");
 
     final Set<String> REQ_APPLICATION_LOGGING_FIELDS = union(
-            Set.of("loggerName", "severity", "thread"), REQ_COMMON_LOGGING_FIELDS);
+            Set.of("loggerName", "severity", "thread", "shortMessage", "fullMessage"), REQ_COMMON_LOGGING_FIELDS);
 
     final Set<String> REQ_ACCESS_LOGGING_FIELDS = union(
             Set.of("requestTime", "responseStatus", "requestMethod", "requestUri"),
@@ -34,10 +32,6 @@ public class LoggingTests {
         result.addAll(commonFields);
         return result;
     }
-    //TODO: Sql logs?
-
-    @Rule
-    public EnvironmentVariablesRule environmentVariablesRule = new EnvironmentVariablesRule();
 
     private Container findContainerByName(String value, List<Container> containers) {
         assert value != null && containers != null;
@@ -59,18 +53,23 @@ public class LoggingTests {
                 .responseTimeout(Duration.ofSeconds(45)).build();
         return DockerClientImpl.getInstance(config, httpClient);
     }
-    private void checkJsonLogs(String logs){
-        // TODO: json parsing?
-        Assert.fail();
 
-        String accessSample = logs.lines().filter(line -> line.contains("\"type\":\"access\"")).findFirst().orElseThrow(AssertionError::new);
-        for(String entry : REQ_ACCESS_LOGGING_FIELDS){
-            Assert.assertTrue("Access logs missing field: " + entry, accessSample.contains(entry));
+    private boolean isCorrectJsonLogs(String logs) {
+        // This fully relies on the logs containing one of each log type before this test runs.
+        String accessSample = logs.lines().filter(line -> line.contains("\"type\":\"access\"")).findFirst().orElse("");
+        String applicationSample = logs.lines().filter(line -> line.contains("\"type\":\"application\"")).findFirst().orElse("");
+        return hasEntries(accessSample, REQ_ACCESS_LOGGING_FIELDS)
+                && hasEntries(applicationSample, REQ_APPLICATION_LOGGING_FIELDS);
+    }
+
+    private boolean hasEntries(String accessSample, Set<String> fields) {
+        assert accessSample != null;
+        for (String entry : fields) {
+            if (!accessSample.contains(entry)) {
+                return false;
+            }
         }
-        String applicationSample = logs.lines().filter(line -> line.contains("\"type\":\"application\"")).findFirst().orElseThrow(AssertionError::new);
-        for(String entry : REQ_APPLICATION_LOGGING_FIELDS){
-            Assert.assertTrue("Application logs missing field: " + entry, applicationSample.contains(entry));
-        }
+        return true;
     }
 
     private static String getContainerLogs(DockerClient dockerClient, Container container)
@@ -88,21 +87,17 @@ public class LoggingTests {
     }
 
     @Test
-    public void testJsonLogging() {
+    public void testJsonLogging() throws IOException, InterruptedException {
+        assert "true".equals(System.getenv().get("JSON_LOGGING"));
+
         final String containerName = "alfresco";
         try (DockerClient dockerClient = createDockerClient()) {
             List<Container> containers = dockerClient.listContainersCmd().withStatusFilter(List.of("running")).exec();
             Container container = findContainerByName(containerName, containers);
             assert container != null;
-
             String logs = getContainerLogs(dockerClient, container);
             Assert.assertFalse(logs.isEmpty());
-            checkJsonLogs(logs);
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            Assert.assertTrue("Logs do not contain required fields or aren't json", isCorrectJsonLogs(logs));
         }
-        Assert.fail(); // TODO: with and without json logging
     }
-
-
 }
