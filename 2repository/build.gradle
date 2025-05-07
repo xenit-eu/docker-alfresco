@@ -30,7 +30,7 @@ subprojects {
         integrationTestImplementation group: 'uk.org.webcompere', name: 'system-stubs-junit4', version: '2.1.8'
         integrationTestImplementation group: 'com.github.docker-java', name: 'docker-java-core', version: '3.4.0'
         integrationTestImplementation group: 'com.github.docker-java', name: 'docker-java-transport-httpclient5', version: '3.4.0'
-
+        integrationTestImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.21.0'
 
         alfrescoSM(group: 'org.postgresql', name: 'postgresql', version: '42.6.0')
     }
@@ -82,6 +82,7 @@ subprojects {
             systemProperty 'alfresco.port.internal', '8080'
             systemProperty 'flavor', "${project.alfresco.flavor}"
             systemProperty 'version', "${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}"
+            systemProperty('alfresco_image_name', "${calcRepository(project.alfresco.flavor,true)}:${calcTags(project.alfresco.version).last()}")
         }
     }
 
