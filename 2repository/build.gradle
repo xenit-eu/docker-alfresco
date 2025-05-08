@@ -38,10 +38,12 @@ subprojects {
 
     def parentProject = project(":1alfresco-skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}")
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
+    def alfrescoRepository = calcRepository(project.alfresco.flavor,true)
+    def alfrescoTags = calcTags(project.alfresco.version)
 
     dockerBuild {
-        repositories = [calcRepository(project.alfresco.flavor,true)]
-        tags = calcTags(project.alfresco.version)
+        repositories = [alfrescoRepository]
+        tags = alfrescoTags
         alfresco {
             baseImage = parentImage.getImageId()
         }
@@ -79,7 +81,7 @@ subprojects {
             systemProperty 'alfresco.port.internal', '8080'
             systemProperty 'flavor', "${project.alfresco.flavor}"
             systemProperty 'version', "${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}"
-            systemProperty('alfresco_image_name', "${calcRepository(project.alfresco.flavor,true)}:${calcTags(project.alfresco.version).last()}")
+            systemProperty('alfresco_image_name', "${alfrescoRepository}:${alfrescoTags.last()}")
         }
     }
 
