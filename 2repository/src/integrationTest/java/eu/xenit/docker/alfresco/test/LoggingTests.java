@@ -1,5 +1,6 @@
 package eu.xenit.docker.alfresco.test;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Map;
@@ -7,6 +8,9 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import org.testcontainers.utility.DockerImageName;
 
 public class LoggingTests {
@@ -29,17 +33,17 @@ public class LoggingTests {
     private boolean isCorrectJsonLogs(String logs) {
         String applicationLogSample = logs.lines().filter(line -> line.contains("\"type\":\"application\"")).findFirst()
                 .orElse("");
-        return hasEntries(applicationLogSample, REQ_APPLICATION_LOGGING_FIELDS);
-    }
-
-    private boolean hasEntries(String logSample, Set<String> fields) {
-        assert logSample != null;
-        for (String entry : fields) {
-            if (!logSample.contains(entry)) {
-                return false;
-            }
+        ObjectMapper objMapper = new ObjectMapper();
+        boolean isCorrect;
+        try {
+            JsonNode jsonLogLine = objMapper.readTree(applicationLogSample);
+            isCorrect = REQ_APPLICATION_LOGGING_FIELDS.stream().allMatch(jsonLogLine::has);
+        } catch (JsonProcessingException ignored) {
+            isCorrect = false;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return true;
+        return isCorrect;
     }
 
     private void setupAlfrescoTestContainer(GenericContainer<?> alfContainer, boolean jsonLogging) {
