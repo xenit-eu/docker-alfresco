@@ -1,7 +1,6 @@
 package eu.xenit.docker.alfresco.test;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,17 +12,18 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import org.testcontainers.utility.DockerImageName;
 
 public class LoggingTests {
 
-
-    public static final long WAIT_FOR_LOGS_DUR = Duration.ofSeconds(10).toMillis();
     public static final String ALFRESCO_IMAGE_NAME = "alfresco_image_name";
     public static final String TYPE_FIELD = "type";
     public static final String APPLICATION_TYPE = "application";
+    public static final int MIN_LOG_LINES = 30;
     // First 7 lines of the logs are not controlled by docker-alfresco, +3 for some margin
     public static final int SKIP_LINES = 10;
+    // DOCKER-467 Error in the jsonLayout always shows this error log
     public static final String KNOWN_NON_JSON_LINE = "ERROR StatusConsoleListener JsonTemplateLayout contains an invalid element or attribute \"pattern\"";
     final Set<String> REQ_COMMON_LOGGING_FIELDS = Set.of("timestamp", "type");
     private static final ObjectMapper objMapper = new ObjectMapper();
@@ -41,7 +41,7 @@ public class LoggingTests {
         // TODO: Fix the jsonLayout so the filter is not required
         return logLines.lines()
                 .skip(SKIP_LINES)
-                .filter(line -> !line.equals(KNOWN_NON_JSON_LINE))
+                .filter(line -> !line.endsWith(KNOWN_NON_JSON_LINE))
                 .map(LoggingTests::parseJsonLine);
     }
 
@@ -90,13 +90,13 @@ public class LoggingTests {
     }
 
     @Test
-    public void testNonJsonLogging() throws InterruptedException {
+    public void testNonJsonLogging() {
         try (GenericContainer<?> alfContainer = new GenericContainer<>(getAlfrescoImageName())) {
             setupAlfrescoTestContainer(alfContainer, false);
             alfContainer.start();
 
-            // Sleep to let the logs accumulate
-            Thread.sleep(WAIT_FOR_LOGS_DUR);
+            // Let the logs accumulate
+            Awaitility.await().until(() -> alfContainer.getLogs().length() > MIN_LOG_LINES);
 
             String logs = alfContainer.getLogs();
 
@@ -105,13 +105,13 @@ public class LoggingTests {
     }
 
     @Test
-    public void testJsonLogging() throws InterruptedException {
+    public void testJsonLogging() {
         try (GenericContainer<?> alfContainer = new GenericContainer<>(getAlfrescoImageName())) {
             setupAlfrescoTestContainer(alfContainer, true);
             alfContainer.start();
 
-            // Sleep to let the logs accumulate
-            Thread.sleep(WAIT_FOR_LOGS_DUR);
+            // Let the logs accumulate
+            Awaitility.await().until(() -> alfContainer.getLogs().length() > MIN_LOG_LINES);
 
             String logs = alfContainer.getLogs();
 
