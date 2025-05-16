@@ -1,0 +1,10 @@
+ext {
+    share = [
+            version: [
+                    major: 25,
+                    minor: 1,
+                    rev: 0
+            ],
+            flavor: 'skeleton'
+    ]
+}
