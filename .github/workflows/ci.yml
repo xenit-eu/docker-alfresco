@@ -77,7 +77,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Login to docker registry
-        run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login docker.xenit.eu --username "${{ secrets.HARBOR_USER }}" --password-stdin
+        run: echo '${{ secrets.HARBOR_PASSWORD }}' | docker login docker.xenit.eu --username '${{ secrets.HARBOR_USER }}' --password-stdin
         # We have to split out publishing to public and private repo's because pushing to docker.io does not seem to work
         # without supplying DOCKER_USER and DOCKER_PASSWORD. However, supplying those environment variables breaks
         # publishing to other repositories
