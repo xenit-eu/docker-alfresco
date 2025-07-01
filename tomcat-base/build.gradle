@@ -107,7 +107,7 @@ subprojects {
             from 'docker.io/eclipse-temurin:11'
         }
         else{
-            from 'docker.io/eclipse-temurin:17-jre'
+            from 'docker.io/eclipse-temurin:17'
         }
         smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
