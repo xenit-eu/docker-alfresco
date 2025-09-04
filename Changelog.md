@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 ## released
 
 ### Fixed
+* [PR #220](https://github.com/xenit-eu/docker-alfresco/pull/220) DOCKER-463 Fixed json logging for Alfresco 7.4/23.x
 * [PR #213](https://github.com/xenit-eu/docker-alfresco/pull/213) DOCKER-460 update tomcat for CVE-2024-50379
 * [PR #118](https://github.com/xenit-eu/docker-alfresco/pull/118) ALFREDOPS-842 upgrade json logging version to 0.0.6
 * [PR #112](https://github.com/xenit-eu/docker-alfresco/pull/111) DOCKER-423 SOLR_SSL setting secret does not disable the tomcat ssl connector
@@ -14,7 +15,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 * [PR #78](https://github.com/xenit-eu/docker-alfresco/pull/78) DOCKER-408 Add timeout to health check commands
 
 ### Added
-* [PR #208](https://xenitsupport.jira.com/browse/DOCKER-450) DOCKER-450 Add Alfresco V23.1 & V23.2 support
+* [PR #223](https://github.com/xenit-eu/docker-alfresco/pull/223) DOCKER-466 Added Support for v25.1 
+* [PR #222](https://github.com/xenit-eu/docker-alfresco/pull/222) DOCKER-464 Added json logging test
+* [PR #219](https://github.com/xenit-eu/docker-alfresco/pull/219) ALFREDAPI-569 Added Alfresco V23.3 & V23.4 support
+* [PR #215](https://github.com/xenit-eu/docker-alfresco/pull/215) DOCKER-462
+  Added settings for AllowCasualMultipartParsing, AllowMultipleLeadingForwardSlashInPath and CrossContext
+* [PR #208](https://github.com/xenit-eu/docker-alfresco/pull/208) DOCKER-450 Add Alfresco V23.1 & V23.2 support
 * [PR #98](https://github.com/xenit-eu/docker-alfresco/pull/98) XM2C-43 Merge docker-share into docker-alfresco
 * [PR #88](https://github.com/xenit-eu/docker-alfresco/pull/88) DOCKER-415 Add a healthcheck for Alfresco
 * [PR #86](https://github.com/xenit-eu/docker-alfresco/pull/86) DOCKER-414 Fix alf_data content store permissions
@@ -35,9 +41,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 * [PR #76](https://github.com/xenit-eu/docker-alfresco/pull/76) Allow manual triggers of workflow
 
 ### Changed
+* [PR #227](https://github.com/xenit-eu/docker-alfresco/pull/227) XENOPS-1325: switch back to JDK to be consistent on image usage 
+* [PR #224](https://github.com/xenit-eu/docker-alfresco/pull/224) XENOPS-1313 publish to harbor instead of cloudsmith
 * [PR #210](https://github.com/xenit-eu/docker-alfresco/pull/210) DOCKER-457 Adapt default context settings for Tomcat 10 (this includes multipart form data parsing)
 * [PR #205](https://github.com/xenit-eu/docker-alfresco/pull/205) DOCKER-446 Instead of webscript org/alfresco/enterprise/repository/person/people-enterprise.get, webscript org/alfresco/repository/person/people.get is now used by default to list the Alfresco users in the admin tools.
 * [PR #201](https://github.com/xenit-eu/docker-alfresco/pull/201) XENOPS-1127 Bumped acs packageing version to the latest path version
+
+### Removed
+
+* [PR #226](https://github.com/xenit-eu/docker-alfresco/pull/226) XENOPS-1313 remove cloudsmith host rule
 
 
 ## 2022-02.03 (2022-02-03)
