@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 ## released
 
 ### Fixed
+* [PR #230](https://github.com/xenit-eu/docker-alfresco/pull/230) DOCKER-468 Update Tomcat for CVE-2025-24813
 * [PR #220](https://github.com/xenit-eu/docker-alfresco/pull/220) DOCKER-463 Fixed json logging for Alfresco 7.4/23.x
 * [PR #213](https://github.com/xenit-eu/docker-alfresco/pull/213) DOCKER-460 update tomcat for CVE-2024-50379
 * [PR #118](https://github.com/xenit-eu/docker-alfresco/pull/118) ALFREDOPS-842 upgrade json logging version to 0.0.6
