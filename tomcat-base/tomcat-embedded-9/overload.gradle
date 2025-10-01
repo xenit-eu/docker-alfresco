@@ -1,5 +1,5 @@
 ext {
     tomcat = [
-            version: '9.0.104'
+            version: '9.0.100'
     ]
 }
