@@ -22,6 +22,7 @@ class RemoteIpValveTests {
     @Test
     void testRemoteIpValveHeadersConfig() throws IOException, LifecycleException {
         TomcatConfiguration configuration = new DefaultConfigurationProvider().getConfiguration();
+        configuration.setTomcatBaseDir("tomcat-base");
         TomcatFactory tomcatFactory = new TomcatFactory(configuration);
         Tomcat tomcat = tomcatFactory.getTomcat();
 
