@@ -1,4 +1,4 @@
-package eu.xenit.alfresco.tomcat.embedded.valves;
+package valves;
 
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
