@@ -29,7 +29,7 @@ public class TomcatFactory {
         this.configuration = configuration;
     }
 
-    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize, String relaxedPathChars, String relaxedQueryChars) {
+    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize, String relaxedPathChars, String relaxedQueryChars, boolean isRemoteIpValveEnabled) {
         Connector connector = new Connector(protocol);
         connector.setPort(port);
         connector.setProperty("connectionTimeout", "240000");
@@ -124,7 +124,8 @@ public class TomcatFactory {
                 getConfiguration().getTomcatMaxThreads(),
                 getConfiguration().getTomcatMaxHttpHeaderSize(),
                 getConfiguration().getTomcatRelaxedPathChars(),
-                getConfiguration().getTomcatRelaxedQueryChars()
+                getConfiguration().getTomcatRelaxedQueryChars(),
+                false
         );
         connector.setRedirectPort(getConfiguration().getTomcatSslPort());
         tomcat.setConnector(connector);

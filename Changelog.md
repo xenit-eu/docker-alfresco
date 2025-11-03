@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 * [PR #78](https://github.com/xenit-eu/docker-alfresco/pull/78) DOCKER-408 Add timeout to health check commands
 
 ### Added
+* [PR #231](https://github.com/xenit-eu/docker-alfresco/pull/231) DOCKER-471 Added remote ip valve to Tomcat 10 
 * [PR #223](https://github.com/xenit-eu/docker-alfresco/pull/223) DOCKER-466 Added Support for v25.1 
 * [PR #222](https://github.com/xenit-eu/docker-alfresco/pull/222) DOCKER-464 Added json logging test
 * [PR #219](https://github.com/xenit-eu/docker-alfresco/pull/219) ALFREDAPI-569 Added Alfresco V23.3 & V23.4 support
