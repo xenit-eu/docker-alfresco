@@ -14,6 +14,7 @@ import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMC
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_BASE_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_CACHE_MAX_SIZE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_CROSS_CONTEXT;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_REMOTE_IP_VALVE_ENABLED;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_HTTP_HEADER_SIZE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_THREADS;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT;
@@ -50,6 +51,7 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(TOMCAT_ALLOW_CASUAL_MULTIPART_PARSING, value -> baseConfiguration.setAllowCasualMultipartParsing(Boolean.parseBoolean(value)));
         setPropertyFromEnv(TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH, value -> baseConfiguration.setAllowMultipleLeadingForwardSlashInPath(Boolean.parseBoolean(value)));
         setPropertyFromEnv(TOMCAT_CROSS_CONTEXT, value -> baseConfiguration.setCrossContext(Boolean.parseBoolean(value)));
+        setPropertyFromEnv(TOMCAT_REMOTE_IP_VALVE_ENABLED, value -> baseConfiguration.setRemoteIpValveEnabled(Boolean.parseBoolean(value)));
         return baseConfiguration;
     }
 }

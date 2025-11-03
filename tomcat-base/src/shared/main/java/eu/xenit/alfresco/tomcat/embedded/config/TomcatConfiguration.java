@@ -31,4 +31,5 @@ public class TomcatConfiguration {
     protected boolean allowCasualMultipartParsing;
     protected boolean allowMultipleLeadingForwardSlashInPath;
     protected boolean crossContext;
+    protected boolean remoteIpValveEnabled;
 }
