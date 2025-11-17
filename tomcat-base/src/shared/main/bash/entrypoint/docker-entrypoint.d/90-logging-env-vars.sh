@@ -4,10 +4,21 @@ set -e
 # This script generates a complete log4j configuration file based on
 # LOG_LEVEL_ environment variables and tells the Java process to use it.
 
-LOG_CONFIG_FILE="/generated-log-config.properties"
+function log() {
+  echo '{ "timestamp" : '"$(date '+%s')"' ,"severity" : "INFO", "type" : "application","component" : "docker-entrypoint" ,"fullMessage" : "'"$1"'"}'
+}
 
-echo "Generating log config at: ${LOG_CONFIG_FILE}"
-echo "Using Log4j Version: ${LOG4J_VERSION}"
+if [ "$LOG4J_VERSION" = "1" ]; then
+  FNAME="log4j.properties"
+else
+  FNAME="log4j2.properties"
+fi
+
+
+LOG_CONFIG_FILE="/usr/local/tomcat/webapps/alfresco/WEB-INF/classes/${FNAME}"
+
+log "Generating log config at: ${LOG_CONFIG_FILE}"
+log "Using Log4j Version: ${LOG4J_VERSION}"
 
 # Start with a clean file
 touch "${LOG_CONFIG_FILE}"
@@ -26,7 +37,7 @@ for var in $(env); do
     logger_name=$(echo "$var_name" | sed 's/LOG_LEVEL_//' | sed 's/_/./g')
 
     if [ -n "$logger_name" ] && [ -n "$var_value" ]; then
-      echo "Applying log level: ${logger_name}=${var_value}"
+      log "Applying log level: ${logger_name}=${var_value}"
 
       if [ "$LOG4J_VERSION" = "1" ]; then
         # Log4j 1.x syntax
@@ -47,7 +58,7 @@ done
 
 if [ "$LOG4J_VERSION" = "1" ]; then
   # --- Log4j 1.x Config ---
-  echo "Generating Log4j config."
+  log "Generating Log4j config."
   echo "# Auto-generated Log4j 1.x config" >> "${LOG_CONFIG_FILE}"
 
   # Add a basic console appender
@@ -94,4 +105,4 @@ fi
 # Export new Java options with updated log config
 export JAVA_OPTS
 
-echo "Log configuration complete. JAVA_OPTS updated."
+log "Log configuration complete. JAVA_OPTS updated."
