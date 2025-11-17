@@ -5,7 +5,7 @@ set -e
 # LOG_LEVEL_ environment variables and tells the Java process to use it.
 
 function log() {
-  echo '{ "timestamp" : '"$(date '+%s')"' ,"severity" : "INFO", "type" : "application","component" : "docker-entrypoint" ,"fullMessage" : "'"$1"'"}'
+  echo '{ "timestamp" : '"$(date '+%s')"' ,"severity" : "INFO", "type" : "entrypoint","component" : "docker-entrypoint" ,"fullMessage" : "'"$1"'"}'
 }
 
 if [ "$LOG4J_VERSION" = "1" ]; then
