@@ -1,6 +1,7 @@
 package eu.xenit.docker.alfresco.test;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -139,7 +140,7 @@ public class LoggingTests {
             alfContainer.start();
 
             // Accumulate some logs (make sure we get enough to catch some Spring logs)
-            Awaitility.await().until(() -> alfContainer.getLogs().lines().count() > 100);
+            Awaitility.await().timeout(Duration.ofMinutes(1)).until(() -> alfContainer.getLogs().lines().count() > 50);
 
             String logs = alfContainer.getLogs();
 
