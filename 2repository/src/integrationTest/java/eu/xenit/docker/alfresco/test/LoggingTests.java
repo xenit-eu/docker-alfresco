@@ -94,6 +94,7 @@ public class LoggingTests {
 
     private boolean containsSpringDebugLog(String logLines) {
         return getJsonLogs(logLines).anyMatch(line -> {
+            if (!line.has("severity") || !line.has("loggerName")) return false;
            return line.get("severity").asText().equals("DEBUG") && line.get("loggerName").asText().contains("org.springframework");
         });
     }
