@@ -28,6 +28,8 @@ subprojects {
         } else {
             environmentVariable('LOG4J_VERSION', '2')
         }
+
+        smartCopy(file("${project.projectDir}/resources/log4j.properties"), "/log4j.properties.base")
     }
 
     createDockerFile.dependsOn(parentImage)

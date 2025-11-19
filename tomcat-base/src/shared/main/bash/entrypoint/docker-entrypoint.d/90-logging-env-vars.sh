@@ -14,14 +14,14 @@ else
   FNAME="log4j2.properties"
 fi
 
-
+LOG_BASE_FILE="/log4j.properties.base"
 LOG_CONFIG_FILE="/usr/local/tomcat/webapps/alfresco/WEB-INF/classes/${FNAME}"
 
 log "Generating log config at: ${LOG_CONFIG_FILE}"
 log "Using Log4j Version: ${LOG4J_VERSION}"
 
-# Start with a clean file
-touch "${LOG_CONFIG_FILE}"
+# Start with the base file
+cp "${LOG_BASE_FILE}" "${LOG_CONFIG_FILE}"
 
 # Now generate logger configs from env variables
 # We need to pre-process for log4j2's 'loggers = name1,name2' syntax
@@ -58,14 +58,6 @@ done
 
 if [ "$LOG4J_VERSION" = "1" ]; then
   # --- Log4j 1.x Config ---
-  log "Generating Log4j config."
-  echo "# Auto-generated Log4j 1.x config" >> "${LOG_CONFIG_FILE}"
-
-  # Add a basic console appender
-  echo "log4j.rootLogger = WARN, CONSOLE" >> "${LOG_CONFIG_FILE}"
-  echo "log4j.appender.CONSOLE = org.apache.log4j.ConsoleAppender" >> "${LOG_CONFIG_FILE}"
-  echo "log4j.appender.CONSOLE.layout = org.apache.log4j.PatternLayout" >> "${LOG_CONFIG_FILE}"
-  echo "log4j.appender.CONSOLE.layout.ConversionPattern = %d{ISO8601} [%t] %-5p %c - %m%n" >> "${LOG_CONFIG_FILE}"
 
   # Add the custom loggers
   echo -e "\n# Custom Log Levels" >> "${LOG_CONFIG_FILE}"
@@ -75,19 +67,6 @@ if [ "$LOG4J_VERSION" = "1" ]; then
   JAVA_OPTS="$JAVA_OPTS -Dlog4j.configuration=file://${LOG_CONFIG_FILE}"
 else
   # --- Log4j 2.x Config ---
-  echo "# Auto-generated Log4j 2.x config" >> "${LOG_CONFIG_FILE}"
-
-  # Add a basic console appender
-  echo "appenders = console" >> "${LOG_CONFIG_FILE}"
-  echo "appender.console.type = Console" >> "${LOG_CONFIG_FILE}"
-  echo "appender.console.name = STDOUT" >> "${LOG_CONFIG_FILE}"
-  echo "appender.console.layout.type = PatternLayout" >> "${LOG_CONFIG_FILE}"
-  echo "appender.console.layout.pattern = %d{ISO8601} [%t] %-5p %c - %m%n" >> "${LOG_CONFIG_FILE}"
-
-  # Add root logger
-  echo "rootLogger.level = WARN" >> "${LOG_CONFIG_FILE}"
-  echo "rootLogger.appenderRefs = console" >> "${LOG_CONFIG_FILE}"
-  echo "rootLogger.appenderRef.console.ref = STDOUT" >> "${LOG_CONFIG_FILE}"
 
   # Add the custom loggers
   echo -e "\n# Custom Log Levels" >> "${LOG_CONFIG_FILE}"
