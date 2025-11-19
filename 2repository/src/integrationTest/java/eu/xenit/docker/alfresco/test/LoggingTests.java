@@ -92,10 +92,9 @@ public class LoggingTests {
 
     }
 
-    private boolean containsSpringDebugLog(String logLines) {
-        return getJsonLogs(logLines).anyMatch(line -> {
-            if (!line.has("severity") || !line.has("loggerName")) return false;
-           return line.get("severity").asText().equals("DEBUG") && line.get("loggerName").asText().contains("org.springframework");
+    private boolean containsSpringDebugLog(String logs) {
+        return logs.lines().anyMatch(line -> {
+           return line.contains("DEBUG org.springframework");
         });
     }
 
@@ -135,12 +134,12 @@ public class LoggingTests {
     @Test
     public void testLogLevelConfiguration() {
         try (GenericContainer<?> alfContainer = new GenericContainer<>(getAlfrescoImageName())) {
-            // Start container with debug Spring, use json logging for easier parsing
-            setupAlfrescoTestContainer(alfContainer, true, Map.of("LOG_LEVEL_org_springframework", "debug"));
+            // Start container with debug Spring
+            setupAlfrescoTestContainer(alfContainer, false, Map.of("LOG_LEVEL_org_springframework", "debug"));
             alfContainer.start();
 
             // Accumulate some logs (make sure we get enough to catch some Spring logs)
-            Awaitility.await().until(() -> alfContainer.getLogs().length() > 100);
+            Awaitility.await().until(() -> alfContainer.getLogs().lines().count() > 100);
 
             String logs = alfContainer.getLogs();
 
