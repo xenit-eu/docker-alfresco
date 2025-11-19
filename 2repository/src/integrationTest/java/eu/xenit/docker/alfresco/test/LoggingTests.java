@@ -1,6 +1,7 @@
 package eu.xenit.docker.alfresco.test;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -63,15 +64,17 @@ public class LoggingTests {
                 .allMatch(logLine -> REQ_APPLICATION_LOGGING_FIELDS.stream().allMatch(logLine::has));
     }
 
-    private void setupAlfrescoTestContainer(GenericContainer<?> alfContainer, boolean jsonLogging) {
-        alfContainer
-                .withExposedPorts(8080)
-                .withEnv(Map.of(
+    private void setupAlfrescoTestContainer(GenericContainer<?> alfContainer, boolean jsonLogging, Map<String, String> env) {
+        Map<String, String> baseEnv = new HashMap<>(Map.of(
                 "ACCESS_LOGGING", "false",
                 "GLOBAL_legacy.transform.service.enabled", "false",
                 "GLOBAL_local.transform.service.enabled", "false",
                 "JSON_LOGGING", String.valueOf(jsonLogging)
-                ));
+        ));
+        baseEnv.putAll(env);
+        alfContainer
+                .withExposedPorts(8080)
+                .withEnv(baseEnv);
     }
 
     private static DockerImageName getAlfrescoImageName() {
@@ -89,10 +92,16 @@ public class LoggingTests {
 
     }
 
+    private boolean containsSpringDebugLog(String logLines) {
+        return getJsonLogs(logLines).anyMatch(line -> {
+           return line.get("severity").asText().equals("DEBUG") && line.get("loggerName").asText().contains("org.springframework");
+        });
+    }
+
     @Test
     public void testNonJsonLogging() {
         try (GenericContainer<?> alfContainer = new GenericContainer<>(getAlfrescoImageName())) {
-            setupAlfrescoTestContainer(alfContainer, false);
+            setupAlfrescoTestContainer(alfContainer, false, Map.of());
             alfContainer.start();
 
             // Let the logs accumulate
@@ -107,7 +116,7 @@ public class LoggingTests {
     @Test
     public void testJsonLogging() {
         try (GenericContainer<?> alfContainer = new GenericContainer<>(getAlfrescoImageName())) {
-            setupAlfrescoTestContainer(alfContainer, true);
+            setupAlfrescoTestContainer(alfContainer, true, Map.of());
             alfContainer.start();
 
             // Let the logs accumulate
@@ -119,6 +128,23 @@ public class LoggingTests {
             Assert.assertTrue("Logs should be json. Logs:\n" + logs, isJsonLogs(logs));
             Stream<JsonNode> jsonNodes = getJsonLogs(logs);
             Assert.assertTrue(validateApplicationJsonLog(jsonNodes));
+        }
+    }
+
+    @Test
+    public void testLogLevelConfiguration() {
+        try (GenericContainer<?> alfContainer = new GenericContainer<>(getAlfrescoImageName())) {
+            // Start container with debug Spring, use json logging for easier parsing
+            setupAlfrescoTestContainer(alfContainer, true, Map.of("LOG_LEVEL_org_springframework", "debug"));
+            alfContainer.start();
+
+            // Accumulate some logs (make sure we get enough to catch some Spring logs)
+            Awaitility.await().until(() -> alfContainer.getLogs().length() > 100);
+
+            String logs = alfContainer.getLogs();
+
+            // Now find log entries from Spring marked as Debug
+            Assert.assertTrue(containsSpringDebugLog(logs));
         }
     }
 }
