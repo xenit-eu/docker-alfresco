@@ -12,6 +12,8 @@ include ':1alfresco-skeleton:23.1'
 include ':1alfresco-skeleton:23.2'
 include ':1alfresco-skeleton:23.3'
 include ':1alfresco-skeleton:23.4'
+include ':1alfresco-skeleton:23.5'
+include ':1alfresco-skeleton:23.6'
 include ':1alfresco-skeleton:25.1'
 include ':2repository'
 include ':1share-skeleton'
@@ -24,6 +26,8 @@ include ':1share-skeleton:23.1'
 include ':1share-skeleton:23.2'
 include ':1share-skeleton:23.3'
 include ':1share-skeleton:23.4'
+include ':1share-skeleton:23.5'
+include ':1share-skeleton:23.6'
 include ':1share-skeleton:25.1'
 include ':2share'
 
@@ -77,5 +81,7 @@ if (includeEnterprise == 'true') {
     includeRepoProject('enterprise', '23.2.0')
     includeRepoProject('enterprise', '23.3.0')
     includeRepoProject('enterprise', '23.4.0')
+    includeRepoProject('enterprise', '23.5.1')
+    includeRepoProject('enterprise', '23.6.0')
     includeRepoProject('enterprise', '25.1.0')
 }
