@@ -2,7 +2,7 @@ ext {
     alfresco = [
             version: [
                     major: 23,
-                    minor: 5,
+                    minor: 6,
                     rev: 0
             ],
             flavor: 'skeleton'
