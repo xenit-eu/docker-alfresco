@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [ "community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "community-23.3.0", "community-23.4.0", "community-25.1.0", "enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0", "enterprise-23.1.0", "enterprise-23.2.0", "enterprise-23.3.0", "enterprise-23.4.0", "enterprise-23.5.0", "enterprise-23.6.0", "enterprise-25.1.0"]
+        version: [ "community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "community-23.3.0", "community-23.4.0", "community-25.1.0", "enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0", "enterprise-23.1.0", "enterprise-23.2.0", "enterprise-23.3.0", "enterprise-23.4.0", "enterprise-23.5.1", "enterprise-23.6.0", "enterprise-25.1.0"]
     steps:
       - uses: actions/checkout@v4.2.2
       - name: Set up JDK 17
