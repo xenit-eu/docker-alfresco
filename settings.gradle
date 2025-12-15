@@ -81,7 +81,7 @@ if (includeEnterprise == 'true') {
     includeRepoProject('enterprise', '23.2.0')
     includeRepoProject('enterprise', '23.3.0')
     includeRepoProject('enterprise', '23.4.0')
-    includeRepoProject('enterprise', '23.5.0')
+    includeRepoProject('enterprise', '23.5.1')
     includeRepoProject('enterprise', '23.6.0')
     includeRepoProject('enterprise', '25.1.0')
 }
