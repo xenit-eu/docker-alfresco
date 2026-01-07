@@ -55,6 +55,14 @@ subprojects {
 
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
+
+        if (project.alfresco.version.major == 7 && project.alfresco.version.minor <= 3) {
+            environmentVariable('LOG4J_VERSION', '1')
+        } else {
+            environmentVariable('LOG4J_VERSION', '2')
+        }
+
+        smartCopy(file("${project.projectDir}/resources/log4j.properties"), "/log4j.properties.base")
     }
 
     createDockerFile.dependsOn(parentImage)

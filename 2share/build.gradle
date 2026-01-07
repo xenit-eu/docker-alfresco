@@ -22,6 +22,14 @@ subprojects {
     createDockerFile {
         environmentVariable('SHARE_FLAVOR', "${project.share.flavor}")
         environmentVariable('SHARE_VERSION', "${project.share.version.major}.${project.share.version.minor}.${project.share.version.rev}")
+
+        if (project.share.version.major == 7 && project.share.version.minor <= 3) {
+            environmentVariable('LOG4J_VERSION', '1')
+        } else {
+            environmentVariable('LOG4J_VERSION', '2')
+        }
+
+        smartCopy(file("${project.projectDir}/resources/log4j.properties"), "/log4j.properties.base")
     }
 
     createDockerFile.dependsOn(parentImage)
