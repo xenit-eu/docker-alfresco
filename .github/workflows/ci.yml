@@ -33,7 +33,7 @@ jobs:
           arguments: sonarqube -i
       - name: Upload test artifact
         if: success() || failure()
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: test-result
           path: /home/runner/work/**/build/reports
@@ -60,7 +60,7 @@ jobs:
           arguments: :2repository:${{ matrix.version }}:integrationTests --info --stacktrace
       - name: Upload test artifact
         if: success() || failure()
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: integration-test-${{ matrix.version }}-result
           path: /home/runner/work/**/build/reports
