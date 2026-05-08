@@ -36,8 +36,7 @@ This is Xenit's repository for Alfresco and Share docker images. A major-minor v
 * alfresco-repository-community:<version>
 
 These are the images used for a multi-container Alfresco enterprise deployment in production. To be used together with
-Share Docker Image , [`docker-solr`](https://github.com/xenit-eu/docker-solr)
-, [`postgres`](https://github.com/xenit-eu/docker-postgres).
+Share Docker Image , [`docker-solr`](https://github.com/xenit-eu/docker-solr).
 
 The most basic setup uses the docker-compose files
 from [`2repository/src/integrationTest/resources`](https://github.com/xenit-eu/docker-alfresco/tree/master/2repository/src/integrationTest/resources)
