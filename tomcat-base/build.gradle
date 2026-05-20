@@ -16,22 +16,23 @@ subprojects {
     configurations {
         sharedLibs
     }
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+
     // This can be deleted when support for Alfresco V7.X is dropped.
     if (!tomcatVersion.contains("10")) {
         java {
-            withJavadocJar()
-            withSourcesJar()
-            sourceCompatibility = JavaVersion.VERSION_11
-            targetCompatibility = JavaVersion.VERSION_11
-
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(11)
+            }
         }
-    }else{
+    } else {
         java {
-            withJavadocJar()
-            withSourcesJar()
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(17)
+            }
         }
     }
     ext {
@@ -110,8 +111,7 @@ subprojects {
     createDockerFile {
         if (!tomcatVersion.contains("10")) {
             from 'docker.io/eclipse-temurin:11'
-        }
-        else{
+        } else {
             from 'docker.io/eclipse-temurin:17'
         }
         smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'
