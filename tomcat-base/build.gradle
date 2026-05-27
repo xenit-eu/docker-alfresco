@@ -110,9 +110,11 @@ subprojects {
     createDockerFile {
         if (!tomcatVersion.startsWith("10.")) {
             from 'docker.io/eclipse-temurin:11'
-            // DOCKER-468: Future Tomcat 9 releases may require adding --add-opens flags that
-            // catalina.sh passes on Java 9+ (e.g. java.base/java.lang, java.base/java.io,
-            // java.rmi/sun.rmi.transport) for Alfresco 7.x's bundled JAXB to function correctly.
+            // DOCKER-468: Tomcat 9.0.100 introduced reflective access to java.io.FileSystem and
+            // other JDK internals via JreCompat. Without these opens, the JVM emits plain-text
+            // WARNING lines that break JSON log parsing. These are the same flags catalina.sh
+            // passes on Java 9+.
+            environmentVariable('JAVA_OPTS_MODULES', '--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED')
         }
         else{
             from 'docker.io/eclipse-temurin:17'
