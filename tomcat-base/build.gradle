@@ -110,6 +110,12 @@ subprojects {
     createDockerFile {
         if (!tomcatVersion.contains("10")) {
             from 'docker.io/eclipse-temurin:11'
+            // DOCKER-468: Tomcat 9.0.100+ requires these --add-opens flags on Java 11 which were
+            // previously not enforced. Without them, Alfresco 7.x fails to start because its bundled
+            // JAXB implementation (javax.xml.bind) uses reflection to access ClassLoader.defineClass()
+            // and java.io/RMI internals — all blocked by the JPMS module system without explicit opens.
+            // These are the same flags that standard Tomcat catalina.sh passes on Java 9+.
+            environmentVariable('JAVA_OPTS_MODULES', '--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED')
         }
         else{
             from 'docker.io/eclipse-temurin:17'
