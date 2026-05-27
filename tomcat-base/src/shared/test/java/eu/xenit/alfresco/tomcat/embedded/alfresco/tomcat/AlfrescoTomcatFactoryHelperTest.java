@@ -7,11 +7,13 @@ import eu.xenit.alfresco.tomcat.embedded.alfresco.config.DefaultAlfrescoConfigur
 import eu.xenit.alfresco.tomcat.embedded.config.DefaultConfigurationProvider;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 import org.junit.jupiter.api.Test;
 
 
@@ -27,10 +29,9 @@ class AlfrescoTomcatFactoryHelperTest {
         tomcatConfiguration.setGeneratedClasspathDir(expectedPath.toAbsolutePath().getParent().toString());
         AlfrescoTomcatFactoryHelper.createGlobalPropertiesFile(alfrescoConfiguration);
         Path tempProps = Paths.get(tomcatConfiguration.getGeneratedClasspathDir(), "alfresco-global.properties");
-        String actual = Files.readString(tempProps);
-        actual = actual.substring(actual.indexOf("\n") + 1);
-        String expected = Files.readString(expectedPath);
-        assertEquals(actual, expected);
+        Properties actual = loadProperties(tempProps);
+        Properties expected = loadProperties(expectedPath);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -44,9 +45,16 @@ class AlfrescoTomcatFactoryHelperTest {
         tomcatConfiguration.setGeneratedClasspathDir(expectedPath.toAbsolutePath().getParent().toString() + "/result-exist");
         AlfrescoTomcatFactoryHelper.createGlobalPropertiesFile(alfrescoConfiguration);
         Path tempProps = Paths.get(tomcatConfiguration.getGeneratedClasspathDir(), "alfresco-global.properties");
-        String actual = Files.readString(tempProps);
-        actual = actual.substring(actual.indexOf("\n") + 1);
-        String expected = Files.readString(expectedPath);
-        assertEquals(actual, expected);
+        Properties actual = loadProperties(tempProps);
+        Properties expected = loadProperties(expectedPath);
+        assertEquals(expected, actual);
+    }
+
+    private Properties loadProperties(Path path) throws IOException {
+        Properties props = new Properties();
+        try (InputStream is = Files.newInputStream(path)) {
+            props.load(is);
+        }
+        return props;
     }
 }
