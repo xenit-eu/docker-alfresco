@@ -16,27 +16,24 @@ subprojects {
     configurations {
         sharedLibs
     }
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+
     // This can be deleted when support for Alfresco V7.X is dropped.
     if (!tomcatVersion.startsWith("10.")) {
         java {
-            withJavadocJar()
-            withSourcesJar()
-            sourceCompatibility = JavaVersion.VERSION_11
-            targetCompatibility = JavaVersion.VERSION_11
-
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(11)
+            }
         }
-    }else{
+    } else {
         java {
-            withJavadocJar()
-            withSourcesJar()
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(17)
+            }
         }
-    }
-    ext {
-        jsonLoggingVersion = '0.0.11'
-        jsonTemplateLayoutVersion = '2.20.0'
     }
     dependencies {
 
@@ -50,9 +47,9 @@ subprojects {
         implementation "eu.xenit.logging:json-logging:${jsonLoggingVersion}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
         testImplementation("org.junit-pioneer:junit-pioneer:2.1.0")
-        testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.3.2'
-        testImplementation group: 'io.rest-assured', name: 'json-path', version: '5.3.2'
-        testImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: '5.3.2'
+        testImplementation group: 'io.rest-assured', name: 'rest-assured', version: restAssuredVersion
+        testImplementation group: 'io.rest-assured', name: 'json-path', version: restAssuredVersion
+        testImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: restAssuredVersion
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
         sharedLibs("eu.xenit.logging:json-logging:${jsonLoggingVersion}") {
             transitive = false

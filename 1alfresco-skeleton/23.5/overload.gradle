@@ -1,0 +1,11 @@
+ext {
+    alfresco = [
+            version: [
+                    major: 23,
+                    minor: 5,
+                    rev: 0
+            ],
+            flavor: 'skeleton'
+    ]
+}
+

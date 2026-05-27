@@ -7,6 +7,14 @@ subprojects {
     apply plugin: 'eu.xenit.docker-alfresco'
     apply plugin: 'eu.xenit.docker-compose'
 
+    // Integration tests run against a Docker container over HTTP, so the test JVM does not need to
+    // match the server JVM. Java 17 is used unconditionally to support modern Java APIs in test code.
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
     configurations {
         sharedBin
         integrationTestCompile.extendsFrom testCompile
@@ -22,9 +30,9 @@ subprojects {
     }
 
     dependencies {
-        integrationTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.3.2'
-        integrationTestImplementation group: 'io.rest-assured', name: 'json-path', version: '5.3.2'
-        integrationTestImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: '5.3.1'
+        integrationTestImplementation group: 'io.rest-assured', name: 'rest-assured', version: restAssuredVersion
+        integrationTestImplementation group: 'io.rest-assured', name: 'json-path', version: restAssuredVersion
+        integrationTestImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: restAssuredVersion
         integrationTestImplementation group: 'junit', name: 'junit', version: '4.13.2'
         integrationTestImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
         integrationTestImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.21.0'
@@ -55,6 +63,14 @@ subprojects {
 
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.flavor}")
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
+
+        if (project.alfresco.version.major == 7 && project.alfresco.version.minor <= 3) {
+            environmentVariable('LOG4J_VERSION', '1')
+        } else {
+            environmentVariable('LOG4J_VERSION', '2')
+        }
+
+        smartCopy(file("${project.projectDir}/resources/log4j.properties"), "/log4j.properties.base")
     }
 
     createDockerFile.dependsOn(parentImage)

@@ -36,8 +36,7 @@ This is Xenit's repository for Alfresco and Share docker images. A major-minor v
 * alfresco-repository-community:<version>
 
 These are the images used for a multi-container Alfresco enterprise deployment in production. To be used together with
-Share Docker Image , [`docker-solr`](https://github.com/xenit-eu/docker-solr)
-, [`postgres`](https://github.com/xenit-eu/docker-postgres).
+Share Docker Image , [`docker-solr`](https://github.com/xenit-eu/docker-solr).
 
 The most basic setup uses the docker-compose files
 from [`2repository/src/integrationTest/resources`](https://github.com/xenit-eu/docker-alfresco/tree/master/2repository/src/integrationTest/resources)
@@ -82,6 +81,7 @@ in the following tables, are the values that are used when the environment varia
 | JMX_ENABLED                                         | false                            | -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.rmi.port=5000 -Dcom.sun.management.jmxremote.port=5000 -Djava.rmi.server.hostname=$JMX_RMI_HOST |
 | JMX_RMI_HOST                                        | 0.0.0.0                          |                                                                                                                                                                                                                                                                                                          |
 | JAVA_OPTS_\<variable\>=\<value\>                    | \<value\>                        | \<variable\>                                                                                                                                                                                                                                                                                             |
+| LOG_LEVEL_\<org_package_name\>=\<value\>            |                                  | Sets the log level for org.package.name to the provided value                                                                                                                                                                                                                                            |
 | JSON_LOGGING                                        | false                            | When true, all logs will be in JSON.                                                                                                                                                                                                                                                                     |
 | ACCESS_LOGGING                                      | false                            | When true, access logs will be printed. These logs are always in JSON format                                                                                                                                                                                                                             |
 | EXIT_ON_FAILURE                                     | true                             | When true, the Java process will exit when the application deployed in Tomcat fails to start. Can be turned of for debugging purposes.                                                                                                                                                                   |
