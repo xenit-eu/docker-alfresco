@@ -63,7 +63,8 @@ public class AlfrescoTomcatFactoryHelper {
                 tomcatConfiguration.getTomcatMaxThreads(),
                 tomcatConfiguration.getTomcatMaxHttpHeaderSize(),
                 tomcatConfiguration.getTomcatRelaxedPathChars(),
-                tomcatConfiguration.getTomcatRelaxedQueryChars()
+                tomcatConfiguration.getTomcatRelaxedQueryChars(),
+                tomcatConfiguration.isRemoteIpValveEnabled()
         );
 
         SSLHostConfig sslHostConfig = new SSLHostConfig();

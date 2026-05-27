@@ -1,7 +1,7 @@
 plugins {
-    id "eu.xenit.docker-alfresco" version "5.5.0" apply false
+    id "eu.xenit.docker-alfresco" version "5.5.1" apply false
     id "be.vbgn.ci-detect" version "0.5.0"
-    id "org.sonarqube" version "4.3.0.3225"
+    id "org.sonarqube" version "4.4.1.3373"
 }
 
 sonarqube {
@@ -44,7 +44,7 @@ def calcTags(version) {
 }
 
 def calcRepository(flavor, isAlfresco) {
-    def repoName = flavor == "enterprise" ? "private.docker.xenit.eu/alfresco-enterprise" : "docker.io/xenit"
+    def repoName = flavor == "enterprise" ? "docker.xenit.eu/alfresco-enterprise" : "docker.io/xenit"
     if (isAlfresco) {
         return "${repoName}/alfresco-repository-${flavor}";
     }
@@ -56,17 +56,12 @@ def calcRepository(flavor, isAlfresco) {
 String getTomcatProject(majorVersion) {
     println "major version used : ${majorVersion}"
 
-    if (majorVersion == 7) {
+    if (majorVersion < 23) {
         println 'tomcat-embedded-9'
         return ":tomcat-base:tomcat-embedded-9"
     }
-
-    if (majorVersion == 23) {
-        println 'tomcat-embedded-10'
-        return ":tomcat-base:tomcat-embedded-10"
-    }
-
-    return null
+    println 'tomcat-embedded-10'
+    return ":tomcat-base:tomcat-embedded-10"
 }
 
 subprojects {

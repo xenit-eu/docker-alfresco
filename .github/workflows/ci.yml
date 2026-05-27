@@ -33,7 +33,7 @@ jobs:
           arguments: sonarqube -i
       - name: Upload test artifact
         if: success() || failure()
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: test-result
           path: /home/runner/work/**/build/reports
@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [ "community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0", "enterprise-23.1.0", "enterprise-23.2.0" ]
+        version: [ "community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "community-23.3.0", "community-23.4.0", "community-25.1.0", "enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0", "enterprise-23.1.0", "enterprise-23.2.0", "enterprise-23.3.0", "enterprise-23.4.0", "enterprise-23.5.1", "enterprise-23.6.0", "enterprise-25.1.0"]
     steps:
       - uses: actions/checkout@v4.2.2
       - name: Set up JDK 17
@@ -51,8 +51,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Login to CloudSmith docker registry
-        run: echo "${{ secrets.CLOUDSMITH_APIKEY }}" | docker login private.docker.xenit.eu --username "${{ secrets.CLOUDSMITH_USER }}" --password-stdin
+      - name: Login to docker registry
+        run: echo '${{ secrets.HARBOR_PASSWORD }}' | docker login docker.xenit.eu --username '${{ secrets.HARBOR_USER }}' --password-stdin
       - name: Integration tests
         uses: gradle/gradle-build-action@v3.5.0
         with:
@@ -60,7 +60,7 @@ jobs:
           arguments: :2repository:${{ matrix.version }}:integrationTests --info --stacktrace
       - name: Upload test artifact
         if: success() || failure()
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: integration-test-${{ matrix.version }}-result
           path: /home/runner/work/**/build/reports
@@ -76,8 +76,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Login to CloudSmith docker registry
-        run: echo "${{ secrets.CLOUDSMITH_APIKEY }}" | docker login private.docker.xenit.eu --username "${{ secrets.CLOUDSMITH_USER }}" --password-stdin
+      - name: Login to docker registry
+        run: echo '${{ secrets.HARBOR_PASSWORD }}' | docker login docker.xenit.eu --username '${{ secrets.HARBOR_USER }}' --password-stdin
         # We have to split out publishing to public and private repo's because pushing to docker.io does not seem to work
         # without supplying DOCKER_USER and DOCKER_PASSWORD. However, supplying those environment variables breaks
         # publishing to other repositories

@@ -17,6 +17,7 @@ import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.valves.RemoteIpValve;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 
@@ -37,7 +38,8 @@ public class TomcatFactory {
             int maxThreads,
             int maxHttpHeaderSize,
             String relaxedPathChars,
-            String relaxedQueryChars) {
+            String relaxedQueryChars,
+            boolean isRemoteIpValveEnabled) {
         Connector connector = new Connector(protocol);
         connector.setPort(port);
         connector.setProperty("connectionTimeout", "240000");
@@ -49,9 +51,23 @@ public class TomcatFactory {
         connector.setProperty("relaxedQueryChars", relaxedQueryChars);
         connector.setScheme(scheme);
         Service service = tomcat.getService();
+        if (isRemoteIpValveEnabled) {
+            RemoteIpValve remoteIpValve = createRemoteIpValve();
+            tomcat.getEngine().getPipeline().addValve(remoteIpValve);
+        }
         service.setContainer(tomcat.getEngine());
         connector.setService(service);
         return connector;
+    }
+
+    private static RemoteIpValve createRemoteIpValve() {
+        RemoteIpValve remoteIpValve = new RemoteIpValve();
+        remoteIpValve.setRemoteIpHeader("X-Forwarded-For");
+        remoteIpValve.setProtocolHeader("X-Forwarded-Proto");
+        remoteIpValve.setHostHeader("Host");
+        remoteIpValve.setPortHeader("X-Forwarded-Port");
+
+        return remoteIpValve;
     }
 
     private TomcatConfiguration getConfiguration() {
@@ -147,7 +163,8 @@ public class TomcatFactory {
                 getConfiguration().getTomcatMaxThreads(),
                 getConfiguration().getTomcatMaxHttpHeaderSize(),
                 getConfiguration().getTomcatRelaxedPathChars(),
-                getConfiguration().getTomcatRelaxedQueryChars()
+                getConfiguration().getTomcatRelaxedQueryChars(),
+                getConfiguration().isRemoteIpValveEnabled()
         );
         connector.setRedirectPort(getConfiguration().getTomcatSslPort());
         tomcat.setConnector(connector);

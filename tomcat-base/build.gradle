@@ -16,26 +16,24 @@ subprojects {
     configurations {
         sharedLibs
     }
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+
     // This can be deleted when support for Alfresco V7.X is dropped.
     if (!tomcatVersion.contains("10")) {
         java {
-            withJavadocJar()
-            withSourcesJar()
-            sourceCompatibility = JavaVersion.VERSION_11
-            targetCompatibility = JavaVersion.VERSION_11
-
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(11)
+            }
         }
-    }else{
+    } else {
         java {
-            withJavadocJar()
-            withSourcesJar()
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(17)
+            }
         }
-    }
-    ext {
-        jsonLoggingVersion = '0.0.11'
     }
     dependencies {
 
@@ -49,8 +47,14 @@ subprojects {
         implementation "eu.xenit.logging:json-logging:${jsonLoggingVersion}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
         testImplementation("org.junit-pioneer:junit-pioneer:2.1.0")
+        testImplementation group: 'io.rest-assured', name: 'rest-assured', version: restAssuredVersion
+        testImplementation group: 'io.rest-assured', name: 'json-path', version: restAssuredVersion
+        testImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: restAssuredVersion
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
         sharedLibs("eu.xenit.logging:json-logging:${jsonLoggingVersion}") {
+            transitive = false
+        }
+        sharedLibs("org.apache.logging.log4j:log4j-layout-template-json:${jsonTemplateLayoutVersion}") {
             transitive = false
         }
     }
@@ -78,7 +82,9 @@ subprojects {
         test {
             java {
                 srcDir file("$project.parent.projectDir/src/shared/test/java")
-
+                if (tomcatVersion.contains("10")) {
+                    srcDir file("$project.projectDir/src/test/java")
+                }
             }
             resources {
                 srcDir file("$project.parent.projectDir/src/shared/test/resources")
@@ -101,18 +107,17 @@ subprojects {
     createDockerFile {
         if (!tomcatVersion.contains("10")) {
             from 'docker.io/eclipse-temurin:11'
-        }
-        else{
-            from 'docker.io/eclipse-temurin:17-jre'
+        } else {
+            from 'docker.io/eclipse-temurin:17'
         }
         smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
+        smartCopy "${project.parent.projectDir}/src/shared/main/resources/jsonLayout/jsonLayout.json", '/usr/local/tomcat/log4j2/jsonLayout/jsonLayout.json'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
         def jarName = archivesBaseName + '.jar'
         dependsOn jar
         smartCopy jar.outputs.files.singleFile, "/app/tomcat-embedded/$jarName"
         smartCopy "${project.parent.projectDir}/src/shared/main/bash/entrypoint/", '/'
-
         def buildDate = project.properties.getOrDefault("buildDate", ((int) (new Date().getTime() / 1000)).toString())
         environmentVariable('BUILD_DATE', buildDate)
 

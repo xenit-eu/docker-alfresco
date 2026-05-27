@@ -28,6 +28,7 @@ class DefaultConfigurationProviderTest {
         expected.setAllowCasualMultipartParsing(false);
         expected.setAllowMultipleLeadingForwardSlashInPath(false);
         expected.setCrossContext(false);
+        expected.setRemoteIpValveEnabled(true);
         assertEquals(configuration, expected);
     }
 

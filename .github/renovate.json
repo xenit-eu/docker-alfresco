@@ -6,14 +6,6 @@
   ],
   "hostRules": [
     {
-      "matchHost": "https://repo.xenit.eu/basic/private/maven/",
-      "hostType": "maven",
-      "username": "token",
-      "encrypted": {
-        "password": "wcFMA/xDdHCJBTolAQ//XOvlh+qzdMUStH8AXlDolT3GQFHuPVPwd5/NGbb/fN60GesdbWVRpF6icPJPzZwBNMk8K3LLfCshda9M2K9PSv1k8bkqp32HvvfbfPFT2W+5amzaHT4Q3qqNZ+icHBtRfykCdlCVyOp13I2SwGb7xIZq5qMm+PBJyWJvAFxPgYoLT+IUNawd8/wmhPWaNv26GUQTvBtZpo2t6SmEswYeYrgwx0vwYKlRDb8vcLL2GINfOEYoPPBt28+Q2koJlBkHwaLc2LmIqV1GHV7vBkTgQugFoHEZSEN/URJR4UsoOMPL+zwo5Gj0/ez2ibKJr2daXcfGiuOo6ecNpzWZI2PnF6l8pdb3NMZn6bKc3EXBAjZOl9t6Ta0SU9OBMfelT7uKtePbqp/Dfdq5MXF3SfBJepIJ4NtJBI3tdu6i/Nzkzkr0S/T4m669AiugHao4+yGyfRxVKAVkygNx2T2br0cmVBwqDnmJA3JzKyDsRQrvrxA0L+/aH1XMZYkk1br8vkVZnQYFfS0ueT2Ca15dPp1yLLz7H8oqGWvfjD9nWWrYYCG97UAZVE6/rkpPKhW8U07DVb1zYjFSMZFZushFTvXdeKm2kGP3kM8jQgDJkMZaUc8cEeoYwCiZb8y3RI6LDSn2VY9h4bY2+sCJqzWYpVe328ah2aJThZCrrKajCQ2GdujSXwFurksAl9DS6lzEhXvh4f/nC2zaZ9TzXwR7JXKGEhjoO04XBx2uS1urws0LPbS2jht6mmHOMC6rqHK6LLeIPPi7xmz6TtB7A6CwYh0Zaom+7aL5wFKb08tZ2iYfP8JY"
-      }
-    },
-    {
       "matchHost": "https://artifacts.alfresco.com/nexus/content/groups/private",
       "hostType": "maven",
       "username": "xenit",
