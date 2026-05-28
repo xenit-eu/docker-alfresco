@@ -10,14 +10,17 @@ function log() {
 
 if [ "$LOG4J_VERSION" = "1" ]; then
   FNAME="log4j.properties"
-else
+elif [ "$LOG4J_VERSION" = "2" ]; then
   FNAME="log4j2.properties"
+else
+  log "Major log4j version is unknown, skipping log config generation"
+  exit 0
 fi
 
 LOG_BASE_FILE="/log4j.properties.base"
 LOG_CONFIG_FILE="/usr/local/tomcat/webapps/alfresco/WEB-INF/classes/${FNAME}"
 
-if [ ! -f "$LOG_BASE_FILE"]; then
+if [ ! -f "$LOG_BASE_FILE" ]; then
   log "log4j.properties.base not found, skipping log config generation"
   exit 0
 fi
