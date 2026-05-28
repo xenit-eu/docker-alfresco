@@ -17,6 +17,13 @@ fi
 LOG_BASE_FILE="/log4j.properties.base"
 LOG_CONFIG_FILE="/usr/local/tomcat/webapps/alfresco/WEB-INF/classes/${FNAME}"
 
+if [ ! -f "$LOG_BASE_FILE"]; then
+  log "log4j.properties.base not found, skipping log config generation"
+  exit 0
+fi
+
+mkdir -p /usr/local/tomcat/webapps/alfresco/WEB-INF/classes
+
 log "Generating log config at: ${LOG_CONFIG_FILE}"
 log "Using Log4j Version: ${LOG4J_VERSION}"
 
