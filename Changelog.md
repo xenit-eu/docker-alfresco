@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## released
 
+## 2026-05.29 (2026-05-29)
+
+### Fixed
+* [PR #237](https://github.com/xenit-eu/docker-alfresco/pull/237) DOCKER-473 Fixed a bug that caused the Docker containers to exit
+
+
+## 2026-05.28 (2026-05.28)
+
 ### Fixed
 * [PR #220](https://github.com/xenit-eu/docker-alfresco/pull/220) DOCKER-463 Fixed json logging for Alfresco 7.4/23.x
 * [PR #213](https://github.com/xenit-eu/docker-alfresco/pull/213) DOCKER-460 update tomcat for CVE-2024-50379
