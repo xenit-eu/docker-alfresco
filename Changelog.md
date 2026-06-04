@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## released
 
+## Unreleased
+
+### Added
+* XENOPS-1395 Added support for Alfresco v25.3
+
 ## 2026-05.29 (2026-05-29)
 
 ### Fixed

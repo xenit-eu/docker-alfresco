@@ -15,6 +15,7 @@ include ':1alfresco-skeleton:23.4'
 include ':1alfresco-skeleton:23.5'
 include ':1alfresco-skeleton:23.6'
 include ':1alfresco-skeleton:25.1'
+include ':1alfresco-skeleton:25.3'
 include ':2repository'
 include ':1share-skeleton'
 include ':1share-skeleton:7.0'
@@ -29,6 +30,7 @@ include ':1share-skeleton:23.4'
 include ':1share-skeleton:23.5'
 include ':1share-skeleton:23.6'
 include ':1share-skeleton:25.1'
+include ':1share-skeleton:25.3'
 include ':2share'
 
 def includeRepoProject(String flavor, String version) {
@@ -58,6 +60,7 @@ if (includeCommunity == 'true') {
     includeRepoProject('community', '23.3.0')
     includeRepoProject('community', '23.4.0')
     includeRepoProject('community', '25.1.0')
+    includeRepoProject('community', '25.3.0')
 
     includeShareProject('community', '7.0.1')
     includeShareProject('community', '7.1.0')
@@ -69,6 +72,7 @@ if (includeCommunity == 'true') {
     includeShareProject('community', '23.3.0')
     includeShareProject('community', '23.4.0')
     includeShareProject('community', '25.1.0')
+    includeShareProject('community', '25.3.0')
 }
 
 if (includeEnterprise == 'true') {
@@ -84,4 +88,5 @@ if (includeEnterprise == 'true') {
     includeRepoProject('enterprise', '23.5.1')
     includeRepoProject('enterprise', '23.6.0')
     includeRepoProject('enterprise', '25.1.0')
+    includeRepoProject('enterprise', '25.3.0')
 }
