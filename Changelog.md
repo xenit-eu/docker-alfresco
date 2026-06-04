@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 ## Unreleased
 
 ### Added
-* XENOPS-1395 Added support for Alfresco v25.3
+* XENOPS-1395 Added support for Alfresco v25.3 — see [Alfresco Community Edition 25.3 release notes](https://connect.hyland.com/t5/alfresco-blog/alfresco-community-edition-25-3-release-notes/ba-p/494778)
 
 ## 2026-05.29 (2026-05-29)
 
