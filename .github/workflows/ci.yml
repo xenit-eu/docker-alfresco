@@ -65,8 +65,26 @@ jobs:
           name: integration-test-${{ matrix.version }}-result
           path: /home/runner/work/**/build/reports
           retention-days: 2
+  share-build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [ "community-7.0.1", "community-7.1.0", "community-7.2.1", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "community-23.3.0", "community-23.4.0", "community-25.1.0", "community-25.3.0" ]
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4.7.0
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build share image
+        uses: gradle/gradle-build-action@v3.5.0
+        with:
+          cache-read-only: false
+          arguments: :2share:${{ matrix.version }}:buildDockerImage --info --stacktrace
   publish-docker-images:
-    needs: [ test, integration-test ]
+    needs: [ test, integration-test, share-build ]
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/tags/v') }}
     steps:
