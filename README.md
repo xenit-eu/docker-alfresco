@@ -28,6 +28,12 @@ This project builds Alfresco-specific docker images used by Xenit, starting with
 
 This is Xenit's repository for Alfresco and Share docker images. A major-minor version has a common skeleton.
 
+## Supported Platforms
+
+For the full support matrix of dependent products (databases, application servers, operating systems) per Alfresco version, refer to the official Hyland documentation:
+
+[Alfresco Supported Platforms](https://docs.hyland.com/r/Current/Alfresco-Supported-Platforms/olh1763030380749)
+
 ## Image Variants
 
 ### Repository-only:
