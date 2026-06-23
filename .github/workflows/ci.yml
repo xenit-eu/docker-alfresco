@@ -85,7 +85,7 @@ jobs:
           arguments: :2share:${{ matrix.version }}:buildDockerImage --info --stacktrace
   publish-docker-images:
     needs: [ test, integration-test, share-build ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-4-cores
     if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/tags/v') }}
     steps:
       - uses: actions/checkout@v4.2.2
