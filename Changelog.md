@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## released
 
+## unreleased
+
+### Fixed
+* DOCKER-468 Bump Tomcat 9/10 further to pick up upstream security and stability fixes
+
+### Added
+* DOCKER-468 Added TOMCAT_MAX_PART_COUNT and TOMCAT_MAX_PART_HEADER_SIZE environment variables to configure multipart upload limits
+
 ## 2026-06.17 (2026-06-17)
 
 ### Added
