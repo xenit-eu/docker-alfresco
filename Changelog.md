@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ### Added
 * DOCKER-468 Added TOMCAT_MAX_PART_COUNT and TOMCAT_MAX_PART_HEADER_SIZE environment variables to configure multipart upload limits, since the underlying limits were newly introduced in Tomcat itself (9.0.106/9.0.107 and 10.1.42/10.1.43)
+* Added support for Alfresco Enterprise v25.4 (25.4.1) — enterprise-only, since Community skipped straight from 25.3 to 26.1 with no 25.4 release
 
 ## 2026-06.17 (2026-06-17)
 
