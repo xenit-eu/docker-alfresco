@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 * DOCKER-468 Bump Tomcat 9/10 further to pick up upstream security and stability fixes
 
 ### Added
-* DOCKER-468 Added TOMCAT_MAX_PART_COUNT and TOMCAT_MAX_PART_HEADER_SIZE environment variables to configure multipart upload limits
+* DOCKER-468 Added TOMCAT_MAX_PART_COUNT and TOMCAT_MAX_PART_HEADER_SIZE environment variables to configure multipart upload limits, since the underlying limits were newly introduced in Tomcat itself (9.0.106/9.0.107 and 10.1.42/10.1.43)
 
 ## 2026-06.17 (2026-06-17)
 
