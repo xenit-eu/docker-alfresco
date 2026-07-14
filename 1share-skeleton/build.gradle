@@ -26,6 +26,14 @@ subprojects {
         environmentVariable('SHARE_VERSION', "${project.share.version.major}.${project.share.version.minor}.${project.share.version.rev}")
         environmentVariable('SHARE_FLAVOR', "${project.share.flavor}")
         environmentVariable('SHARE_ENABLED', "true")
+
+        if (project.share.version.major == 7 && project.share.version.minor <= 3) {
+            environmentVariable('LOG4J_VERSION', '1')
+            smartCopy(file("${project.parent.projectDir}/resources/log4j1.properties"), "/log4j.properties.base")
+        } else {
+            environmentVariable('LOG4J_VERSION', '2')
+            smartCopy(file("${project.parent.projectDir}/resources/log4j2.properties"), "/log4j.properties.base")
+        }
     }
 
 
