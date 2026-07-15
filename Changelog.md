@@ -15,6 +15,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 * DOCKER-468 Added TOMCAT_MAX_PART_COUNT and TOMCAT_MAX_PART_HEADER_SIZE environment variables to configure multipart upload limits, since the underlying limits were newly introduced in Tomcat itself (9.0.106/9.0.107 and 10.1.42/10.1.43)
 * Added support for Alfresco Enterprise v25.4 (25.4.1) — enterprise-only, since Community skipped straight from 25.3 to 26.1 with no 25.4 release
 
+### Changed
+* **Possible breaking change**: the Tomcat bump above means multipart requests are now bounded by `maxPartCount` (default **100**) and `maxPartHeaderSize` (default **1024 bytes**), where previously there was no such limit (only the much larger `maxParameterCount`, default 10000, applied). Deployments that upload forms with more than 100 parts or with larger part headers will start failing after upgrading, unless `TOMCAT_MAX_PART_COUNT` / `TOMCAT_MAX_PART_HEADER_SIZE` are raised accordingly.
+
 ## 2026-06.17 (2026-06-17)
 
 ### Added
