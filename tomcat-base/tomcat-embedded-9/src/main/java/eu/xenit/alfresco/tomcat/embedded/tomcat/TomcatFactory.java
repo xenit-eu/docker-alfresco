@@ -29,7 +29,7 @@ public class TomcatFactory {
         this.configuration = configuration;
     }
 
-    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize, String relaxedPathChars, String relaxedQueryChars, boolean isRemoteIpValveEnabled) {
+    public static Connector getConnector(Tomcat tomcat, String protocol, int port, boolean sslEnabled, String scheme, int maxThreads, int maxHttpHeaderSize, int maxPartCount, int maxPartHeaderSize, String relaxedPathChars, String relaxedQueryChars, boolean isRemoteIpValveEnabled) {
         Connector connector = new Connector(protocol);
         connector.setPort(port);
         connector.setProperty("connectionTimeout", "240000");
@@ -37,6 +37,8 @@ public class TomcatFactory {
         connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
         connector.setProperty("maxThreads", String.valueOf(maxThreads));
         connector.setProperty("maxHttpHeaderSize", String.valueOf(maxHttpHeaderSize));
+        connector.setProperty("maxPartCount", String.valueOf(maxPartCount));
+        connector.setProperty("maxPartHeaderSize", String.valueOf(maxPartHeaderSize));
         connector.setProperty("relaxedPathChars", relaxedPathChars);
         connector.setProperty("relaxedQueryChars", relaxedQueryChars);
         connector.setScheme(scheme);
@@ -123,6 +125,8 @@ public class TomcatFactory {
                 "http",
                 getConfiguration().getTomcatMaxThreads(),
                 getConfiguration().getTomcatMaxHttpHeaderSize(),
+                getConfiguration().getTomcatMaxPartCount(),
+                getConfiguration().getTomcatMaxPartHeaderSize(),
                 getConfiguration().getTomcatRelaxedPathChars(),
                 getConfiguration().getTomcatRelaxedQueryChars(),
                 false

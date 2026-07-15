@@ -22,7 +22,7 @@ subprojects {
     }
 
     // This can be deleted when support for Alfresco V7.X is dropped.
-    if (!tomcatVersion.contains("10")) {
+    if (!tomcatVersion.startsWith("10.")) {
         java {
             toolchain {
                 languageVersion = JavaLanguageVersion.of(11)
@@ -82,7 +82,7 @@ subprojects {
         test {
             java {
                 srcDir file("$project.parent.projectDir/src/shared/test/java")
-                if (tomcatVersion.contains("10")) {
+                if (tomcatVersion.startsWith("10.")) {
                     srcDir file("$project.projectDir/src/test/java")
                 }
             }
@@ -105,9 +105,15 @@ subprojects {
     }
 
     createDockerFile {
-        if (!tomcatVersion.contains("10")) {
+        if (!tomcatVersion.startsWith("10.")) {
             from 'docker.io/eclipse-temurin:11'
-        } else {
+            // DOCKER-468: Tomcat 9.0.100 introduced reflective access to java.io.FileSystem and
+            // other JDK internals via JreCompat. Without these opens, the JVM emits plain-text
+            // WARNING lines that break JSON log parsing. These are the same flags catalina.sh
+            // passes on Java 9+.
+            environmentVariable('JAVA_OPTS_MODULES', '--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED')
+        }
+        else{
             from 'docker.io/eclipse-temurin:17'
         }
         smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'

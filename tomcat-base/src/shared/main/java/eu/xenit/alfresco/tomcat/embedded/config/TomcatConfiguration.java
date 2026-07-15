@@ -21,6 +21,8 @@ public class TomcatConfiguration {
     protected boolean accessLogging;
     protected int tomcatMaxThreads;
     protected int tomcatMaxHttpHeaderSize;
+    protected int tomcatMaxPartCount;
+    protected int tomcatMaxPartHeaderSize;
     protected int tomcatServerPort;
     protected String tomcatRelaxedQueryChars;
     protected String tomcatRelaxedPathChars;

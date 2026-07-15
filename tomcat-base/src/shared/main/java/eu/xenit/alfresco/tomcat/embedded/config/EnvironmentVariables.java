@@ -11,6 +11,8 @@ public class EnvironmentVariables {
     public static final String TOMCAT_SERVER_PORT = "TOMCAT_SERVER_PORT";
     public static final String TOMCAT_MAX_HTTP_HEADER_SIZE = "TOMCAT_MAX_HTTP_HEADER_SIZE";
     public static final String TOMCAT_MAX_THREADS = "TOMCAT_MAX_THREADS";
+    public static final String TOMCAT_MAX_PART_COUNT = "TOMCAT_MAX_PART_COUNT";
+    public static final String TOMCAT_MAX_PART_HEADER_SIZE = "TOMCAT_MAX_PART_HEADER_SIZE";
     public static final String TOMCAT_RELAXED_QUERY_CHARS = "TOMCAT_RELAXED_QUERY_CHARS";
     public static final String TOMCAT_RELAXED_PATH_CHARS = "TOMCAT_RELAXED_PATH_CHARS";
     public static final String EXIT_ON_FAILURE = "EXIT_ON_FAILURE";

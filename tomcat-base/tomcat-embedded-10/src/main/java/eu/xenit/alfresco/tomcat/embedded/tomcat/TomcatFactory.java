@@ -37,6 +37,8 @@ public class TomcatFactory {
             String scheme,
             int maxThreads,
             int maxHttpHeaderSize,
+            int maxPartCount,
+            int maxPartHeaderSize,
             String relaxedPathChars,
             String relaxedQueryChars,
             boolean isRemoteIpValveEnabled) {
@@ -47,6 +49,8 @@ public class TomcatFactory {
         connector.setProperty("SSLEnabled", String.valueOf(sslEnabled));
         connector.setProperty("maxThreads", String.valueOf(maxThreads));
         connector.setProperty("maxHttpHeaderSize", String.valueOf(maxHttpHeaderSize));
+        connector.setProperty("maxPartCount", String.valueOf(maxPartCount));
+        connector.setProperty("maxPartHeaderSize", String.valueOf(maxPartHeaderSize));
         connector.setProperty("relaxedPathChars", relaxedPathChars);
         connector.setProperty("relaxedQueryChars", relaxedQueryChars);
         connector.setScheme(scheme);
@@ -162,6 +166,8 @@ public class TomcatFactory {
                 "http",
                 getConfiguration().getTomcatMaxThreads(),
                 getConfiguration().getTomcatMaxHttpHeaderSize(),
+                getConfiguration().getTomcatMaxPartCount(),
+                getConfiguration().getTomcatMaxPartHeaderSize(),
                 getConfiguration().getTomcatRelaxedPathChars(),
                 getConfiguration().getTomcatRelaxedQueryChars(),
                 getConfiguration().isRemoteIpValveEnabled()

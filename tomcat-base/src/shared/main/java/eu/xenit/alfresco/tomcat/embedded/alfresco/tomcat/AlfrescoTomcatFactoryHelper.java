@@ -62,6 +62,8 @@ public class AlfrescoTomcatFactoryHelper {
                 "https",
                 tomcatConfiguration.getTomcatMaxThreads(),
                 tomcatConfiguration.getTomcatMaxHttpHeaderSize(),
+                tomcatConfiguration.getTomcatMaxPartCount(),
+                tomcatConfiguration.getTomcatMaxPartHeaderSize(),
                 tomcatConfiguration.getTomcatRelaxedPathChars(),
                 tomcatConfiguration.getTomcatRelaxedQueryChars(),
                 tomcatConfiguration.isRemoteIpValveEnabled()
