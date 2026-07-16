@@ -111,6 +111,8 @@ subprojects {
             // other JDK internals via JreCompat. Without these opens, the JVM emits plain-text
             // WARNING lines that break JSON log parsing. These are the same flags catalina.sh
             // passes on Java 9+.
+            // JDK 11 repro that these flags are functionally/security-wise a no-op on Java 11 —
+            // kept purely for log cleanliness.
             environmentVariable('JAVA_OPTS_MODULES', '--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED')
         }
         else{

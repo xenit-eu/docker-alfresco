@@ -19,6 +19,14 @@ subprojects {
         repositories = [calcRepository(project.share.flavor,false)]
         tags = calcTags(project.share.version)
     }
+
+    def localConfigDir = new File("${project.projectDir}/local")
+    if (!localConfigDir.exists() || !localConfigDir.list()) {
+        throw new GradleException("Missing required share config resources in ${localConfigDir} " +
+                "(e.g. share-config-custom.xml). Every 1share-skeleton/<version> directory must provide " +
+                "a non-empty local/ folder that gets copied into the Docker image.")
+    }
+
     createDockerFile {
         smartCopy "$project.projectDir/local", "/docker-config/"
         dependsOn(tomcatImage)
