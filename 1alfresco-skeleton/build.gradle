@@ -25,13 +25,13 @@ subprojects {
         environmentVariable('ALFRESCO_VERSION', "${project.alfresco.version.major}.${project.alfresco.version.minor}.${project.alfresco.version.rev}")
         environmentVariable('ALFRESCO_FLAVOR', "${project.alfresco.version.flavor}")
         environmentVariable('ALFRESCO_ENABLED', "true")
-
+        //TODO: make shared logging map, put in base properties files and 90 script and read out where necessary
         if (project.alfresco.version.major == 7 && project.alfresco.version.minor <= 3) {
             environmentVariable('LOG4J_VERSION', '1')
-            smartCopy(file("${project.parent.projectDir}/resources/log4j1.properties"), "/log4j.properties.base")
+            smartCopy(file("${project.rootDir}/logging/templates/log4j1.properties"), "/log4j.properties.base")
         } else {
             environmentVariable('LOG4J_VERSION', '2')
-            smartCopy(file("${project.parent.projectDir}/resources/log4j2.properties"), "/log4j.properties.base")
+            smartCopy(file("${project.rootDir}/logging/templates/log4j2.properties"), "/log4j.properties.base")
         }
     }
 

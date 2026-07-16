@@ -118,6 +118,7 @@ subprojects {
         dependsOn jar
         smartCopy jar.outputs.files.singleFile, "/app/tomcat-embedded/$jarName"
         smartCopy "${project.parent.projectDir}/src/shared/main/bash/entrypoint/", '/'
+        smartCopy "${project.rootDir}/logging/docker-entrypoint.d/", "/docker-entrypoint.d/"
         def buildDate = project.properties.getOrDefault("buildDate", ((int) (new Date().getTime() / 1000)).toString())
         environmentVariable('BUILD_DATE', buildDate)
 
