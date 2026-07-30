@@ -6,10 +6,12 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setWebappsPath("/usr/local/tomcat/webapps");
         baseConfiguration.setTomcatBaseDir("/usr/local/tomcat/temp");
         baseConfiguration.setTomcatPort(8080);
+        baseConfiguration.setTomcatProbePort(8090);
         baseConfiguration.setJsonLogging(false);
         baseConfiguration.setAccessLogging(false);
         baseConfiguration.setSharedLibDir("/usr/local/tomcat/shared/lib");
         baseConfiguration.setTomcatMaxThreads(200);
+        baseConfiguration.setTomcatProbeMaxThreads(5);
         baseConfiguration.setTomcatMaxHttpHeaderSize(32768);
         baseConfiguration.setTomcatMaxPartCount(100);
         baseConfiguration.setTomcatMaxPartHeaderSize(1024);
