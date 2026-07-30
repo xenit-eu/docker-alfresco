@@ -8,9 +8,11 @@ public class EnvironmentVariables {
     public static final String TOMCAT_PORT = "TOMCAT_PORT";
     public static final String TOMCAT_BASE_DIR = "TOMCAT_BASE_DIR";
     public static final String TOMCAT_PORT_SSL = "TOMCAT_PORT_SSL";
+    public static final String TOMCAT_PORT_PROBE = "TOMCAT_PORT_PROBE";
     public static final String TOMCAT_SERVER_PORT = "TOMCAT_SERVER_PORT";
     public static final String TOMCAT_MAX_HTTP_HEADER_SIZE = "TOMCAT_MAX_HTTP_HEADER_SIZE";
     public static final String TOMCAT_MAX_THREADS = "TOMCAT_MAX_THREADS";
+    public static final String TOMCAT_MAX_THREADS_PROBE = "TOMCAT_MAX_THREADS_PROBE";
     public static final String TOMCAT_MAX_PART_COUNT = "TOMCAT_MAX_PART_COUNT";
     public static final String TOMCAT_MAX_PART_HEADER_SIZE = "TOMCAT_MAX_PART_HEADER_SIZE";
     public static final String TOMCAT_RELAXED_QUERY_CHARS = "TOMCAT_RELAXED_QUERY_CHARS";
