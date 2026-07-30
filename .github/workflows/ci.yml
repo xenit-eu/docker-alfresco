@@ -23,6 +23,11 @@ jobs:
         with:
           cache-read-only: false
           arguments: test --parallel --info
+      - name: Set up JDK 21 for SonarQube Cloud analysis (mandatory)
+        uses: actions/setup-java@v4.7.0
+        with:
+          distribution: 'temurin'
+          java-version: '21'
       - name: Upload analysis to sonarcloud
         uses: gradle/gradle-build-action@v3.5.0
         env:
