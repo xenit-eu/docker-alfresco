@@ -18,24 +18,20 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5.0.2
       - name: Unit tests
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          cache-read-only: false
-          arguments: test --parallel --info
+        run: ./gradlew test --parallel --info
       - name: Set up JDK 21 for SonarQube Cloud analysis (mandatory)
         uses: actions/setup-java@v4.7.0
         with:
           distribution: 'temurin'
           java-version: '21'
       - name: Upload analysis to sonarcloud
-        uses: gradle/gradle-build-action@v3.5.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }}
-        with:
-          cache-read-only: false
-          arguments: sonarqube -i
+        run: ./gradlew sonarqube -i
       - name: Upload test artifact
         if: success() || failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -58,11 +54,10 @@ jobs:
           java-version: '17'
       - name: Login to docker registry
         run: echo '${{ secrets.HARBOR_PASSWORD }}' | docker login docker.xenit.eu --username '${{ secrets.HARBOR_USER }}' --password-stdin
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5.0.2
       - name: Integration tests
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          cache-read-only: false
-          arguments: :2repository:${{ matrix.version }}:integrationTests --info --stacktrace
+        run: ./gradlew :2repository:${{ matrix.version }}:integrationTests --info --stacktrace
       - name: Upload test artifact
         if: success() || failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -83,11 +78,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5.0.2
       - name: Build share image
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          cache-read-only: false
-          arguments: :2share:${{ matrix.version }}:buildDockerImage --info --stacktrace
+        run: ./gradlew :2share:${{ matrix.version }}:buildDockerImage --info --stacktrace
   publish-docker-images:
     needs: [ test, integration-test, share-build ]
     runs-on: ubuntu-latest-4-cores
@@ -104,19 +98,15 @@ jobs:
         # We have to split out publishing to public and private repo's because pushing to docker.io does not seem to work
         # without supplying DOCKER_USER and DOCKER_PASSWORD. However, supplying those environment variables breaks
         # publishing to other repositories
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5.0.2
       - name: Publish public docker images
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          cache-read-only: false
-          arguments: pushDockerImage -PincludeEnterprise=false
+        run: ./gradlew pushDockerImage -PincludeEnterprise=false
       - name: Publish private docker images
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          cache-read-only: false
-          arguments: :2repository:pushDockerImage -PincludeCommunity=false
+        run: ./gradlew :2repository:pushDockerImage -PincludeCommunity=false
   publish-maven-images:
     needs: [ test, integration-test ]
     runs-on: ubuntu-latest
@@ -128,13 +118,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5.0.2
       - name: Publish tomcat base jars
         env:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.MAVEN_CENTRAL_GPG_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
           ORG_GRADLE_PROJECT_sonatype_username: ${{ secrets.SONATYPE_S01_USERNAME  }}
           ORG_GRADLE_PROJECT_sonatype_password: ${{ secrets.SONATYPE_S01_PASSWORD  }}
-        uses: gradle/gradle-build-action@v3.5.0
-        with:
-          cache-read-only: false
-          arguments: :tomcat-base:tomcat-embedded-9:publish :tomcat-base:tomcat-embedded-10:publish --info -PsigningKeyId=CDE3528F
+        run: ./gradlew :tomcat-base:tomcat-embedded-9:publish :tomcat-base:tomcat-embedded-10:publish --info -PsigningKeyId=CDE3528F
