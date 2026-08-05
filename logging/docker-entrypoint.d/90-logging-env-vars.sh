@@ -2,13 +2,15 @@
 set -e
 
 # This script generates a complete log4j configuration file based on
-# LOG_LEVEL_ environment variables and tells the Java process to use it.
+# LOG_LEVEL_ environment variables and installs it into the WEB-INF/classes
+# of every initialised webapp, so each webapp picks it up from its own classpath.
 
 log() {
   echo '{ "timestamp" : '"$(date '+%s')"' ,"severity" : "INFO", "type" : "entrypoint","component" : "docker-entrypoint" ,"fullMessage" : "'"$1"'"}'
 }
 
 LOG_BASE_FILE="/log4j.properties.base"
+WEBAPPS_DIR="/usr/local/tomcat/webapps"
 
 # Decide the output filename from the major log4j version.
 case "$LOG4J_VERSION" in
@@ -22,15 +24,7 @@ if [ -z "$FNAME" ]; then
 elif [ ! -f "$LOG_BASE_FILE" ]; then
   log "log4j.properties.base not found, skipping log config generation"
 else
-  LOG_CONFIG_FILE="/usr/local/tomcat/webapps/alfresco/WEB-INF/classes/${FNAME}"
-
-  mkdir -p /usr/local/tomcat/webapps/alfresco/WEB-INF/classes
-
-  log "Generating log config at: ${LOG_CONFIG_FILE}"
   log "Using Log4j Version: ${LOG4J_VERSION}"
-
-  # Start from the base file.
-  cp "${LOG_BASE_FILE}" "${LOG_CONFIG_FILE}"
 
   # Build logger configs from LOG_LEVEL_* env variables.
   # For log4j2 we also need a 'loggers = name1,name2' list.
@@ -62,21 +56,29 @@ else
     fi
   done < <(env)
 
-  # Append the generated logger section and point Java at the file.
-  echo -e "\n# Custom Log Levels" >> "${LOG_CONFIG_FILE}"
+  # Install the generated config into every initialised webapp.
+  for webapp_dir in "${WEBAPPS_DIR}"/*/; do
+    [ -d "$webapp_dir" ] || continue
 
-  if [ "$LOG4J_VERSION" = "1" ]; then
-    echo -e "${logger_configs}" >> "${LOG_CONFIG_FILE}"
-    JAVA_OPTS="$JAVA_OPTS -Dlog4j.configuration=file://${LOG_CONFIG_FILE}"
-  else
-    if [ -n "$logger_list" ]; then
+    webapp_name="$(basename "$webapp_dir")"
+    LOG_CONFIG_FILE="${webapp_dir}WEB-INF/classes/${FNAME}"
+
+    mkdir -p "${webapp_dir}WEB-INF/classes"
+
+    log "Generating log config for webapp '${webapp_name}' at: ${LOG_CONFIG_FILE}"
+
+    # Start from the base file, then append the generated logger section.
+    cp "${LOG_BASE_FILE}" "${LOG_CONFIG_FILE}"
+    echo -e "\n# Custom Log Levels" >> "${LOG_CONFIG_FILE}"
+
+    if [ "$LOG4J_VERSION" = "1" ]; then
+      echo -e "${logger_configs}" >> "${LOG_CONFIG_FILE}"
+    elif [ -n "$logger_list" ]; then
       # Add the 'loggers = name1,name2' list (stripping last comma)
       echo "loggers = ${logger_list%,}" >> "${LOG_CONFIG_FILE}"
       echo -e "${logger_configs}" >> "${LOG_CONFIG_FILE}"
     fi
-    JAVA_OPTS="$JAVA_OPTS -Dlog4j.configurationFile=${LOG_CONFIG_FILE}"
-  fi
+  done
 
-  export JAVA_OPTS
-  log "Log configuration complete. JAVA_OPTS updated."
+  log "Log configuration complete."
 fi
