@@ -4,7 +4,6 @@ subprojects {
     version = baseVersion[1..baseVersion.length() - 1]
     apply plugin: 'eu.xenit.docker'
     apply plugin: 'java'
-    apply plugin: "maven-publish"
     apply from: "${rootProject.projectDir}/jacoco.gradle"
 
     if (new File("${project.projectDir}/overload.gradle").exists()) {
@@ -133,13 +132,4 @@ subprojects {
         instruction("HEALTHCHECK CMD java -cp $classPath eu.xenit.alfresco.tomcat.embedded.healthcheck.HealthCheck")
     }
 
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                from components.java
-            }
-        }
-    }
-
-    apply from: "${rootProject.projectDir}/tomcat-base/publish.gradle"
 }
