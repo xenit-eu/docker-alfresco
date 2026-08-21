@@ -35,7 +35,7 @@ subprojects {
         integrationTestImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: restAssuredVersion
         integrationTestImplementation group: 'junit', name: 'junit', version: '4.13.2'
         integrationTestImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
-        integrationTestImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.21.0'
+        integrationTestImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.21.4'
 
         alfrescoSM(group: 'org.postgresql', name: 'postgresql', version: '42.6.0')
     }
