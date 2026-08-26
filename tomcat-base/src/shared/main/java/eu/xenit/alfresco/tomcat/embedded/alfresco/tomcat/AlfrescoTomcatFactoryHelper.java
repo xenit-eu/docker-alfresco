@@ -88,4 +88,22 @@ public class AlfrescoTomcatFactoryHelper {
         connector.setMaxSavePostSize(-1);
         tomcat.setConnector(connector);
     }
+
+    public static void createProbeConnector(Tomcat tomcat, AlfrescoConfiguration alfrescoConfiguration) {
+        var tomcatConfiguration = alfrescoConfiguration.getTomcatConfiguration();
+        Connector connector = TomcatFactory.getConnector(tomcat,
+                "HTTP/1.1",
+                tomcatConfiguration.getTomcatProbePort(),
+                false,
+                "http",
+                tomcatConfiguration.getTomcatProbeMaxThreads(),
+                tomcatConfiguration.getTomcatMaxHttpHeaderSize(),
+                tomcatConfiguration.getTomcatMaxPartCount(),
+                tomcatConfiguration.getTomcatMaxPartHeaderSize(),
+                tomcatConfiguration.getTomcatRelaxedPathChars(),
+                tomcatConfiguration.getTomcatRelaxedQueryChars(),
+                tomcatConfiguration.isRemoteIpValveEnabled()
+        );
+        tomcat.setConnector(connector);
+    }
 }
