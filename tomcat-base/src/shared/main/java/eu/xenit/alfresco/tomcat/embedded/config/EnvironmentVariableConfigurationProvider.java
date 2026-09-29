@@ -18,9 +18,9 @@ import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMC
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_PART_COUNT;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_PART_HEADER_SIZE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_THREADS;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_THREADS_PROBE;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_THREADS_SECONDARY;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT_PROBE;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT_SECONDARY;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT_SSL;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_RELAXED_PATH_CHARS;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_RELAXED_QUERY_CHARS;
@@ -43,11 +43,11 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(GENERATED_CLASSPATH_DIR, baseConfiguration::setGeneratedClasspathDir);
         setPropertyFromEnv(TOMCAT_PORT, value -> baseConfiguration.setTomcatPort(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_PORT_SSL, value -> baseConfiguration.setTomcatSslPort(Integer.parseInt(value)));
-        setPropertyFromEnv(TOMCAT_PORT_PROBE, value -> baseConfiguration.setTomcatProbePort(Integer.parseInt(value)));
+        setPropertyFromEnv(TOMCAT_PORT_SECONDARY, value -> baseConfiguration.setTomcatSecondaryPort(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_SERVER_PORT, value -> baseConfiguration.setTomcatServerPort(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_MAX_HTTP_HEADER_SIZE, value -> baseConfiguration.setTomcatMaxHttpHeaderSize(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_MAX_THREADS, value -> baseConfiguration.setTomcatMaxThreads(Integer.parseInt(value)));
-        setPropertyFromEnv(TOMCAT_MAX_THREADS_PROBE, value -> baseConfiguration.setTomcatProbeMaxThreads(Integer.parseInt(value)));
+        setPropertyFromEnv(TOMCAT_MAX_THREADS_SECONDARY, value -> baseConfiguration.setTomcatSecondaryMaxThreads(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_MAX_PART_COUNT, value -> baseConfiguration.setTomcatMaxPartCount(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_MAX_PART_HEADER_SIZE, value -> baseConfiguration.setTomcatMaxPartHeaderSize(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_RELAXED_QUERY_CHARS, baseConfiguration::setTomcatRelaxedQueryChars);

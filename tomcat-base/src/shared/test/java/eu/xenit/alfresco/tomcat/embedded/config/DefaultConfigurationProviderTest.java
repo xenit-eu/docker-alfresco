@@ -16,12 +16,12 @@ class DefaultConfigurationProviderTest {
         expected.setAccessLogging(false);
         expected.setSharedLibDir("/usr/local/tomcat/shared/lib");
         expected.setTomcatMaxThreads(200);
-        expected.setTomcatProbeMaxThreads(5);
+        expected.setTomcatSecondaryMaxThreads(5);
         expected.setTomcatMaxHttpHeaderSize(32768);
         expected.setTomcatMaxPartCount(100);
         expected.setTomcatMaxPartHeaderSize(1024);
         expected.setTomcatSslPort(8443);
-        expected.setTomcatProbePort(8090);
+        expected.setTomcatSecondaryPort(8090);
         expected.setTomcatServerPort(8005);
         expected.setExitOnFailure(true);
         expected.setAlfrescoEnabled(false);

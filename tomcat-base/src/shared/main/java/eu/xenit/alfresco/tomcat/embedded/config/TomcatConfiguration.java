@@ -15,13 +15,13 @@ public class TomcatConfiguration {
     protected String tomcatBaseDir;
     protected int tomcatPort;
     protected int tomcatSslPort;
-    protected int tomcatProbePort;
+    protected int tomcatSecondaryPort;
     protected String sharedClasspathDir;
     protected String sharedLibDir;
     protected boolean jsonLogging;
     protected boolean accessLogging;
     protected int tomcatMaxThreads;
-    protected int tomcatProbeMaxThreads;
+    protected int tomcatSecondaryMaxThreads;
     protected int tomcatMaxHttpHeaderSize;
     protected int tomcatMaxPartCount;
     protected int tomcatMaxPartHeaderSize;

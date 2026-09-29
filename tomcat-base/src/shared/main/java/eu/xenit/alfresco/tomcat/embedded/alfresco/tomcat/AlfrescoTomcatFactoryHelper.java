@@ -89,14 +89,14 @@ public class AlfrescoTomcatFactoryHelper {
         tomcat.setConnector(connector);
     }
 
-    public static void createProbeConnector(Tomcat tomcat, AlfrescoConfiguration alfrescoConfiguration) {
+    public static void createSecondaryConnector(Tomcat tomcat, AlfrescoConfiguration alfrescoConfiguration) {
         var tomcatConfiguration = alfrescoConfiguration.getTomcatConfiguration();
         Connector connector = TomcatFactory.getConnector(tomcat,
                 "HTTP/1.1",
-                tomcatConfiguration.getTomcatProbePort(),
+                tomcatConfiguration.getTomcatSecondaryPort(),
                 false,
                 "http",
-                tomcatConfiguration.getTomcatProbeMaxThreads(),
+                tomcatConfiguration.getTomcatSecondaryMaxThreads(),
                 tomcatConfiguration.getTomcatMaxHttpHeaderSize(),
                 tomcatConfiguration.getTomcatMaxPartCount(),
                 tomcatConfiguration.getTomcatMaxPartHeaderSize(),
