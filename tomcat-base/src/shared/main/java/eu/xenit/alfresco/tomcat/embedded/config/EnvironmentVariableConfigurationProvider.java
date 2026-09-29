@@ -25,6 +25,7 @@ import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMC
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_RELAXED_PATH_CHARS;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_RELAXED_QUERY_CHARS;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_REMOTE_IP_VALVE_ENABLED;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_SECONDARY_CONNECTOR_ENABLED;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_SERVER_PORT;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_WEBAPPS;
 import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.setPropertyFromEnv;
@@ -60,6 +61,7 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH, value -> baseConfiguration.setAllowMultipleLeadingForwardSlashInPath(Boolean.parseBoolean(value)));
         setPropertyFromEnv(TOMCAT_CROSS_CONTEXT, value -> baseConfiguration.setCrossContext(Boolean.parseBoolean(value)));
         setPropertyFromEnv(TOMCAT_REMOTE_IP_VALVE_ENABLED, value -> baseConfiguration.setRemoteIpValveEnabled(Boolean.parseBoolean(value)));
+        setPropertyFromEnv(TOMCAT_SECONDARY_CONNECTOR_ENABLED, value -> baseConfiguration.setSecondaryConnectorEnabled(Boolean.parseBoolean(value)));
         return baseConfiguration;
     }
 }

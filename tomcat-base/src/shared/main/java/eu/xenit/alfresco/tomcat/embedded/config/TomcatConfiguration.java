@@ -36,4 +36,5 @@ public class TomcatConfiguration {
     protected boolean allowMultipleLeadingForwardSlashInPath;
     protected boolean crossContext;
     protected boolean remoteIpValveEnabled;
+    protected boolean secondaryConnectorEnabled;
 }

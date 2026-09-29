@@ -27,6 +27,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setAllowMultipleLeadingForwardSlashInPath(false);
         baseConfiguration.setCrossContext(false);
         baseConfiguration.setRemoteIpValveEnabled(true);
+        baseConfiguration.setSecondaryConnectorEnabled(false);
         return baseConfiguration;
     }
 }

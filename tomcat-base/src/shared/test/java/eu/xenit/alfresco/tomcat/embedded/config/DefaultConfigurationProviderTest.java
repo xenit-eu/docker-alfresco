@@ -33,6 +33,7 @@ class DefaultConfigurationProviderTest {
         expected.setAllowMultipleLeadingForwardSlashInPath(false);
         expected.setCrossContext(false);
         expected.setRemoteIpValveEnabled(true);
+        expected.setSecondaryConnectorEnabled(false);
         assertEquals(expected, configuration);
     }
 

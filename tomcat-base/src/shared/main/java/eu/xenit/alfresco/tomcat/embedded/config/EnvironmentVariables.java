@@ -27,6 +27,7 @@ public class EnvironmentVariables {
     public static final String TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH = "TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH";
     public static final String TOMCAT_CROSS_CONTEXT = "TOMCAT_CROSS_CONTEXT";
     public static final String TOMCAT_REMOTE_IP_VALVE_ENABLED = "TOMCAT_REMOTE_IP_VALVE_ENABLED";
+    public static final String TOMCAT_SECONDARY_CONNECTOR_ENABLED = "TOMCAT_SECONDARY_CONNECTOR_ENABLED";
     private EnvironmentVariables() {
     }
 

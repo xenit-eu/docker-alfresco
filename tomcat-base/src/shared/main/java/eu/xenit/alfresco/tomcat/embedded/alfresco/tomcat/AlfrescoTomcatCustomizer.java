@@ -16,9 +16,11 @@ public class AlfrescoTomcatCustomizer implements TomcatCustomizer {
                 .getConfiguration(new DefaultAlfrescoConfigurationProvider()
                         .getConfiguration(new AlfrescoConfiguration(configuration)));
         AlfrescoTomcatFactoryHelper.createGlobalPropertiesFile(alfrescoConfiguration);
-        AlfrescoTomcatFactoryHelper.createSecondaryConnector(tomcat, alfrescoConfiguration);
         if (alfrescoConfiguration.isSolrSSLEnabled()) {
             AlfrescoTomcatFactoryHelper.createSSLConnector(tomcat, alfrescoConfiguration);
+        }
+        if (configuration.isSecondaryConnectorEnabled()) {
+            AlfrescoTomcatFactoryHelper.createSecondaryConnector(tomcat, configuration);
         }
     }
 }
