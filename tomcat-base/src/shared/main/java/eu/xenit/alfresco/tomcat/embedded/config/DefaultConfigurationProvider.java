@@ -11,7 +11,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         baseConfiguration.setAccessLogging(false);
         baseConfiguration.setSharedLibDir("/usr/local/tomcat/shared/lib");
         baseConfiguration.setTomcatMaxThreads(200);
-        baseConfiguration.setTomcatSecondaryMaxThreads(5);
+        baseConfiguration.setTomcatSecondaryMaxThreads(10);
         baseConfiguration.setTomcatMaxHttpHeaderSize(32768);
         baseConfiguration.setTomcatMaxPartCount(100);
         baseConfiguration.setTomcatMaxPartHeaderSize(1024);

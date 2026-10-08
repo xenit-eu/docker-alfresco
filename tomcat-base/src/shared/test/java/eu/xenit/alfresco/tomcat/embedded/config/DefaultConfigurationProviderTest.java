@@ -16,7 +16,7 @@ class DefaultConfigurationProviderTest {
         expected.setAccessLogging(false);
         expected.setSharedLibDir("/usr/local/tomcat/shared/lib");
         expected.setTomcatMaxThreads(200);
-        expected.setTomcatSecondaryMaxThreads(5);
+        expected.setTomcatSecondaryMaxThreads(10);
         expected.setTomcatMaxHttpHeaderSize(32768);
         expected.setTomcatMaxPartCount(100);
         expected.setTomcatMaxPartHeaderSize(1024);
