@@ -1,6 +1,7 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat;
 
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoConfiguration;
+import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatFactory;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
@@ -86,6 +87,24 @@ public class AlfrescoTomcatFactoryHelper {
         connector.setProperty("clientAuth", "want");
         connector.setProperty("allowUnsafeLegacyRenegotiation", "true");
         connector.setMaxSavePostSize(-1);
+        tomcat.setConnector(connector);
+    }
+
+    public static void createSecondaryConnector(Tomcat tomcat, TomcatConfiguration tomcatConfiguration) {
+        Connector connector = TomcatFactory.getConnector(tomcat,
+                "HTTP/1.1",
+                tomcatConfiguration.getTomcatSecondaryPort(),
+                false,
+                "http",
+                tomcatConfiguration.getTomcatSecondaryMaxThreads(),
+                tomcatConfiguration.getTomcatMaxHttpHeaderSize(),
+                tomcatConfiguration.getTomcatMaxPartCount(),
+                tomcatConfiguration.getTomcatMaxPartHeaderSize(),
+                tomcatConfiguration.getTomcatRelaxedPathChars(),
+                tomcatConfiguration.getTomcatRelaxedQueryChars(),
+                false
+        );
+        connector.setRedirectPort(tomcatConfiguration.getTomcatSslPort());
         tomcat.setConnector(connector);
     }
 }

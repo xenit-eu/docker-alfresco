@@ -15,11 +15,13 @@ public class TomcatConfiguration {
     protected String tomcatBaseDir;
     protected int tomcatPort;
     protected int tomcatSslPort;
+    protected int tomcatSecondaryPort;
     protected String sharedClasspathDir;
     protected String sharedLibDir;
     protected boolean jsonLogging;
     protected boolean accessLogging;
     protected int tomcatMaxThreads;
+    protected int tomcatSecondaryMaxThreads;
     protected int tomcatMaxHttpHeaderSize;
     protected int tomcatMaxPartCount;
     protected int tomcatMaxPartHeaderSize;
@@ -34,4 +36,5 @@ public class TomcatConfiguration {
     protected boolean allowMultipleLeadingForwardSlashInPath;
     protected boolean crossContext;
     protected boolean remoteIpValveEnabled;
+    protected boolean secondaryConnectorEnabled;
 }

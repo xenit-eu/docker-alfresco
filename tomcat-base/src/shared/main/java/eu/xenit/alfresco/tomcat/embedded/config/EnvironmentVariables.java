@@ -8,9 +8,11 @@ public class EnvironmentVariables {
     public static final String TOMCAT_PORT = "TOMCAT_PORT";
     public static final String TOMCAT_BASE_DIR = "TOMCAT_BASE_DIR";
     public static final String TOMCAT_PORT_SSL = "TOMCAT_PORT_SSL";
+    public static final String TOMCAT_PORT_SECONDARY = "TOMCAT_PORT_SECONDARY";
     public static final String TOMCAT_SERVER_PORT = "TOMCAT_SERVER_PORT";
     public static final String TOMCAT_MAX_HTTP_HEADER_SIZE = "TOMCAT_MAX_HTTP_HEADER_SIZE";
     public static final String TOMCAT_MAX_THREADS = "TOMCAT_MAX_THREADS";
+    public static final String TOMCAT_MAX_THREADS_SECONDARY = "TOMCAT_MAX_THREADS_SECONDARY";
     public static final String TOMCAT_MAX_PART_COUNT = "TOMCAT_MAX_PART_COUNT";
     public static final String TOMCAT_MAX_PART_HEADER_SIZE = "TOMCAT_MAX_PART_HEADER_SIZE";
     public static final String TOMCAT_RELAXED_QUERY_CHARS = "TOMCAT_RELAXED_QUERY_CHARS";
@@ -25,6 +27,7 @@ public class EnvironmentVariables {
     public static final String TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH = "TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH";
     public static final String TOMCAT_CROSS_CONTEXT = "TOMCAT_CROSS_CONTEXT";
     public static final String TOMCAT_REMOTE_IP_VALVE_ENABLED = "TOMCAT_REMOTE_IP_VALVE_ENABLED";
+    public static final String TOMCAT_SECONDARY_CONNECTOR_ENABLED = "TOMCAT_SECONDARY_CONNECTOR_ENABLED";
     private EnvironmentVariables() {
     }
 

@@ -3,7 +3,6 @@ package eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat;
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.DefaultAlfrescoConfigurationProvider;
 import eu.xenit.alfresco.tomcat.embedded.alfresco.config.EnvironmentVariableAlfrescoConfigurationProvider;
-import eu.xenit.alfresco.tomcat.embedded.alfresco.tomcat.AlfrescoTomcatFactoryHelper;
 import eu.xenit.alfresco.tomcat.embedded.config.TomcatConfiguration;
 import eu.xenit.alfresco.tomcat.embedded.tomcat.TomcatCustomizer;
 import org.apache.catalina.startup.Tomcat;
@@ -19,6 +18,9 @@ public class AlfrescoTomcatCustomizer implements TomcatCustomizer {
         AlfrescoTomcatFactoryHelper.createGlobalPropertiesFile(alfrescoConfiguration);
         if (alfrescoConfiguration.isSolrSSLEnabled()) {
             AlfrescoTomcatFactoryHelper.createSSLConnector(tomcat, alfrescoConfiguration);
+        }
+        if (configuration.isSecondaryConnectorEnabled()) {
+            AlfrescoTomcatFactoryHelper.createSecondaryConnector(tomcat, configuration);
         }
     }
 }
