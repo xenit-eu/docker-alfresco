@@ -44,6 +44,8 @@ subprojects {
     if (new File("${project.projectDir}/overload.gradle").exists())
         apply from: "${project.projectDir}/overload.gradle"
 
+    def useSolr = project.alfresco.version.major < 26
+
     def parentProject = project(":1alfresco-skeleton:${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}")
     def parentImage = parentProject.getTasks().getByName('buildDockerImage')
     def alfrescoRepository = calcRepository(project.alfresco.flavor,true)
@@ -97,6 +99,7 @@ subprojects {
             systemProperty 'alfresco.port.internal', '8080'
             systemProperty 'flavor', "${project.alfresco.flavor}"
             systemProperty 'version', "${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}"
+            systemProperty 'search.enabled', useSolr
             systemProperty('alfresco_image_name', "${alfrescoRepository}:${alfrescoTags.last()}")
         }
     }
@@ -114,6 +117,7 @@ subprojects {
             systemProperty 'alfresco.port.internal', '5656'
             systemProperty 'flavor', "${project.alfresco.flavor}"
             systemProperty 'version', "${project.alfresco.version.major}" + "." + "${project.alfresco.version.minor}"
+            systemProperty 'search.enabled', useSolr
         }
     }
 
@@ -131,27 +135,36 @@ subprojects {
             isRequiredBy(project.tasks.integrationTestDefault)
 
             environment.put 'SHARE_IMAGE', project.shareimage
-            environment.put 'SOLR_IMAGE', project.solrimage
+            if (useSolr) {
+                environment.put 'SOLR_IMAGE', project.solrimage
+                environment.put 'SOLR_PORT_SSL', '8443'
+            }
             if (project.hasProperty("psqlimage")) {
                 environment.put 'PSQL_IMAGE', project.psqlimage
             }
-            environment.put 'SOLR_PORT_SSL', '8443'
-
             def composeDir = "${project.parent.projectDir}/src/integrationTest/resources";
 
             useComposeFiles = ["$composeDir/docker-compose-alfresco-minimal.yml",
-                               "$composeDir/docker-compose-solr.yml", "$composeDir/docker-compose-db.yml"];
+                               "$composeDir/docker-compose-db.yml"];
+            if (useSolr) {
+                useComposeFiles.add("$composeDir/docker-compose-solr.yml")
+            }
 
             changedPorts {
                 isRequiredBy(project.tasks.integrationTestChangedPorts)
 
                 environment.put 'ALFRESCO_PORT', '5656'
                 environment.put 'ALFRESCO_PORT_SSL', '5657'
-                environment.put 'SOLR_PORT', '2323'
-                environment.put 'SOLR_PORT_SSL', '2324'
+                if (useSolr) {
+                    environment.put 'SOLR_PORT', '2323'
+                    environment.put 'SOLR_PORT_SSL', '2324'
+                }
 
-                useComposeFiles = ["$composeDir/docker-compose-alfresco-changed-ports.yml", "$composeDir/docker-compose-solr-changed-ports.yml",
+                useComposeFiles = ["$composeDir/docker-compose-alfresco-changed-ports.yml",
                                    "$composeDir/docker-compose-db.yml"];
+                if (useSolr) {
+                    useComposeFiles.add("$composeDir/docker-compose-solr-changed-ports.yml")
+                }
             }
         }
     }

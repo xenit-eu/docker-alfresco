@@ -28,6 +28,14 @@ This project builds Alfresco-specific docker images used by Xenit, starting with
 
 This is Xenit's repository for Alfresco and Share docker images. A major-minor version has a common skeleton.
 
+Alfresco 26.2 repository and Share images use Tomcat 11 and Java 21. A skeleton version
+such as `26.2.0` is shared by all patch releases in that major-minor family.
+
+For Alfresco 26 and later, Solr is no longer supported. These images leave the search
+subsystem at the ACS default unless overridden with `INDEX` or `GLOBAL_index.subsystem.name`.
+Configure a supported search service separately for production. The 26.2 repository
+integration setup runs without a search service and skips the search-dependent smoke test.
+
 ## Supported Platforms
 
 For the full support matrix of dependent products (databases, application servers, operating systems) per Alfresco version, refer to the official Hyland documentation:
@@ -42,7 +50,8 @@ For the full support matrix of dependent products (databases, application server
 * alfresco-repository-community:<version>
 
 These are the images used for a multi-container Alfresco enterprise deployment in production. To be used together with
-Share Docker Image , [`docker-solr`](https://github.com/xenit-eu/docker-solr).
+Share Docker Image and a supported search service
+([`docker-solr`](https://github.com/xenit-eu/docker-solr) for versions before Alfresco 26).
 
 The most basic setup uses the docker-compose files
 from [`2repository/src/integrationTest/resources`](https://github.com/xenit-eu/docker-alfresco/tree/master/2repository/src/integrationTest/resources)
@@ -51,7 +60,7 @@ from [`2repository/src/integrationTest/resources`](https://github.com/xenit-eu/d
 ### Share-only:
 
 Multi-container: `share` to be used together with Alfresco Docker Image
-, [`docker-solr`](https://github.com/xenit-eu/docker-solr), [`postgres`](https://github.com/xenit-eu/docker-postgres).
+, a supported search service and [`postgres`](https://github.com/xenit-eu/docker-postgres).
 
 ### Repository and share:
 

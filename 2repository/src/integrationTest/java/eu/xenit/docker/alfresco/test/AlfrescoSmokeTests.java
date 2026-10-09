@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeTrue;
 
 import io.restassured.RestAssured;
 import io.restassured.authentication.PreemptiveBasicAuthScheme;
@@ -64,6 +65,8 @@ public class AlfrescoSmokeTests {
     // Note: due to eventual consistency, we can't test the expected number of results
     // This test only works if alfresco-share-services amp is installed
     public void testSearch(){
+        assumeTrue("No search backend is configured for this integration test",
+                Boolean.parseBoolean(System.getProperty("search.enabled", "true")));
         given()
                 .when()
                 .get("slingshot/search?term=pdf*")

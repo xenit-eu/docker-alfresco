@@ -11,7 +11,6 @@ public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurati
         baseAlfrescoConfiguration.setTomcatSSLTruststore("/keystore/ssl.truststore");
         baseAlfrescoConfiguration.setTomcatSSLKeystorePassword(DEFAULT_SSL_PASSWORD);
         baseAlfrescoConfiguration.setTomcatSSLTruststorePassword(DEFAULT_SSL_PASSWORD);
-        baseAlfrescoConfiguration.setSolrSSLEnabled(true);
         baseAlfrescoConfiguration.setGlobalProperty("db.host", "postgresql");
         baseAlfrescoConfiguration.setGlobalProperty("db.port", "5432");
         baseAlfrescoConfiguration.setGlobalProperty("db.driver", "org.postgresql.Driver");
@@ -44,11 +43,16 @@ public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurati
         baseAlfrescoConfiguration.setGlobalProperty("events.subsystem.autoStart", "false");
         baseAlfrescoConfiguration.setGlobalProperty("local.transform.service.enabled", "true");
 
-        baseAlfrescoConfiguration.setGlobalProperty("index.subsystem.name", "solr6");
-        baseAlfrescoConfiguration.setGlobalProperty("solr.host", "solr");
-        baseAlfrescoConfiguration.setGlobalProperty("solr.port", "8080");
-        baseAlfrescoConfiguration.setGlobalProperty("solr.port.ssl", "8443");
-        baseAlfrescoConfiguration.setGlobalProperty("solr.secureComms", "https");
+        String alfrescoVersion = System.getenv(AlfrescoEnvironmentVariables.ALFRESCO_VERSION);
+        // ACS 26 no longer supports Solr; leave search selection to ACS and deployment overrides.
+        if (alfrescoVersion == null || Integer.parseInt(alfrescoVersion.split("\\.")[0]) < 26) {
+            baseAlfrescoConfiguration.setSolrSSLEnabled(true);
+            baseAlfrescoConfiguration.setGlobalProperty("index.subsystem.name", "solr6");
+            baseAlfrescoConfiguration.setGlobalProperty("solr.host", "solr");
+            baseAlfrescoConfiguration.setGlobalProperty("solr.port", "8080");
+            baseAlfrescoConfiguration.setGlobalProperty("solr.port.ssl", "8443");
+            baseAlfrescoConfiguration.setGlobalProperty("solr.secureComms", "https");
+        }
 
         baseAlfrescoConfiguration.setGlobalProperty("dir.root", "/opt/alfresco/alf_data");
 
