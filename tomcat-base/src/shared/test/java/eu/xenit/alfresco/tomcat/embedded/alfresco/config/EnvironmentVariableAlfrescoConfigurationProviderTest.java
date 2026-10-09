@@ -16,6 +16,30 @@ class EnvironmentVariableAlfrescoConfigurationProviderTest {
     private final static String SOLR_SECURE_COMMS_ENV = "GLOBAL_" + SECURE_COMMS_KEY;
 
     @Test
+    @SetEnvironmentVariable(key = "ALFRESCO_VERSION", value = "26.2.2")
+    @SetEnvironmentVariable(key = "GLOBAL_elasticsearch.host", value = "custom-search")
+    @SetEnvironmentVariable(key = "GLOBAL_elasticsearch.port", value = "9443")
+    @SetEnvironmentVariable(key = "GLOBAL_elasticsearch.secureComms", value = "https")
+    void testOpenSearchConnectionOverrides() {
+        AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider()
+                .getConfiguration(new DefaultAlfrescoConfigurationProvider().getConfiguration());
+        assertEquals("elasticsearch", configuration.getGlobalProperties().get("index.subsystem.name"));
+        assertEquals("custom-search", configuration.getGlobalProperties().get("elasticsearch.host"));
+        assertEquals("9443", configuration.getGlobalProperties().get("elasticsearch.port"));
+        assertEquals("https", configuration.getGlobalProperties().get("elasticsearch.secureComms"));
+        assertFalse(configuration.isSolrSSLEnabled());
+    }
+
+    @Test
+    @SetEnvironmentVariable(key = "ALFRESCO_VERSION", value = "26.2.0")
+    @SetEnvironmentVariable(key = "INDEX", value = "noindex")
+    void testOpenSearchSubsystemCanBeDisabled() {
+        AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider()
+                .getConfiguration(new DefaultAlfrescoConfigurationProvider().getConfiguration());
+        assertEquals("noindex", configuration.getGlobalProperties().get("index.subsystem.name"));
+    }
+
+    @Test
     void testGetConfiguration() {
         AlfrescoConfiguration configuration = new EnvironmentVariableAlfrescoConfigurationProvider().getConfiguration();
         AlfrescoConfiguration expected = new AlfrescoConfiguration();

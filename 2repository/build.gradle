@@ -146,6 +146,9 @@ subprojects {
 
             useComposeFiles = ["$composeDir/docker-compose-alfresco-minimal.yml",
                                "$composeDir/docker-compose-db.yml"];
+            if (!useSolr) {
+                useComposeFiles.add("$composeDir/docker-compose-noindex.yml")
+            }
             if (useSolr) {
                 useComposeFiles.add("$composeDir/docker-compose-solr.yml")
             }
@@ -162,6 +165,9 @@ subprojects {
 
                 useComposeFiles = ["$composeDir/docker-compose-alfresco-changed-ports.yml",
                                    "$composeDir/docker-compose-db.yml"];
+                if (!useSolr) {
+                    useComposeFiles.add("$composeDir/docker-compose-noindex.yml")
+                }
                 if (useSolr) {
                     useComposeFiles.add("$composeDir/docker-compose-solr-changed-ports.yml")
                 }

@@ -44,7 +44,6 @@ public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurati
         baseAlfrescoConfiguration.setGlobalProperty("local.transform.service.enabled", "true");
 
         String alfrescoVersion = System.getenv(AlfrescoEnvironmentVariables.ALFRESCO_VERSION);
-        // ACS 26 no longer supports Solr; leave search selection to ACS and deployment overrides.
         if (alfrescoVersion == null || Integer.parseInt(alfrescoVersion.split("\\.")[0]) < 26) {
             baseAlfrescoConfiguration.setSolrSSLEnabled(true);
             baseAlfrescoConfiguration.setGlobalProperty("index.subsystem.name", "solr6");
@@ -52,6 +51,13 @@ public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurati
             baseAlfrescoConfiguration.setGlobalProperty("solr.port", "8080");
             baseAlfrescoConfiguration.setGlobalProperty("solr.port.ssl", "8443");
             baseAlfrescoConfiguration.setGlobalProperty("solr.secureComms", "https");
+        } else {
+            // ACS uses the elasticsearch subsystem for both Elasticsearch and OpenSearch.
+            baseAlfrescoConfiguration.setGlobalProperty("index.subsystem.name", "elasticsearch");
+            baseAlfrescoConfiguration.setGlobalProperty("elasticsearch.host", "opensearch");
+            baseAlfrescoConfiguration.setGlobalProperty("elasticsearch.port", "9200");
+            baseAlfrescoConfiguration.setGlobalProperty("elasticsearch.secureComms", "none");
+            baseAlfrescoConfiguration.setGlobalProperty("elasticsearch.createIndexIfNotExists", "true");
         }
 
         baseAlfrescoConfiguration.setGlobalProperty("dir.root", "/opt/alfresco/alf_data");
