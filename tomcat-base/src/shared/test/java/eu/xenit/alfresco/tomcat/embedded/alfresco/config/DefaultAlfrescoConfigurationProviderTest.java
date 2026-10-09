@@ -1,8 +1,11 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 class DefaultAlfrescoConfigurationProviderTest {
     @Test
@@ -48,6 +51,37 @@ class DefaultAlfrescoConfigurationProviderTest {
         expected.setGlobalProperty("solr.secureComms", "https");
         expected.setGlobalProperty("dir.root", "/opt/alfresco/alf_data");
         assertEquals(configuration, expected);
+    }
+
+    @Test
+    @SetEnvironmentVariable(key = "ALFRESCO_VERSION", value = "25.4.1")
+    void testLegacySolrDefaults() {
+        AlfrescoConfiguration configuration = new DefaultAlfrescoConfigurationProvider().getConfiguration();
+        assertEquals("solr6", configuration.getGlobalProperties().get("index.subsystem.name"));
+        assertEquals("https", configuration.getGlobalProperties().get("solr.secureComms"));
+        assertTrue(configuration.isSolrSSLEnabled());
+    }
+
+    @Test
+    @SetEnvironmentVariable(key = "ALFRESCO_VERSION", value = "26.2.2")
+    void testAlfresco26UsesOpenSearch() {
+        AlfrescoConfiguration configuration = new DefaultAlfrescoConfigurationProvider().getConfiguration();
+        assertFalse(configuration.isSolrSSLEnabled());
+        assertEquals("elasticsearch", configuration.getGlobalProperties().get("index.subsystem.name"));
+        assertEquals("opensearch", configuration.getGlobalProperties().get("elasticsearch.host"));
+        assertEquals("9200", configuration.getGlobalProperties().get("elasticsearch.port"));
+        assertEquals("none", configuration.getGlobalProperties().get("elasticsearch.secureComms"));
+        assertEquals("true", configuration.getGlobalProperties().get("elasticsearch.createIndexIfNotExists"));
+        assertFalse(configuration.getGlobalProperties().keySet().stream().anyMatch(key -> key.startsWith("solr.")));
+    }
+
+    @Test
+    @SetEnvironmentVariable(key = "ALFRESCO_VERSION", value = "26.2.0")
+    void testAlfresco26CommunityUsesOpenSearch() {
+        AlfrescoConfiguration configuration = new DefaultAlfrescoConfigurationProvider().getConfiguration();
+        assertEquals("elasticsearch", configuration.getGlobalProperties().get("index.subsystem.name"));
+        assertEquals("opensearch", configuration.getGlobalProperties().get("elasticsearch.host"));
+        assertFalse(configuration.isSolrSSLEnabled());
     }
 
     @Test

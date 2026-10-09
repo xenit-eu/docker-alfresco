@@ -1,5 +1,9 @@
 
 services:
 
+ alfresco:
+   environment:
+   - SOLR_HOST=solr
+
  solr:
    image: ${SOLR_IMAGE}

@@ -8,7 +8,6 @@ services:
    depends_on:
      - postgresql
    environment:
-   - SOLR_HOST=solr
    - GLOBAL_legacy.transform.service.enabled=false
    - GLOBAL_local.transform.service.enabled=false
    - JSON_LOGGING=true
