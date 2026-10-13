@@ -14,15 +14,18 @@ import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMC
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_BASE_DIR;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_CACHE_MAX_SIZE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_CROSS_CONTEXT;
-import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_REMOTE_IP_VALVE_ENABLED;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_HTTP_HEADER_SIZE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_PART_COUNT;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_PART_HEADER_SIZE;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_THREADS;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_MAX_THREADS_SECONDARY;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT_SECONDARY;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_PORT_SSL;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_RELAXED_PATH_CHARS;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_RELAXED_QUERY_CHARS;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_REMOTE_IP_VALVE_ENABLED;
+import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_SECONDARY_CONNECTOR_ENABLED;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_SERVER_PORT;
 import static eu.xenit.alfresco.tomcat.embedded.config.EnvironmentVariables.TOMCAT_WEBAPPS;
 import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.setPropertyFromEnv;
@@ -41,9 +44,11 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(GENERATED_CLASSPATH_DIR, baseConfiguration::setGeneratedClasspathDir);
         setPropertyFromEnv(TOMCAT_PORT, value -> baseConfiguration.setTomcatPort(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_PORT_SSL, value -> baseConfiguration.setTomcatSslPort(Integer.parseInt(value)));
+        setPropertyFromEnv(TOMCAT_PORT_SECONDARY, value -> baseConfiguration.setTomcatSecondaryPort(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_SERVER_PORT, value -> baseConfiguration.setTomcatServerPort(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_MAX_HTTP_HEADER_SIZE, value -> baseConfiguration.setTomcatMaxHttpHeaderSize(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_MAX_THREADS, value -> baseConfiguration.setTomcatMaxThreads(Integer.parseInt(value)));
+        setPropertyFromEnv(TOMCAT_MAX_THREADS_SECONDARY, value -> baseConfiguration.setTomcatSecondaryMaxThreads(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_MAX_PART_COUNT, value -> baseConfiguration.setTomcatMaxPartCount(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_MAX_PART_HEADER_SIZE, value -> baseConfiguration.setTomcatMaxPartHeaderSize(Integer.parseInt(value)));
         setPropertyFromEnv(TOMCAT_RELAXED_QUERY_CHARS, baseConfiguration::setTomcatRelaxedQueryChars);
@@ -56,6 +61,7 @@ public class EnvironmentVariableConfigurationProvider implements ConfigurationPr
         setPropertyFromEnv(TOMCAT_ALLOW_MULTIPLE_LEADING_FORWARD_SLASH_IN_PATH, value -> baseConfiguration.setAllowMultipleLeadingForwardSlashInPath(Boolean.parseBoolean(value)));
         setPropertyFromEnv(TOMCAT_CROSS_CONTEXT, value -> baseConfiguration.setCrossContext(Boolean.parseBoolean(value)));
         setPropertyFromEnv(TOMCAT_REMOTE_IP_VALVE_ENABLED, value -> baseConfiguration.setRemoteIpValveEnabled(Boolean.parseBoolean(value)));
+        setPropertyFromEnv(TOMCAT_SECONDARY_CONNECTOR_ENABLED, value -> baseConfiguration.setSecondaryConnectorEnabled(Boolean.parseBoolean(value)));
         return baseConfiguration;
     }
 }

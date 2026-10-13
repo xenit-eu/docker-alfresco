@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
+## unreleased
+
+### Added
+* Add opt-in additional Tomcat connector with separate thread pool
+
 ## released
 
-## unreleased
+## 2026-07.15 (2026-07-15)
 
 ### Fixed
 * DOCKER-468 Bump Tomcat 9/10 further to pick up upstream security and stability fixes
