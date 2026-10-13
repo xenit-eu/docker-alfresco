@@ -12,7 +12,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Set up JDK 21 (minimum version 21 needed for SonarQube Cloud analysis)
         uses: actions/setup-java@v4.7.0
         with:
@@ -41,7 +41,7 @@ jobs:
       matrix:
         version: [ "community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "community-23.3.0", "community-23.4.0", "community-25.1.0", "community-25.3.0", "enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0", "enterprise-23.1.0", "enterprise-23.2.0", "enterprise-23.3.0", "enterprise-23.4.0", "enterprise-23.5.1", "enterprise-23.6.0", "enterprise-25.1.0", "enterprise-25.3.0", "enterprise-25.4.1"]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Set up JDK 21
         uses: actions/setup-java@v4.7.0
         with:
@@ -67,7 +67,7 @@ jobs:
       matrix:
         version: [ "community-7.0.1", "community-7.1.0", "community-7.2.1", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "community-23.3.0", "community-23.4.0", "community-25.1.0", "community-25.3.0" ]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Set up JDK 21
         uses: actions/setup-java@v4.7.0
         with:
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest-4-cores
     if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/tags/v') }}
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Set up JDK 21
         uses: actions/setup-java@v4.7.0
         with:
