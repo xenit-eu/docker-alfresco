@@ -12,14 +12,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up JDK 21 (minimum version 21 needed for SonarQube Cloud analysis)
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           distribution: 'temurin'
           java-version: '21'
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v5.0.2
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
       - name: Unit tests
         run: ./gradlew test --parallel --info
       - name: Upload analysis to sonarcloud
@@ -41,16 +41,16 @@ jobs:
       matrix:
         version: [ "community-7.0.0", "community-7.1.1", "community-7.2.0", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "community-23.3.0", "community-23.4.0", "community-25.1.0", "community-25.3.0", "enterprise-7.0.1", "enterprise-7.1.0", "enterprise-7.2.0", "enterprise-7.3.0", "enterprise-7.4.0", "enterprise-23.1.0", "enterprise-23.2.0", "enterprise-23.3.0", "enterprise-23.4.0", "enterprise-23.5.1", "enterprise-23.6.0", "enterprise-25.1.0", "enterprise-25.3.0", "enterprise-25.4.1"]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up JDK 21
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           distribution: 'temurin'
           java-version: '21'
       - name: Login to docker registry
         run: echo '${{ secrets.HARBOR_PASSWORD }}' | docker login docker.xenit.eu --username '${{ secrets.HARBOR_USER }}' --password-stdin
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v5.0.2
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
       - name: Integration tests
         run: ./gradlew :2repository:${{ matrix.version }}:integrationTests --info --stacktrace
       - name: Upload test artifact
@@ -67,14 +67,14 @@ jobs:
       matrix:
         version: [ "community-7.0.1", "community-7.1.0", "community-7.2.1", "community-7.3.0", "community-7.4.0", "community-23.1.0", "community-23.2.0", "community-23.3.0", "community-23.4.0", "community-25.1.0", "community-25.3.0" ]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up JDK 21
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           distribution: 'temurin'
           java-version: '21'
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v5.0.2
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
       - name: Build share image
         run: ./gradlew :2share:${{ matrix.version }}:buildDockerImage --info --stacktrace
   publish-docker-images:
@@ -82,9 +82,9 @@ jobs:
     runs-on: ubuntu-latest-4-cores
     if: ${{ startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/tags/v') }}
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up JDK 21
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -94,7 +94,7 @@ jobs:
         # without supplying DOCKER_USER and DOCKER_PASSWORD. However, supplying those environment variables breaks
         # publishing to other repositories
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v5.0.2
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
       - name: Publish public docker images
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
