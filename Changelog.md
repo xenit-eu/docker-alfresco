@@ -6,10 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## unreleased
 
-### Added
-* Add opt-in additional Tomcat connector with separate thread pool
 
 ## released
+
+## 2026-10.13 (2026-10-13)
+
+### Added
+* Add opt-in additional Tomcat connector with separate thread pool
 
 ## 2026-07.15 (2026-07-15)
 
