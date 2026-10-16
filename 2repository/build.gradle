@@ -148,6 +148,8 @@ subprojects {
                                "$composeDir/docker-compose-db.yml"];
             if (useSolr) {
                 useComposeFiles.add("$composeDir/docker-compose-solr.yml")
+            } else {
+                useComposeFiles.add("$composeDir/docker-compose-noindex.yml")
             }
 
             changedPorts {
@@ -164,6 +166,8 @@ subprojects {
                                    "$composeDir/docker-compose-db.yml"];
                 if (useSolr) {
                     useComposeFiles.add("$composeDir/docker-compose-solr-changed-ports.yml")
+                } else  {
+                    useComposeFiles.add("$composeDir/docker-compose-noindex.yml")
                 }
             }
         }
