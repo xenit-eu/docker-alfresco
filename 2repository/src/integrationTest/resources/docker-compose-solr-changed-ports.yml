@@ -1,6 +1,12 @@
 
 services:
 
+ alfresco:
+    environment:
+    - SOLR_HOST=solr
+    - SOLR_PORT=${SOLR_PORT}
+    - SOLR_PORT_SSL=${SOLR_PORT_SSL}
+
  solr:
     image: ${SOLR_IMAGE}
     # tomcat properties used for solr1 + solr4, jetty for solr6
@@ -14,4 +20,3 @@ services:
     # disable healthcheck (not ok for solr6)
     healthcheck:
       disable: true
-

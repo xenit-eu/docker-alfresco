@@ -20,18 +20,10 @@ subprojects {
         withSourcesJar()
     }
 
-    // This can be deleted when support for Alfresco V7.X is dropped.
-    if (!tomcatVersion.startsWith("10.")) {
-        java {
-            toolchain {
-                languageVersion = JavaLanguageVersion.of(11)
-            }
-        }
-    } else {
-        java {
-            toolchain {
-                languageVersion = JavaLanguageVersion.of(17)
-            }
+    def javaVersion = tomcatVersion.startsWith("11.") ? 21 : tomcatVersion.startsWith("10.") ? 17 : 11
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(javaVersion)
         }
     }
     dependencies {
@@ -81,7 +73,7 @@ subprojects {
         test {
             java {
                 srcDir file("$project.parent.projectDir/src/shared/test/java")
-                if (tomcatVersion.startsWith("10.")) {
+                if (tomcatVersion.startsWith("10.") || tomcatVersion.startsWith("11.")) {
                     srcDir file("$project.projectDir/src/test/java")
                 }
             }
@@ -104,12 +96,7 @@ subprojects {
     }
 
     createDockerFile {
-        if (!tomcatVersion.startsWith("10.")) {
-            from 'docker.io/eclipse-temurin:11'
-        }
-        else{
-            from 'docker.io/eclipse-temurin:17'
-        }
+        from "docker.io/eclipse-temurin:${javaVersion}"
         smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/jsonLayout/jsonLayout.json", '/usr/local/tomcat/log4j2/jsonLayout/jsonLayout.json'
