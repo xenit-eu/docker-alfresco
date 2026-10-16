@@ -52,7 +52,7 @@ subprojects {
 
     boolean isRelease = ci.branch?.equals("master")
             || ci.branch?.equals("release")
-            || (ci.tag != null && ci.tag.toLowerCase().startsWith("v"))
+            || (ci.tag != null && ci.tag.toString().toLowerCase().startsWith("v"))
     if (!isRelease) {
         version += "-SNAPSHOT"
     }
@@ -88,7 +88,9 @@ subprojects {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 
-    archivesBaseName = 'xenit-tomcat-embedded'
+    base {
+        archivesName = 'xenit-tomcat-embedded'
+    }
 
     dockerBuild {
         repositories = ['docker.io/xenit/tomcat']
@@ -101,11 +103,11 @@ subprojects {
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/jsonLayout/jsonLayout.json", '/usr/local/tomcat/log4j2/jsonLayout/jsonLayout.json'
         smartCopy configurations.runtimeClasspath, '/app/tomcat-embedded/lib'
-        def jarName = archivesBaseName + '.jar'
+        def jarName = base.archivesName.get() + '.jar'
         dependsOn jar
         smartCopy jar.outputs.files.singleFile, "/app/tomcat-embedded/$jarName"
         smartCopy "${project.parent.projectDir}/src/shared/main/bash/entrypoint/", '/'
-        def buildDate = project.properties.getOrDefault("buildDate", ((int) (new Date().getTime() / 1000)).toString())
+        def buildDate = providers.gradleProperty("buildDate").getOrElse(((int) (new Date().getTime() / 1000)).toString())
         environmentVariable('BUILD_DATE', buildDate)
 
         runCommand 'useradd -u 990 tomcat'
