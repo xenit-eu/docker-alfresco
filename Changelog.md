@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## unreleased
 
+### Added
+* Added support for Alfresco Enterprise v23.7 (23.7.3)
+
+### Changed
+* Bumped Testcontainers (integration tests) from 1.21.0 to 1.21.4 for compatibility with Docker Engine 29+
+
 
 ## released
 
