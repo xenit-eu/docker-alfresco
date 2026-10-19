@@ -1,0 +1,4 @@
+services:
+  alfresco:
+    environment:
+      - INDEX=noindex

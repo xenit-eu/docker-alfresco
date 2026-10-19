@@ -72,6 +72,10 @@ public class LoggingTests {
                 "GLOBAL_local.transform.service.enabled", "false",
                 "JSON_LOGGING", String.valueOf(jsonLogging)
         ));
+        // These isolated containers have no search backend; ACS 26+ would otherwise default to OpenSearch.
+        if (Integer.parseInt(System.getProperty("version", "0").split("\\.")[0]) >= 26) {
+            baseEnv.put("INDEX", "noindex");
+        }
         baseEnv.putAll(env);
         alfContainer
                 .withExposedPorts(8080)

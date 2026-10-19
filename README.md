@@ -28,6 +28,41 @@ This project builds Alfresco-specific docker images used by Xenit, starting with
 
 This is Xenit's repository for Alfresco and Share docker images. A major-minor version has a common skeleton.
 
+Alfresco 26.2 repository and Share images use Tomcat 11 and Java 21. A skeleton version
+such as `26.2.0` is shared by all patch releases in that major-minor family.
+
+### Search
+
+For Alfresco 26 and later, Solr is no longer supported. By default these images enable the
+`elasticsearch` search subsystem (used for both Elasticsearch and OpenSearch) and point it at a service
+named `opensearch`: `index.subsystem.name=elasticsearch`, `elasticsearch.host=opensearch`,
+`elasticsearch.port=9200`, `elasticsearch.secureComms=none` and `elasticsearch.createIndexIfNotExists=true`.
+Alfresco versions before 26 keep using Solr. Any of these can be overridden with the `INDEX` variable or
+`GLOBAL_<property>` variables, which always take precedence.
+
+The search engine and indexers are separate services that you deploy next to the repository.
+This repository does not build or bundle those services, and has no OpenSearch companion stack or
+search integration tests for either edition. ACS 26.2 integration containers use `INDEX=noindex`,
+and no OpenSearch, indexer, or supporting search-service images are pulled. This override is test-only:
+built repository images retain OpenSearch connection defaults but never bundle the engine or companion services.
+
+Supported versions: [Community](https://docs.hyland.com/r/Current/Alfresco-Supported-Platforms/oxn1005172196153),
+[Enterprise](https://docs.hyland.com/r/Current/Alfresco-Supported-Platforms/snp4131841454065).
+Reference deployments: [acs-deployment](https://github.com/Alfresco/acs-deployment/tree/master/docker-compose).
+
+Notes:
+
+* Start the indexers only after the repository is ready (`/alfresco/api/-default-/public/alfresco/versions/1/probes/-ready-`),
+  so Alfresco initializes its search index and mappings before documents are indexed.
+* Full-text indexing needs content transformation: set `GLOBAL_local.transform.service.enabled=true` and
+  `GLOBAL_localTransform.core-aio.url=http://transform-core-aio:8090/`. The Community batch indexer authenticates
+  against the repository with `GLOBAL_solr.secureComms=secret` and `GLOBAL_solr.sharedSecret=<secret>`
+  (matching `ALFRESCO_CONTENT_TRANSFORM_SHAREDSECRET`); no Solr engine is involved.
+* Enterprise needs messaging and events enabled (they are disabled by default in these images):
+  `GLOBAL_messaging.subsystem.autoStart=true`, `GLOBAL_events.subsystem.autoStart=true` and
+  `GLOBAL_messaging.broker.url=failover:(nio://activemq:61616)?timeout=3000&jms.useCompression=true`, plus the
+  transform router/shared file store properties (`transform.service.url`, `sfs.url`).
+
 ## Supported Platforms
 
 For the full support matrix of dependent products (databases, application servers, operating systems) per Alfresco version, refer to the official Hyland documentation:
@@ -42,7 +77,8 @@ For the full support matrix of dependent products (databases, application server
 * alfresco-repository-community:<version>
 
 These are the images used for a multi-container Alfresco enterprise deployment in production. To be used together with
-Share Docker Image , [`docker-solr`](https://github.com/xenit-eu/docker-solr).
+Share Docker Image and a supported search service
+([`docker-solr`](https://github.com/xenit-eu/docker-solr) for versions before Alfresco 26, OpenSearch from Alfresco 26, see [Search](#search)).
 
 The most basic setup uses the docker-compose files
 from [`2repository/src/integrationTest/resources`](https://github.com/xenit-eu/docker-alfresco/tree/master/2repository/src/integrationTest/resources)
@@ -51,7 +87,7 @@ from [`2repository/src/integrationTest/resources`](https://github.com/xenit-eu/d
 ### Share-only:
 
 Multi-container: `share` to be used together with Alfresco Docker Image
-, [`docker-solr`](https://github.com/xenit-eu/docker-solr), [`postgres`](https://github.com/xenit-eu/docker-postgres).
+, a supported search service and [`postgres`](https://github.com/xenit-eu/docker-postgres).
 
 ### Repository and share:
 
