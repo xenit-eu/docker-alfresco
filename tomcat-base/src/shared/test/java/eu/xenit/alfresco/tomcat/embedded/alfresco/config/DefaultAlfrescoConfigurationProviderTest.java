@@ -70,7 +70,7 @@ class DefaultAlfrescoConfigurationProviderTest {
         assertEquals("elasticsearch", configuration.getGlobalProperties().get("index.subsystem.name"));
         assertEquals("opensearch", configuration.getGlobalProperties().get("elasticsearch.host"));
         assertEquals("9200", configuration.getGlobalProperties().get("elasticsearch.port"));
-        assertEquals("none", configuration.getGlobalProperties().get("elasticsearch.secureComms"));
+        assertEquals("https", configuration.getGlobalProperties().get("elasticsearch.secureComms"));
         assertEquals("true", configuration.getGlobalProperties().get("elasticsearch.createIndexIfNotExists"));
         assertFalse(configuration.getGlobalProperties().keySet().stream().anyMatch(key -> key.startsWith("solr.")));
     }

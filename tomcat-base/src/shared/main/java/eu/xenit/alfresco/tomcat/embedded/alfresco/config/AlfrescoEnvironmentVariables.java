@@ -22,6 +22,10 @@ public class AlfrescoEnvironmentVariables {
     public static final String SOLR_HOST = "SOLR_HOST";
     public static final String SOLR_PORT = "SOLR_PORT";
     public static final String SOLR_PORT_SSL = "SOLR_PORT_SSL";
+    public static final String ELASTICSEARCH_HOST = "ELASTICSEARCH_HOST";
+    public static final String ELASTICSEARCH_PORT = "ELASTICSEARCH_PORT";
+    public static final String ELASTICSEARCH_SECURE_COMMS = "ELASTICSEARCH_SECURE_COMMS";
+    public static final String ELASTICSEARCH_CREATE_INDEX_IF_NOT_EXISTS = "ELASTICSEARCH_CREATE_INDEX_IF_NOT_EXISTS";
     public static final String TOMCAT_SSL_KEYSTORE = "TOMCAT_SSL_KEYSTORE";
     public static final String TOMCAT_SSL_KEYSTORE_KEY_META_DATA_LOCATION = "TOMCAT_SSL_KEYSTORE_KEY_META_DATA_LOCATION";
     public static final String TOMCAT_SSL_KEYSTORE_PASSWORD = "TOMCAT_SSL_KEYSTORE_PASSWORD";
