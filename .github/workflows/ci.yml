@@ -14,9 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
       - name: Set up JDK 21 (minimum version 21 needed for SonarQube Cloud analysis)
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@v6
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '21'
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5.0.2
