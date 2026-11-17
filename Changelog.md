@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 ### Changed
 * Bumped Testcontainers (integration tests) from 1.21.0 to 1.21.4 for compatibility with Docker Engine 29+
 
+### Fixed
+* Fixed eMudhra Intermediate CA Compromise
 
 ## released
 
