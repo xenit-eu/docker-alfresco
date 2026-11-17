@@ -2,8 +2,8 @@
 
 > [![Xenit Logo](https://xenit.eu/wp-content/uploads/2017/09/XeniT_Website_Logo.png)](https://xenit.eu/open-source)
 >
-> docker-alfresco is a part of the Xenit Open Source Tooling around Alfresco. Xenit is company with a big expertise and
-> a strong team around Alfresco. If you'd like to learn more about our
+> docker-alfresco is a part of the Xenit Open Source Tooling around Alfresco. Xenit is company with in-depth expertise
+> and a strong team centered around Alfresco and document management. If you'd like to learn more about our
 > [tools](https://xenit.eu/open-source), [services](https://xenit.eu/alfresco) and
 > [products](https://xenit.eu/alfresco-products), please visit our [website](https://xenit.eu).
 
