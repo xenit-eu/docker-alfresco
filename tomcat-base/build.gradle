@@ -97,6 +97,13 @@ subprojects {
 
     createDockerFile {
         from "docker.io/eclipse-temurin:${javaVersion}"
+        // eMudhra CA compromise (CVE-2026-91403, CVE-2026-114820, CVE-2026-114406).
+        // 1. patch the OS trust store (note we also rely on upstream patched base image)
+        runCommand 'apt-get update && apt-get install -y --only-upgrade ca-certificates && rm -rf /var/lib/apt/lists/*'
+        // 2. drop the eMudhra emSign roots from the JDK cacerts
+        runCommand 'keytool -list -v -cacerts -storepass changeit | sed -n "s/^Alias name: //p" | grep -i emsign | while read -r a; do keytool -delete -cacerts -storepass changeit -alias "$a"; done'
+        // 3. fail the build if a compromised root (emSign, or Sectigo AAA Certificate Services who cross-signed) is still trusted
+        runCommand '! keytool -list -v -cacerts -storepass changeit | grep -qE "^Owner: .*CN=(emSign|AAA Certificate Services)" && ! ls /etc/ssl/certs | grep -qE "AAA_Certificate_Services|emSign_.*G3"'
         smartCopy configurations.sharedLibs, '/usr/local/tomcat/shared/lib/'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/keystore", '/keystore'
         smartCopy "${project.parent.projectDir}/src/shared/main/resources/jsonLayout/jsonLayout.json", '/usr/local/tomcat/log4j2/jsonLayout/jsonLayout.json'
