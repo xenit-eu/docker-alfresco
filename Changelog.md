@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 * Bumped Testcontainers (integration tests) from 1.21.0 to 1.21.4 for compatibility with Docker Engine 29+
 
 ### Fixed
-* Fixed eMudhra Intermediate CA Compromise
+* DOCKER-481 Fixed eMudhra Intermediate CA Compromise: distrust emSign ECC Root CA - G3 and AAA Certificate Services, and as a precaution emSign Root CA - G1, C1 and ECC Root CA - C3, in both the OS and JVM truststores
 
 ## released
 
