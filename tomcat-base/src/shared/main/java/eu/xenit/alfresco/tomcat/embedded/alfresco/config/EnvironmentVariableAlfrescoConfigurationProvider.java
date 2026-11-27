@@ -1,35 +1,7 @@
 package eu.xenit.alfresco.tomcat.embedded.alfresco.config;
 
 
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_FLAVOUR;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_HOST;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_PORT;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_PROTOCOL;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ALFRESCO_VERSION;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_DRIVER;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_HOST;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_NAME;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_PASSWORD;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_PORT;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_QUERY;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_URL;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DB_USERNAME;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.DIR_ROOT;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.ENABLE_CLUSTERING;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.INDEX;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SHARE_HOST;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SHARE_PORT;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SHARE_PROTOCOL;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SOLR_HOST;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SOLR_PORT;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SOLR_PORT_SSL;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.SOLR_SSL;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.TOMCAT_SSL_KEYSTORE;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.TOMCAT_SSL_KEYSTORE_KEY_META_DATA_LOCATION;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.TOMCAT_SSL_KEYSTORE_PASSWORD;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.TOMCAT_SSL_TRUSTSTORE;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.TOMCAT_SSL_TRUSTSTORE_KEY_META_DATA_LOCATION;
-import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.TOMCAT_SSL_TRUSTSTORE_PASSWORD;
+import static eu.xenit.alfresco.tomcat.embedded.alfresco.config.AlfrescoEnvironmentVariables.*;
 import static eu.xenit.alfresco.tomcat.embedded.utils.Utils.setPropertyFromEnv;
 
 public class EnvironmentVariableAlfrescoConfigurationProvider implements AlfrescoConfigurationProvider {
@@ -56,6 +28,10 @@ public class EnvironmentVariableAlfrescoConfigurationProvider implements Alfresc
         setGlobalPropertyFromEnv(SOLR_PORT, finalBaseAlfrescoConfiguration, "solr.port");
         setGlobalPropertyFromEnv(SOLR_PORT_SSL, finalBaseAlfrescoConfiguration, "solr.port.ssl");
         setGlobalPropertyFromEnv(SOLR_SSL, finalBaseAlfrescoConfiguration, "solr.secureComms");
+        setGlobalPropertyFromEnv(ELASTICSEARCH_HOST, finalBaseAlfrescoConfiguration, "elasticsearch.host");
+        setGlobalPropertyFromEnv(ELASTICSEARCH_PORT, finalBaseAlfrescoConfiguration, "elasticsearch.port");
+        setGlobalPropertyFromEnv(ELASTICSEARCH_SECURE_COMMS, finalBaseAlfrescoConfiguration, "elasticsearch.secureComms");
+        setGlobalPropertyFromEnv(ELASTICSEARCH_CREATE_INDEX_IF_NOT_EXISTS, finalBaseAlfrescoConfiguration, "elasticsearch.createIndexIfNotExists");
         setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE, finalBaseAlfrescoConfiguration, "encryption.ssl.keystore.location");
         setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE_KEY_META_DATA_LOCATION, finalBaseAlfrescoConfiguration, "encryption.ssl.keystore.keyMetaData.location");
         setGlobalPropertyFromEnv(TOMCAT_SSL_KEYSTORE_PASSWORD, finalBaseAlfrescoConfiguration, "ssl-keystore.password");
@@ -72,11 +48,10 @@ public class EnvironmentVariableAlfrescoConfigurationProvider implements Alfresc
         setGlobalPropertyFromEnv(SHARE_PORT, finalBaseAlfrescoConfiguration, "share.port");
         setGlobalPropertyFromEnv(SHARE_PROTOCOL, finalBaseAlfrescoConfiguration, "share.protocol");
         setGlobalProperties(finalBaseAlfrescoConfiguration);
-        if ("https".equals(finalBaseAlfrescoConfiguration.getGlobalProperties().get("solr.secureComms"))) {
-            finalBaseAlfrescoConfiguration.setSolrSSLEnabled(true);
-        } else {
-            finalBaseAlfrescoConfiguration.setSolrSSLEnabled(false);
-        }
+
+        finalBaseAlfrescoConfiguration.setSolrSSLEnabled(
+            "https".equals(finalBaseAlfrescoConfiguration.getGlobalProperties().get("solr.secureComms"))
+        );
         return finalBaseAlfrescoConfiguration;
     }
 

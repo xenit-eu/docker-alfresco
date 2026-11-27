@@ -52,11 +52,11 @@ public class DefaultAlfrescoConfigurationProvider implements AlfrescoConfigurati
             baseAlfrescoConfiguration.setGlobalProperty("solr.port.ssl", "8443");
             baseAlfrescoConfiguration.setGlobalProperty("solr.secureComms", "https");
         } else {
-            // ACS uses the elasticsearch subsystem for both Elasticsearch and OpenSearch.
+            // ACS uses the Elasticsearch subsystem for both Elasticsearch and OpenSearch.
             baseAlfrescoConfiguration.setGlobalProperty("index.subsystem.name", "elasticsearch");
             baseAlfrescoConfiguration.setGlobalProperty("elasticsearch.host", "opensearch");
             baseAlfrescoConfiguration.setGlobalProperty("elasticsearch.port", "9200");
-            baseAlfrescoConfiguration.setGlobalProperty("elasticsearch.secureComms", "none");
+            baseAlfrescoConfiguration.setGlobalProperty("elasticsearch.secureComms", "https");
             baseAlfrescoConfiguration.setGlobalProperty("elasticsearch.createIndexIfNotExists", "true");
         }
 
